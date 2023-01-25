@@ -1,0 +1,5 @@
+ContentMenu.expandToLevel(99);
+sap.n.Launchpad.setMenuActiveState();
+
+sap.n.Launchpad.openAppExpanded = true;
+sap.n.Launchpad.setOpenAppsExpanded();

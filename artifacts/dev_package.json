@@ -1,5 +1,5 @@
 {
-	"id": "AE5DD690-2555-ED11-ADE6-000D3AB237DF",
+	"id": "ae5dd690-2555-ed11-ade6-000d3ab237df",
 	"createdAt": "2022-10-26T11:58:56.063Z",
 	"createdBy": "lloyd.trevarthen@neptune-software.com",
 	"git": {
@@ -8,20 +8,19 @@
 	},
 	"name": "neptunesoftware-dxp-abb-launchpadstandard",
 	"description": null,
-	"ver": "22.10.26.1159",
+	"ver": "23.1.25.1522",
 	"enableCICD": true,
 	"apps": [
 		{
-			"id": "479CA632-13F8-4B0E-A8A0-EB1ED336432C",
-			"ver": "22.10.26.1416",
+			"id": "479ca632-13f8-4b0e-a8a0-eb1ed336432c",
 			"application": "planet9_launchpad_standard",
 			"title": "",
 			"description": "Planet 9 Launchpad "
 		}
 	],
 	"api": [],
-	"odataMock": [],
 	"odataSource": [],
+	"odataMock": [],
 	"dictionary": [],
 	"jsclass": [],
 	"jsscript_group": [],
@@ -39,8 +38,10 @@
 	"systems": [],
 	"doc": [],
 	"wf_notifications": [],
-	"wf_definition": [],
 	"department": [],
 	"script_scheduler": [],
-	"connector": []
+	"wf_definition": [],
+	"connector": [],
+	"events": [],
+	"media_library": []
 }

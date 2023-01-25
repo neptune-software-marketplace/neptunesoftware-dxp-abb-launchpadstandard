@@ -1,0 +1,2 @@
+diaMessage.onDecline();
+diaMessage.close();

@@ -1,0 +1,6 @@
+let show = !pageVerticalMenu.getShowSubHeader();
+pageVerticalMenu.setShowSubHeader(show);
+// if (!show) {
+//     AppCacheShellSearchTags.removeAllSelectedItems();
+//     toolVerticalMenuFilter.fireLiveChange();
+// }

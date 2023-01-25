@@ -1,0 +1,24 @@
+let binding = ContentMenu.getBinding('items');
+let searchValue = this.getValue() || '';
+let filterArr = [];
+
+// Use UI5 Filter to get results
+if (!!searchValue) {
+    filterArr.push(new sap.ui.model.Filter({
+        filters: [
+            new sap.ui.model.Filter('title', 'Contains', searchValue),
+            new sap.ui.model.Filter('filter', 'Contains', searchValue),
+            new sap.ui.model.Filter('tags', 'Contains', searchValue)
+        ],
+        and: false
+    }));
+}
+
+AppCacheShellSearchTags.getSelectedItems().forEach(function (item) {
+    filterArr.push(new sap.ui.model.Filter('tags', 'Contains', item.getText()));
+});
+
+binding.filter(filterArr);
+
+ContentMenu.expandToLevel(99);
+sap.n.Launchpad.setMenuActiveState();

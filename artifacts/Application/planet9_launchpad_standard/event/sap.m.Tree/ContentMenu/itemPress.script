@@ -1,0 +1,5 @@
+let selectedItem = this.getSelectedItem();
+if (selectedItem) {
+    sap.n.Launchpad.handleTreeNavigation(selectedItem);
+    ContentMenu.removeSelections();
+}

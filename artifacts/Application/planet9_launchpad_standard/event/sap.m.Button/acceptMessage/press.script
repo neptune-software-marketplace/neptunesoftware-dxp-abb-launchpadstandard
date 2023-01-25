@@ -1,0 +1,2 @@
+diaMessage.onAccept();
+diaMessage.close();

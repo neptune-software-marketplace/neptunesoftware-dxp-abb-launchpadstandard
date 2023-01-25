@@ -1,0 +1,9 @@
+let oSorter;
+if (this.getSelectedKey() === 'date') {
+    oSorter = new sap.ui.model.Sorter('lastLogin', true, false);
+} else {
+    oSorter = new sap.ui.model.Sorter('username', false, false);
+}
+
+let binding = AppCacheUsers.getBinding('items');
+binding.sort(oSorter);

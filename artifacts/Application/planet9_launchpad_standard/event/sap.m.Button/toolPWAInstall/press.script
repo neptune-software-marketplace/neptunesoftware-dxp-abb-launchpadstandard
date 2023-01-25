@@ -1,0 +1,10 @@
+_pwadeferredPrompt.prompt();
+_pwadeferredPrompt.userChoice
+    .then(function(choiceResult) {
+        if (choiceResult.outcome === 'accepted') {
+            actionPWA.setVisible(false);
+            pageShell.setShowSubHeader(false);
+            sap.n.Layout.setHeaderPadding();
+        }
+        _pwadeferredPrompt = null;        
+    });

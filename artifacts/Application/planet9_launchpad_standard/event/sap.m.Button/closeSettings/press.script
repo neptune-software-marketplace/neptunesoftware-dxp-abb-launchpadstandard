@@ -1,0 +1,2 @@
+this.getParent().getParent().close();
+sap.n.Launchpad.settingsMenuClose();

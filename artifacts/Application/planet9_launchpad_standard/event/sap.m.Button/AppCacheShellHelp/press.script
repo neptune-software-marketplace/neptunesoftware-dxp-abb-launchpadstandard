@@ -1,0 +1,18 @@
+let rootDir = '/public/views/';
+if (parseInt(AppCache.p9Version) <= 21) rootDir = '/views/';
+
+if (sap.n.Launchpad.isPhone()) {
+    AppCache.Load('cockpit_doc_reader', {
+        dialogShow: true,
+        dialogTitle: AppCache_tHelp.getText(),
+        dialogHideMinimize: true,
+        dialogHideMosaic: true,
+        dialogHideMaximize: true,
+        rootDir: rootDir
+    });
+} else {
+    sap.n.Shell.loadSidepanel('cockpit_doc_reader', sap.n.Launchpad.currentTile.title, {
+        additionaltext: AppCache_tHelp.getText(),
+        rootDir: rootDir
+    });
+}

@@ -1,0 +1,2 @@
+let user = ModelData.FindFirst(AppCacheUsers, 'username', username);
+return user && user.name ? user.name : username;

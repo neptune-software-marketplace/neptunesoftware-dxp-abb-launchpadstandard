@@ -1,0 +1,6 @@
+
+// Remove CSS animation class
+boxShake.removeStyleClass("animated shake");
+
+// Clear numpad
+NumPad.Clear();

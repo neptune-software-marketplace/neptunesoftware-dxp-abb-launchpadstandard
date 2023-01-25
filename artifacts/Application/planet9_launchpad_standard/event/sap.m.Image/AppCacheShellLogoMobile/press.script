@@ -1,0 +1,2 @@
+if (AppCache.isMobile && AppCache.isRestricted) return;
+AppCache._Home();

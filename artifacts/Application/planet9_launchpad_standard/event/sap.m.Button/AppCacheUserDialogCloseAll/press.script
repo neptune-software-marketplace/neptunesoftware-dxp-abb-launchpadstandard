@@ -1,0 +1,17 @@
+
+// Close Buttons
+AppCacheUserDialog.getButtons().forEach(function (data) {
+    if (data.getId() !== "AppCacheUserDialogCloseAll") {
+        data.destroy();
+    }
+});
+
+// Close Dialogs
+AppCache.Dialogs.forEach(function (data) {
+    let dia = sap.ui.getCore().byId(data);
+    if (dia) dia.close();
+});
+
+AppCacheShellDialog.setVisible(false);
+AppCache.Dialogs = [];
+AppCacheUserDialog.close();

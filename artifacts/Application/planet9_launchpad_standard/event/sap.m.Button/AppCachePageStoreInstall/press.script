@@ -1,0 +1,18 @@
+const deviceName = sap.ui.Device.os.name;
+const { id, serverAddress, activeBuild, activeVersion } = modelAppCachePageStore.oData;
+
+let n = `${serverAddress}/mobileClients/${id}/build/${activeBuild.id}/`;
+
+if (deviceName === 'win') n += 'Windows';
+else if (deviceName === 'Android') n += 'Android';
+else if (deviceName === 'iOS') {
+    n = 'itms-services://?action=download-manifest&url=' + encodeURIComponent(`${n}Ios.plist`);
+    console.log(n);
+}
+
+if (isCordova()) {
+    AppCache.UpdateMobileApp(n, activeVersion);
+} else {
+    sap.m.URLHelper.redirect(n, false);
+    sap.m.MessageToast.show('Download Started');
+}

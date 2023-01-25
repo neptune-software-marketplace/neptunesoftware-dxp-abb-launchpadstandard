@@ -1,0 +1,2 @@
+setCacheAppCacheDiaSettings();
+sap.n.Launchpad.applyUserTheme();

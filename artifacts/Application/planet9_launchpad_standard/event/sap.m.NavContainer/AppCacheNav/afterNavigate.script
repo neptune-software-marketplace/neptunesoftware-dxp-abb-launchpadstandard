@@ -1,0 +1,16 @@
+// Check for page content. Could be deleted after onOffline/onOnline and RebuildTiles
+let currentPage = AppCacheNav.getCurrentPage();
+
+// Only for Tile Group + Childs 
+if (currentPage.sId.indexOf('page') > -1 && !currentPage.getContent().length) {
+    let cat = currentPage.sId;
+    cat = cat.split('page')[1];
+
+    const category = sap.n.Customization.getCategory(cat);
+    if (category) {
+        sap.n.Launchpad.BuildTiles(category);
+    } else {
+        const tilegroup = sap.n.Customization.getTileGroup(cat);
+        if (tilegroup) sap.n.Launchpad.BuildTiles(tilegroup, tilegroup.id);
+    }
+}

@@ -1,0 +1,4 @@
+setCacheAppCacheDiaSettings();
+sap.n.Launchpad.applyUserTheme();
+sap.n.Launchpad.RebuildTiles();
+AppCache.Home();

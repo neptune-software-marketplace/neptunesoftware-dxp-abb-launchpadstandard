@@ -1,0 +1,24 @@
+let userName = AppCache_inUsername.getValue();
+AppCache_inUsername.setValue(userName.trim());
+
+AppCache_inUsername.setValueState();
+AppCache_inPassword.setValueState();
+
+// Checks
+if (AppCache_inUsername.getVisible() && !AppCache_inUsername.getValue()) {
+    AppCache_inUsername.setValueState('Error');
+    setTimeout(function () {
+        AppCache_inUsername.focus();
+    }, 400);
+    return;
+}
+
+if (AppCache_inPassword.getVisible() && !AppCache_inPassword.getValue()) {
+    AppCache_inPassword.setValueState('Error');
+    setTimeout(function () {
+        AppCache_inPassword.focus();
+    }, 400);
+    return;
+}
+
+AppCache.Logon();

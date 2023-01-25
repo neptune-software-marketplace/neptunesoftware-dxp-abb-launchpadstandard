@@ -1,0 +1,2 @@
+modelManagePages.setData([]);
+diaManagePages.close();

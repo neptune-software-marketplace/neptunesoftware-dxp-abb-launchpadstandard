@@ -1,0 +1,7 @@
+sap.n.Launchpad.settingsMenuClose();
+
+if (launchpadContentSideApp.getWidth() === "0px") {
+    sap.n.Launchpad.sidepanelOpen();
+} else {
+    sap.n.Launchpad.sidepanelClose();
+}

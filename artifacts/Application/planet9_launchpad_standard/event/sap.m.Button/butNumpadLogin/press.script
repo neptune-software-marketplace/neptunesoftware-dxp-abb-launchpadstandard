@@ -1,0 +1,15 @@
+// Check biometricAuthentication
+if (AppCache.biometricAuthentication) {
+    
+    // Remove CSS animation class
+    boxShake.removeStyleClass("animated shake");
+
+    // Clear numpad
+    NumPad.Clear();
+
+    if (sap.ui.Device.os.ios && typeof CID !== "undefined") sap.n.Fingerprint.ios.checkSupport();
+    if (sap.ui.Device.os.android) FingerprintAuth.isAvailable(sap.n.Fingerprint.android.onSupported, sap.n.Fingerprint.android.notSupported);
+
+} else {
+    NumPad.Logon();
+}

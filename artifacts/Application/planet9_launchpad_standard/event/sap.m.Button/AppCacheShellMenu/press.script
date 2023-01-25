@@ -1,0 +1,21 @@
+if (sap.ui.Device.resize.width < sap.n.Launchpad.verticalMenuLimit) launchpadContentMenu.setWidth("0px");
+
+if (AppCache.config.verticalMenu && sap.ui.Device.resize.width >= sap.n.Launchpad.verticalMenuLimit) {
+    let size = (launchpadContentMenu.getWidth() === "0px") ? "300px" : "0px";
+    launchpadContentMenu.addItem(pageVerticalMenu);
+    launchpadContentMenu.setWidth(size);
+    openAppMaster.setVisible((openApps.getItems().length > 0));
+} else {
+
+    launchpadOverflow.addItem(pageVerticalMenu);
+    openAppMaster.setVisible((openApps.getItems().length > 0));
+
+    applyCSSToElmId('launchpadOverflowContainer', { width: '100%' });
+    applyCSSToElmId('launchpadOverflowClickArea', { display: 'block' });
+
+    setTimeout(function () {
+        launchpadOverflow.addStyleClass("nepLaunchpadMenuOverflowOpen");
+    }, 10);
+}
+
+sap.n.Layout.setHeaderPadding();

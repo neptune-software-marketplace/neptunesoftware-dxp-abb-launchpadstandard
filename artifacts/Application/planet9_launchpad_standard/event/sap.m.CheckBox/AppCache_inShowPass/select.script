@@ -1,0 +1,5 @@
+if (AppCache_inShowPass.getSelected()) {
+    AppCache_inPassword.setType("Text");
+} else {
+    AppCache_inPassword.setType("Password");
+}

@@ -1,0 +1,6 @@
+setCacheAppCacheDiaSettings();
+if (launchpadContentSideApp.getWidth() !== '0px') {
+    let sidepanelWidth = sap.n.Launchpad.sidepanelWidth[modelAppCacheDiaSettings.oData.sidepanelWidth || 'large'];
+    launchpadContentSideApp.setWidth(sidepanelWidth);
+    sap.n.Launchpad.setLaunchpadContentWidth();
+}

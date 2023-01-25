@@ -1,0 +1,2 @@
+AppCacheDiaSettings.close();
+sap.n.Launchpad.settingsMenuClose();

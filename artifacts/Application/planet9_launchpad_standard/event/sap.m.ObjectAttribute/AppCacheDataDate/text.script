@@ -1,0 +1,10 @@
+if (typeof updatedAt === 'undefined' || updatedAt === null || updatedAt === '') { return; }
+
+let oDateFormat = sap.ui.core.format.DateFormat.getDateTimeInstance();
+if (updatedAt.length === 14) {
+    let oSAPFormat = sap.ui.core.format.DateFormat.getDateTimeInstance({ pattern: 'yyyyMMddhhmmss' });
+    let oDate = oSAPFormat.parse(updatedAt);
+    return oDateFormat.format(new Date(oDate));
+}
+    
+return oDateFormat.format(new Date(updatedAt));

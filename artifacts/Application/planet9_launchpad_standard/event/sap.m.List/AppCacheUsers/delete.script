@@ -1,0 +1,49 @@
+let deleteItem = oEvent.getParameter('listItem');
+let context = deleteItem.getBindingContext();
+let data = context.getObject();
+
+ModelData.Delete(AppCacheUsers, ['username', 'logonData/type'], [data.username, data.logonData.type]);
+setCacheAppCacheUsers();
+
+// Remove iOS SAMKeychain library and Android SecureStorage key
+if (typeof window.cordova !== 'undefined' && !window.navigator.simulator && data.biometric) {
+    if (sap.ui.Device.os.ios || sap.ui.Device.os.android) {
+        // Set iOS SAMKeychain library and Android SecureStorage key
+        let servicekey = data.username.toString().toUpperCase();
+
+        // Delete SecureStorage key
+        if (typeof cordova.plugins !== 'undefined' && cordova.plugins.SecureStorage) {
+            let ss = new cordova.plugins.SecureStorage(
+                function () {
+                    try {
+                        ss.remove(function (key) { }, function (error) { }, servicekey);
+                    } catch (error) { }
+                },
+                function (error) { },
+                AppCache.AppID);
+        }
+
+        // FingerprintAuth.delete
+        if (window.FingerprintAuth) {
+            try {
+                FingerprintAuth.delete({
+                    clientId: AppCache.AppID,
+                    username: servicekey
+                }, function (result) {
+
+                }, function (error) {
+
+                });
+            } catch (error) {
+
+            }
+        }
+    }
+}
+
+toolUsersFilter.setValue();
+toolUsersFilter.fireLiveChange();
+AppCache.calculateUserScreen();
+
+// No User -> Logon Screen
+if (!modelAppCacheUsers.oData.length) AppCache.setEnableLogonScreen();

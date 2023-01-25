@@ -1,0 +1,4 @@
+actionPWA.setVisible(false);
+pageShell.setShowSubHeader(false);
+pageShell.rerender();
+sap.n.Layout.setHeaderPadding();

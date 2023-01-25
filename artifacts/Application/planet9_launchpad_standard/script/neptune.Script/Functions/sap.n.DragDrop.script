@@ -1,0 +1,28 @@
+let dragDropProps = {
+    forceHelperSize: true,
+    tolerance: 'pointer',
+    revert: 25,
+    opacity: 0.5,
+    scroll: true,
+    placeholder: 'dragPlaceholder',
+};
+
+sap.n.DragDrop = {
+    restrictedTo(elm, onDragStart, onDragStop) {
+        return jQuery(elm).sortable({
+            ...dragDropProps,
+            start: onDragStart,
+            stop: onDragStop,
+            containment: 'parent',
+        });
+    },
+
+    connectWith(selector, onDragStart, onDragStop) {
+        return jQuery(selector).sortable({
+            ...dragDropProps,
+            start: onDragStart,
+            stop: onDragStop,
+            connectWith: selector,
+        });
+    },
+};

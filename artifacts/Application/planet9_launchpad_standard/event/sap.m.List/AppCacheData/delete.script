@@ -1,0 +1,6 @@
+let deleteItem = oEvent.getParameter('listItem');
+let context = deleteItem.getBindingContext();
+let data = context.getObject();
+
+ModelData.Delete(AppCacheData, ['application', 'language', 'appPath'], [data.application, data.language, data.appPath]);
+setCacheAppCacheData();

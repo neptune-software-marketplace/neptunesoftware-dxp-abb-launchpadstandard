@@ -1,0 +1,27 @@
+// Destroy Content
+let tab = oEvent.mParameters.item;
+let tabKey = tab.getKey();
+let view = tab.getContent()[0];
+
+// onClose event
+if (sap.n.Shell.sidepanelCloseEvents[tabKey]) sap.n.Shell.sidepanelCloseEvents[tabKey]();
+
+// Destroy View
+if (view) {
+    view.removeAllContent();
+    view.destroy();
+    sap.n.Shell.clearObjects(view.sId);
+}
+
+// Hide sidepanel
+setTimeout(function () {
+    if (AppCachePageSideTab.getItems().length === 0) {
+        sap.n.Launchpad.sidepanelClose();
+        AppCacheUserActionSidepanel.setVisible(false);
+
+        // Mark Open From 
+        if (sap.n.Launchpad.currentTile && sap.n.Launchpad.currentTile.actionApplication) {
+            delete sap.n.Shell.openSidePanelApps[sap.n.Launchpad.currentTile.actionApplication]
+        }
+    }
+}, 200);

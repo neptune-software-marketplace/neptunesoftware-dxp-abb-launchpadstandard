@@ -1,0 +1,34 @@
+if (informSetPasswordOne.getValue() !== informSetPasswordTwo.getValue()) {
+    sap.m.MessageToast.show("Password confirmation doesn't match password");
+} else if (!informSetPasswordOne.getValue()) {
+    sap.m.MessageToast.show("Please provide a password");
+} else if (!informSetPasswordOld.getValue()) {
+    sap.m.MessageToast.show("Please provide the current password");
+} else {
+
+    diaSetPassword.setBusy(true);
+
+    data = {
+        id: AppCache.userInfo.id,
+        old: informSetPasswordOld.getValue(),
+        updated: informSetPasswordTwo.getValue()
+    }
+
+    request({
+        type: "POST",
+        contentType: 'application/json; charset=utf-8',
+        url: AppCache.Url + "/user/reset",
+        // dataType: "json",
+        data: JSON.stringify(data),
+        success: function (data) {
+            diaSetPassword.setBusy(false);
+            sap.m.MessageToast.show("Password updated");
+            diaSetPassword.close();
+        },
+        error: function (data) {
+            diaSetPassword.setBusy(false);
+            if (data.responseJSON && data.responseJSON.status) sap.m.MessageToast.show(data.responseJSON.status);
+        }
+    });
+
+}

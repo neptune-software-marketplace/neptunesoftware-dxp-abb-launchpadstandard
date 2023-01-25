@@ -1,0 +1,13 @@
+if (!sap.n.Customization.isSupported()) {
+    chkAppCacheLockScreenChanges.setVisible(false);
+    chkAppCacheDisableScreenChanges.setVisible(false);
+    return;
+}
+
+chkAppCacheLockScreenChanges.setVisible(true).setEnabled(true);
+chkAppCacheDisableScreenChanges.setVisible(true).setEnabled(true);
+
+const { disableScreenChanges, lockScreenChanges } = modelAppCacheDiaSettings.getData();
+if (lockScreenChanges) {
+    chkAppCacheDisableScreenChanges.setEnabled(false);
+}
