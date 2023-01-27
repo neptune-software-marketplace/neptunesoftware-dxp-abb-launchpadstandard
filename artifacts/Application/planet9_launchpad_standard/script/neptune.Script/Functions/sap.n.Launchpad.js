@@ -76,12 +76,12 @@ sap.n.Launchpad = {
         if (sap.n.Customization.isJiggling()) {
             sap.n.Customization.stopJiggling();
         }
-        
-        if (!sap.n.Customization.isSupported()) {
+
+        if (sap.n.Customization.isDisabled()) {
             AppCacheUserActionEditScreen.setVisible(false);
         } else {
-            const { disableScreenChanges, lockScreenChanges } = modelAppCacheDiaSettings.getData();
-            AppCacheUserActionEditScreen.setVisible(!disableScreenChanges && !lockScreenChanges);
+            const { lockScreenChanges } = modelAppCacheDiaSettings.getData();
+            AppCacheUserActionEditScreen.setVisible(!lockScreenChanges);
         }
 
         applyCSSToElmId('launchpadSettings', { display: 'flex' });
@@ -993,7 +993,9 @@ sap.n.Launchpad = {
                 gridContainer.addItem(cards);
 
                 // Add Grid to Page
-                pageCat.addContent(gridContainer);
+                if (tileGroups.length > 0) {
+                    pageCat.addContent(gridContainer);
+                }
 
                 // Child Tile Groups
                 tileGroups.forEach(function (data) {
@@ -1041,11 +1043,14 @@ sap.n.Launchpad = {
                     pageCat.addContent(tilegroupContainer);
                 });
 
-                let boxEmpty = new sap.m.HBox(nepId(), {
-                    height: '50px'
-                });
-
-                pageCat.addContent(boxEmpty);
+                if (tileGroups.length > 0) {
+                    // add an empty box
+                    pageCat.addContent(
+                        new sap.m.HBox(nepId(), {
+                            height: '50px'
+                        })
+                    );
+                }
             } else {
                 // Build Group Header
                 if (!dataCat.hideHeader) pageCat.addContent(sap.n.Launchpad.buildGroupHeader(dataCat));
@@ -1114,12 +1119,13 @@ sap.n.Launchpad = {
                     pageCat.addContent(AppCacheObjectTiles);
                 });
 
-                if (dataCat.tilegroups.length) {
-                    let boxEmpty = new sap.m.HBox(nepId(), {
-                        height: (window.innerHeight - 270) + 'px'
-                    });
-
-                    pageCat.addContent(boxEmpty);
+                if (dataCat.tilegroups.length > 0) {
+                    // add an empty box
+                    pageCat.addContent(
+                        new sap.m.HBox(nepId(), {
+                            height: (window.innerHeight - 270) + 'px'
+                        })
+                    );
                 }
 
                 if (subCat) {

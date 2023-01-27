@@ -176,9 +176,27 @@ sap.n.Customization = {
         return !!lockScreenChanges;
     },
 
+    isUserAnonymous() {
+        return AppCache && AppCache.userInfo && AppCache.userInfo.username && AppCache.userInfo.username === 'anonymous';
+    },
+
+    areExplicitlyDisabled() {
+        return AppCache.config && AppCache.config.disableCustomizations === true;
+    },
+
     // force disabled, otherwise existing launchpads would break
     isDisabled() {
+        if (this.areExplicitlyDisabled()) return true;
+        
         if (!this.isSupported()) return true;
+
+        // anonymous user is not logged in, and has random public access to the launchpad
+        // so saving customizations for such user is not useful
+        if (this.isUserAnonymous()) return true;
+
+        // public launchpads are used by everyone in the same standard way
+        // so customizations are disabled
+        if (AppCache.isPublic) return true;
 
         // view standard screens
         const { disableScreenChanges } = modelAppCacheDiaSettings.getData();
@@ -527,6 +545,7 @@ sap.n.Customization = {
     },
 
     filterByActiveStatus(item) {
+        if (typeof item.status === 'undefined') return true;
         return this.filterByStatus(item, "active");
     },
 

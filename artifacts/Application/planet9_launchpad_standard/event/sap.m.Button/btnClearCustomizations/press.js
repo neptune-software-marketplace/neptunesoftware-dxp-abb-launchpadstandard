@@ -8,12 +8,11 @@ sap.m.MessageBox.warning('Are you are sure, you want to clear all your customiza
                 sap.m.MessageBox.information('Please refresh to see your standard launchpad.', {
                     icon: sap.m.MessageBox.Icon.SUCCESS,
                     title: 'Customizations Cleared',
-                    actions: [sap.m.MessageBox.Action.OK, sap.m.MessageBox.Action.CANCEL],
+                    actions: [sap.m.MessageBox.Action.OK],
                     emphasizedAction: sap.m.MessageBox.Action.OK,
-                    onClose: function (sAction) {
-                        if (sAction === sap.m.MessageBox.Action.OK) {
-                            location.reload();
-                        }
+                    onClose: function () {
+                        AppCache._Home();
+                        location.reload();
                     },
                 })
             });
