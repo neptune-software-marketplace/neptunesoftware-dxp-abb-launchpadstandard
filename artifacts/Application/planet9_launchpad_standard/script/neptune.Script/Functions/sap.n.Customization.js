@@ -901,9 +901,7 @@ sap.n.Customization = {
 
     getProperties(path) {
         let [found] = this.find(path);
-        if (!found) {
-        }
-
+        if (!found) return false;
         return found.props;
     },
 };

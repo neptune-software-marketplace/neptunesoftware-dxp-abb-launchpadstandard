@@ -328,10 +328,6 @@ html.sap-desktop .nepDialogSubObjHeader .sapContrastPlus.sapMIBar.sapMFooter-CTX
     white-space: normal;
 }
 
-.nepPage .sapMPageEnableScrolling {
-    scroll-behavior: smooth;
-}
-
 .nepUserList .sapMLIB.sapMObjLItem {
     margin-bottom: 10px;
     border-radius: 10px;

@@ -1141,7 +1141,7 @@ sap.n.Launchpad = {
 
         // Navigate
         setTimeout(function () {
-            AppCacheNav.to(pageCat, modelAppCacheDiaSettings.oData.TRANSITION || 'show');
+            AppCacheNav.to(pageCat, modelAppCacheDiaSettings.oData.TRANSITION || 'fade');
         }, 100);
 
         // Scrolling to SubMenu
@@ -1458,7 +1458,7 @@ sap.n.Launchpad = {
                 sap.n.Launchpad.handleAppTitle(appTitle);
                 sap.n.Launchpad.handleNavButton(dataTile, dataCat);
 
-                AppCacheNav.to(AppCache_boxURL, modelAppCacheDiaSettings.oData.TRANSITION || 'show');
+                AppCacheNav.to(AppCache_boxURL, modelAppCacheDiaSettings.oData.TRANSITION || 'fade');
 
                 if (dataTile.openFullscreen) {
                     AppCacheShellUI.setAppWidthLimited(false);
