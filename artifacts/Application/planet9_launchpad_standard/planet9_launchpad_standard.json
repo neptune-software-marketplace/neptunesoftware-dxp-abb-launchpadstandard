@@ -3283,6 +3283,13 @@
 																			"value": "Anonymous Function",
 																			"script": "file://event/sap.m.NavContainer/AppCacheNav/afterNavigate.script",
 																			"translation": []
+																		},
+																		{
+																			"attribute": "autoFocus",
+																			"grouping": "Properties",
+																			"value": "false",
+																			"script": "",
+																			"translation": []
 																		}
 																	],
 																	"data": [
@@ -25253,7 +25260,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "23.1.27.162",
+	"ver": "23.1.28.1813",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",

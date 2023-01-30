@@ -273,7 +273,7 @@ sap.n.Launchpad = {
         });
 
         // add add new Card Button
-        if (!config.isFav && !sap.n.Customization.isDisabled()) {
+        if (!config.isFav && !sap.n.Customization.isDisabled() && sap.n.Customization.isInitialized()) {
             const cardContainer = new sap.m.FlexBox(nepId(), {
                 width: '100%',
                 fitContainer: true,
@@ -993,7 +993,7 @@ sap.n.Launchpad = {
                 gridContainer.addItem(cards);
 
                 // Add Grid to Page
-                if (tileGroups.length > 0) {
+                if (tileGroups.length > 0 || cards.getItems().length > 0) {
                     pageCat.addContent(gridContainer);
                 }
 
@@ -1043,7 +1043,7 @@ sap.n.Launchpad = {
                     pageCat.addContent(tilegroupContainer);
                 });
 
-                if (tileGroups.length > 0) {
+                if (tileGroups.length > 0 || cards.getItems().length > 0) {
                     // add an empty box
                     pageCat.addContent(
                         new sap.m.HBox(nepId(), {
