@@ -97,6 +97,10 @@ const NumPad = {
             return;
         }
 
+        if (Number.isNaN(Number.parseInt(key))) {
+            return;
+        }
+
         NumPad.enterKey(key);
     },
 

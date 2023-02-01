@@ -2966,6 +2966,7 @@ let AppCache = {
         function handleNumPadKeyEvents() {
             if (pageId === 'AppCache_boxPasscodeEntry') {
                 NumPad.KeypressHandlerSet();
+                butNumpad1.focus();
             }
         }
 

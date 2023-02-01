@@ -128,6 +128,14 @@ sap.ui.getCore().attachInit(function () {
         this.__proto__.onAfterRendering.apply(this);
     }
 
+    AppCacheUsers.addEventDelegate({
+        onAfterRendering: () => {
+            if (AppCacheUsers.getItems().length) {
+                AppCacheUsers.getItems()[0].focus();
+            }
+        }
+    });
+
     applyWCAGFixes();
 
     setTimeout(function () {
