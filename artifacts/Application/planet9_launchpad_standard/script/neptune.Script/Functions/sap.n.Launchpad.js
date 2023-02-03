@@ -185,8 +185,7 @@ sap.n.Launchpad = {
         const left = (menuWidth + navWidth) + 'px';
         const right = launchpadContentSideApp.getWidth();
 
-        const dir = querySelector('html').getAttribute('dir').toLowerCase();
-        if (dir === 'rtl') {
+        if (isRTL()) {
             let l = left;
             left = right;
             right = l;

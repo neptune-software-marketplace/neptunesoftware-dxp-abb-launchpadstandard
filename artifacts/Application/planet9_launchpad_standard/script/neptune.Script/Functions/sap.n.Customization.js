@@ -144,8 +144,10 @@ const CustomizationStorage = {
 };
 
 sap.n.Customization = {
+    // if customization are not enabled per device
+    // by default we will use 'default' as the device name
     getDeviceType() {
-        return sap.n.Launchpad.deviceType();
+        return this.isDeviceBased() ? sap.n.Launchpad.deviceType() : 'default';
     },
 
     isEmpty(obj) {
@@ -169,6 +171,10 @@ sap.n.Customization = {
         if (visible) {
             this.jiggle();
         }
+    },
+
+    isDeviceBased() {
+        return AppCache.config && AppCache.config.enableDeviceBasedCustomizations === true;
     },
 
     areScreensLocked() {
@@ -1058,8 +1064,8 @@ sap.n.Customization.Popover = {
     },
 
     open(elm, config) {
-        if (this.isOpen()) return;
-
+        if (!elm || this.isOpen()) return;
+        
         this.context = config;
         popCustomizationTiles.openBy(elm);
     },

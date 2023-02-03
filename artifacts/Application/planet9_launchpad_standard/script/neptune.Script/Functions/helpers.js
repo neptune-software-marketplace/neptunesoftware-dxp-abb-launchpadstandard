@@ -140,6 +140,10 @@ function appendStyle(targetEl, style) {
     targetEl.appendChild(style);
 }
 
+function isRTL() {
+    return querySelector('html').getAttribute('dir').toLowerCase() === 'rtl';
+}
+
 function addCustomData(sapELm, list) {
     for (const [key, value] of Object.entries(list)) {
         sapELm.addCustomData(

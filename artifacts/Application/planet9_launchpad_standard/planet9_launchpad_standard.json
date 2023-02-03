@@ -13456,13 +13456,6 @@
 									"translation": []
 								},
 								{
-									"attribute": "placement",
-									"grouping": "Properties",
-									"value": "Right",
-									"script": "",
-									"translation": []
-								},
-								{
 									"attribute": "offsetX",
 									"grouping": "Properties",
 									"value": "-56",
@@ -13645,6 +13638,13 @@
 									"attribute": "showHeader",
 									"grouping": "Properties",
 									"value": "false",
+									"script": "",
+									"translation": []
+								},
+								{
+									"attribute": "placement",
+									"grouping": "Properties",
+									"value": "Auto",
 									"script": "",
 									"translation": []
 								},
@@ -25260,7 +25260,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "23.2.1.157",
+	"ver": "23.2.3.1255",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",
