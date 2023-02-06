@@ -882,15 +882,15 @@ sap.n.Launchpad = {
         }
 
         function applyTileGroupEnhancement() {
-            if (type === 'tilegroup' && sap.n.Enhancement.AfterTileGroupRenderer) {
+            if (sap.n.Enhancement.AfterTileGroupRenderer) {
                 try {
-                    sap.n.Enhancement.AfterTileGroupRenderer(this, data);
+                    sap.n.Enhancement.AfterTileGroupRenderer(cards, data);
                 } catch (e) {
-                    appCacheError('Enhancement AfterTileGroupRenderer ' + e);
+                    appCacheError('Enhancement AfterTileGroupRenderer ' + e);
                 }
             }
         }
-
+        
         cards.onAfterRendering = function () {
             applyDragDrop();
             applyTileGroupEnhancement();

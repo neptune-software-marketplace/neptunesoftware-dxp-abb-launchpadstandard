@@ -25260,7 +25260,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "23.2.3.1255",
+	"ver": "23.2.6.1235",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",
@@ -25296,6 +25296,8 @@
 	"ui5_ionic": false,
 	"useV2AppHandler": false,
 	"compilerTarget": 3,
+	"tabWidth": null,
+	"printWidth": null,
 	"apis": [],
 	"package": "ae5dd690-2555-ed11-ade6-000d3ab237df"
 }
