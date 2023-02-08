@@ -37,8 +37,12 @@ function cordovaRequest(opts) {
         }
 
         // we pass json as string into jQuery.request
-        if (opts.data && typeof opts.data === 'string') {
-            data = JSON.parse(opts.data);
+        if (typeof opts.data !== 'undefined') {
+            if (typeof opts.data === 'string') {
+                data = JSON.parse(opts.data);
+            } else if (typeof opts.data === 'object') {
+                data = opts.data;
+            }
         }
 
         // jQuery.request (success, error) functions we already pass as options
