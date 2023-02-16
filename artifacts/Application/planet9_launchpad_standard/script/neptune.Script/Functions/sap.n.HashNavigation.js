@@ -28,7 +28,12 @@ sap.n.HashNavigation = {
         // Top Menu Navigation
         if (parts[0].indexOf('neptopmenu') > -1) {
             const category = sap.n.Customization.getCategory(parts[1]);
-            if (category) sap.n.Launchpad.BuildTiles(category); 
+            if (category) {
+                sap.n.Launchpad.BuildTiles(category);
+            } else {
+                const url = window.location.href;
+                window.location = url.substr(0, url.indexOf('#'));
+            }
             return;
         }
 

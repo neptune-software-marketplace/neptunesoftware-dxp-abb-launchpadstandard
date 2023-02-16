@@ -627,7 +627,7 @@ sap.n.Customization = {
             // it "might" be a referenced from a Tile itself as action. But,
             // the tiles inside it are not included directly as part of the launchpad
             const tileGroup = sap.n.Customization.getTileGroup(id);
-            if (tileGroup.tiles.length > 0) {
+            if (Array.isArray(tileGroup.tiles) && tileGroup.tiles.length > 0) {
                 // TODO can this be customized, because it would get a little bit weird to customize tiles that are not directly references
                 return tileGroup.tiles;
             }
