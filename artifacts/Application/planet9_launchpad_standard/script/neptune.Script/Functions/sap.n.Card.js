@@ -228,6 +228,17 @@ sap.n.Card = {
             const tileId = config.dataTile.id;
 
             const img = new Image();
+            img.oncontextmenu = function () {
+                if (!sap.n.Customization.isDisabled()) {
+                    sap.n.Customization.Popover.open(img, {
+                        tileId,
+                        type: 'tile',
+                        elmId: card.getId(), 
+                    });
+                    return false;
+                }
+            };
+
             Object.entries({
                 'src': imageSource,
                 'alt': '',

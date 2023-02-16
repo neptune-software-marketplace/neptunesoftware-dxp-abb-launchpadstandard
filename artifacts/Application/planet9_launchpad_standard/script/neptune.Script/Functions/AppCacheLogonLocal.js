@@ -16,9 +16,15 @@ let AppCacheLogonLocal = {
             url: AppCache.Url + '/user/logon/local' + AppCache._getLoginQuery(),
             data: JSON.stringify(rec),
             success: function (data) {
-                setSelectedLoginType('local');
-                AppCache.getUserInfo();
-                AppCacheLogonLocal.AutoLoginSet();
+                if (data.status && data.status === 'UpdatePassword') {
+                    const url = new URL(data.link, location.href);
+                    url.searchParams.append('reason', data.reason || 'other');
+                    location.replace(url.toString());
+                } else {
+                    setSelectedLoginType('local');
+                    AppCache.getUserInfo();
+                    AppCacheLogonLocal.AutoLoginSet();
+                }
             },
             error: function (result, status) {
                 if (result.status === 401) sap.m.MessageToast.show(AppCache_tWrongUserNamePass.getText());
@@ -91,8 +97,15 @@ let AppCacheLogonLocal = {
                 url: AppCache.Url + '/user/logon/local' + AppCache._getLoginQuery(),
                 data: JSON.stringify(rec),
                 success: function (data) {
-                    setSelectedLoginType('local');
-                    resolve('OK');
+                    if (data.status && data.status === 'UpdatePassword') {
+                        const url = new URL(data.link, location.href);
+                        url.searchParams.append('reason', data.reason || 'other');
+                        location.replace(url.toString());
+                        resolve('ERROR');
+                    } else {
+                        setSelectedLoginType('local');
+                        resolve('OK');
+                    }
                 },
                 error: function (result, status) {
                     if (result.status === 0) {

@@ -19132,6 +19132,14 @@
 									"translation": []
 								},
 								{
+									"attribute": "beforeOpen",
+									"grouping": "Events",
+									"value": "Anonymous Function",
+									"script": "file://event/sap.m.Dialog/diaMoveTile/beforeOpen.js",
+									"language": "javascript",
+									"translation": []
+								},
+								{
 									"attribute": "afterOpen",
 									"grouping": "Events",
 									"value": "MoveTile.setSelectedItem(MoveTile.getItems()[0]);",
@@ -25260,7 +25268,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "23.2.8.1113",
+	"ver": "23.2.16.928",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",
@@ -25285,6 +25293,7 @@
 	"ui5_url": "https://openui5.hana.ondemand.com/1.71.47/resources/sap-ui-core.js",
 	"cus_theme": "",
 	"css": "file:///css.css",
+	"compiledCss": "file://script/undefined/undefined.script",
 	"header": "file:///header.html",
 	"manifest": "",
 	"globalScript": "",

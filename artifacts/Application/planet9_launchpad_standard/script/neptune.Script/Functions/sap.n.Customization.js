@@ -622,7 +622,18 @@ sap.n.Customization = {
 
     getTiles(id) {
         const result = this.findPath(id);
-        if (result === undefined || result.path.length === 0) return [];
+        if (result === undefined || result.path.length === 0) {
+            // if we are fetching tiles for tile group, but get nothing
+            // it "might" be a referenced from a Tile itself as action. But,
+            // the tiles inside it are not included directly as part of the launchpad
+            const tileGroup = sap.n.Customization.getTileGroup(id);
+            if (tileGroup.tiles.length > 0) {
+                // TODO can this be customized, because it would get a little bit weird to customize tiles that are not directly references
+                return tileGroup.tiles;
+            }
+
+            return [];
+        }
 
         const [item] = this.find(result.path);
         if (!item) return [];
