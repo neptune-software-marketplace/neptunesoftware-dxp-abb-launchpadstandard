@@ -4257,6 +4257,12 @@ html[dir=rtl] body.resizing {
 .jiggle.lp-is-customizable .nepBlockLayoutTileRow:not(.favorite-cards) .nepFCardContainer > .sapMFlexItem:first-of-type {
     display: block;
 }
+.jiggle .nepFCard {
+    cursor: move;
+}
+.jiggle .nepResizable {
+    display: none;
+}
 .jiggle .nepFCardContainer > .sapMFlexItem:first-of-type {
     display: block;
 }

@@ -4171,6 +4171,14 @@ html[dir=rtl] body.resizing {
   display: block;
 }
 
+.jiggle .nepFCard {
+  cursor: move;
+}
+
+.jiggle .nepResizable {
+  display: none;
+}
+
 .jiggle .nepFCardContainer > .sapMFlexItem:first-of-type {
   display: block;
 }
