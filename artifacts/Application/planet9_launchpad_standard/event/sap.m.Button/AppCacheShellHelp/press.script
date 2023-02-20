@@ -1,5 +1,5 @@
 let rootDir = '/public/views/';
-if (parseInt(AppCache.p9Version) <= 21) rootDir = '/views/';
+if (parseInt(AppCache.p9Version) >= 21) rootDir = '/views/';
 
 if (sap.n.Launchpad.isPhone()) {
     AppCache.Load('cockpit_doc_reader', {

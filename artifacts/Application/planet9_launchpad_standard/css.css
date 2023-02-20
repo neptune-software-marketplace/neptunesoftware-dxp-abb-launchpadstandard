@@ -4227,6 +4227,24 @@ html[dir="rtl"] .nepEditHomeTitle {
 .nepEditHomeListItemError .sapUiIcon {
     color: #aa0808;
 }
+.nepResizable {
+    cursor: nwse-resize;
+    opacity: .2;
+    font-size: 24px;
+}
+html[dir=rtl] .nepResizable {
+    cursor: nesw-resize;
+}
+.nepResizable:hover {
+    opacity: 1;
+}
+body.resizing {
+    cursor: nwse-resize;
+    user-select: none;
+}
+html[dir=rtl] body.resizing {
+    cursor: nesw-resize;
+}
 
 /* to take remove card item out of flex flow */
 .lp-is-customizable .nepBlockLayoutTileRow:not(.favorite-cards) .nepFCardContainer > .sapMFlexItem:first-of-type {

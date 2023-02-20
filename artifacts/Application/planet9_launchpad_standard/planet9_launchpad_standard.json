@@ -12349,434 +12349,6 @@
 							"data": []
 						},
 						{
-							"fieldNo": "8d55381d-a565-4eab-bc21-2a99807348cb",
-							"fieldName": "popResizeTile",
-							"fieldParent": "6cc710c1-161b-453f-bd50-b935559ffbe6",
-							"fieldType": "sap.m.Popover",
-							"script": "",
-							"customComponent": false,
-							"bindingValue": "Generic Object",
-							"bindingType": "u",
-							"bindingSource": "P9",
-							"request": [],
-							"response": [],
-							"attributes": [],
-							"data": [
-								{
-									"fieldNo": "383e3420-3578-408e-a79e-0ee7e5ab85e2",
-									"fieldName": "resizeTileForm",
-									"fieldParent": "8d55381d-a565-4eab-bc21-2a99807348cb",
-									"fieldType": "sap.ui.layout.form.SimpleForm",
-									"script": "",
-									"customComponent": false,
-									"request": [],
-									"response": [],
-									"attributes": [
-										{
-											"attribute": "layout",
-											"grouping": "Properties",
-											"value": "ResponsiveGridLayout",
-											"script": "",
-											"translation": []
-										},
-										{
-											"attribute": "labelSpanM",
-											"grouping": "Properties",
-											"value": "12",
-											"script": "",
-											"translation": []
-										},
-										{
-											"attribute": "labelSpanL",
-											"grouping": "Properties",
-											"value": "12",
-											"script": "",
-											"translation": []
-										},
-										{
-											"attribute": "editable",
-											"grouping": "Properties",
-											"value": "true",
-											"script": "",
-											"translation": []
-										}
-									],
-									"data": [
-										{
-											"fieldNo": "bec224b6-ad14-4755-ff06-dd92a1b77aa6",
-											"fieldName": "lblResizeTileWidth",
-											"fieldParent": "383e3420-3578-408e-a79e-0ee7e5ab85e2",
-											"fieldType": "sap.m.Label",
-											"script": "",
-											"customComponent": false,
-											"request": [],
-											"response": [],
-											"attributes": [
-												{
-													"attribute": "text",
-													"grouping": "Properties",
-													"value": "Width",
-													"script": "",
-													"translation": []
-												}
-											],
-											"data": []
-										},
-										{
-											"fieldNo": "13ae2e41-8785-4618-a9dc-57b16469bed9",
-											"fieldName": "selResizeTileWidth",
-											"fieldParent": "383e3420-3578-408e-a79e-0ee7e5ab85e2",
-											"fieldType": "sap.m.Select",
-											"script": "",
-											"customComponent": false,
-											"request": [],
-											"response": [],
-											"attributes": [
-												{
-													"attribute": "selectedKey",
-													"grouping": "Properties",
-													"value": "{/tile/cardWidth}",
-													"script": "",
-													"translation": []
-												},
-												{
-													"attribute": "change",
-													"grouping": "Events",
-													"value": "sap.n.Customization.onCardResize();",
-													"script": "sap.n.Customization.onCardResize();",
-													"translation": []
-												}
-											],
-											"data": [
-												{
-													"fieldNo": "813e8d2b-366c-4dd8-949b-8a7b8257fd92",
-													"fieldName": "resizeTileWidthDefault",
-													"fieldParent": "13ae2e41-8785-4618-a9dc-57b16469bed9",
-													"fieldType": "sap.ui.core.Item",
-													"script": "",
-													"customComponent": false,
-													"request": [],
-													"response": [],
-													"attributes": [
-														{
-															"attribute": "text",
-															"grouping": "Properties",
-															"value": "Default (1x)",
-															"script": "",
-															"translation": [
-																{
-																	"language": "PL",
-																	"value": "Domyślnie (1x)"
-																}
-															]
-														}
-													],
-													"data": []
-												},
-												{
-													"fieldNo": "a7af5ef8-31bf-4569-bcba-96a8bbc60d85",
-													"fieldName": "resizeTileWidthMedium",
-													"fieldParent": "13ae2e41-8785-4618-a9dc-57b16469bed9",
-													"fieldType": "sap.ui.core.Item",
-													"script": "",
-													"customComponent": false,
-													"request": [],
-													"response": [],
-													"attributes": [
-														{
-															"attribute": "text",
-															"grouping": "Properties",
-															"value": "Medium (2x)",
-															"script": "",
-															"translation": [
-																{
-																	"language": "PL",
-																	"value": "Średni (2x)"
-																}
-															]
-														},
-														{
-															"attribute": "key",
-															"grouping": "Properties",
-															"value": "Medium",
-															"script": "",
-															"translation": []
-														}
-													],
-													"data": []
-												},
-												{
-													"fieldNo": "d64ab5a5-b445-4e04-cca8-af73e3ff8c5e",
-													"fieldName": "resizeTileWidthWide",
-													"fieldParent": "13ae2e41-8785-4618-a9dc-57b16469bed9",
-													"fieldType": "sap.ui.core.Item",
-													"script": "",
-													"customComponent": false,
-													"request": [],
-													"response": [],
-													"attributes": [
-														{
-															"attribute": "text",
-															"grouping": "Properties",
-															"value": "Wide (3x)",
-															"script": "",
-															"translation": [
-																{
-																	"language": "PL",
-																	"value": "Szeroki (3x)"
-																}
-															]
-														},
-														{
-															"attribute": "key",
-															"grouping": "Properties",
-															"value": "Wide",
-															"script": "",
-															"translation": []
-														}
-													],
-													"data": []
-												},
-												{
-													"fieldNo": "3cd5e5c1-b705-494f-b59e-8c1db0aca256",
-													"fieldName": "resizeTileWidthWider",
-													"fieldParent": "13ae2e41-8785-4618-a9dc-57b16469bed9",
-													"fieldType": "sap.ui.core.Item",
-													"script": "",
-													"customComponent": false,
-													"request": [],
-													"response": [],
-													"attributes": [
-														{
-															"attribute": "text",
-															"grouping": "Properties",
-															"value": "Wider (4x)",
-															"script": "",
-															"translation": [
-																{
-																	"language": "PL",
-																	"value": "Szersze (4x)"
-																}
-															]
-														},
-														{
-															"attribute": "key",
-															"grouping": "Properties",
-															"value": "Wider",
-															"script": "",
-															"translation": []
-														}
-													],
-													"data": []
-												},
-												{
-													"fieldNo": "081f30c6-40c7-4d88-e998-e8ac74dbf2db",
-													"fieldName": "resizeTileWidthMax",
-													"fieldParent": "13ae2e41-8785-4618-a9dc-57b16469bed9",
-													"fieldType": "sap.ui.core.Item",
-													"script": "",
-													"customComponent": false,
-													"request": [],
-													"response": [],
-													"attributes": [
-														{
-															"attribute": "text",
-															"grouping": "Properties",
-															"value": "Maxiumum (Full width)",
-															"script": "",
-															"translation": [
-																{
-																	"language": "PL",
-																	"value": "Maxiumum (pełna szerokość)"
-																}
-															]
-														},
-														{
-															"attribute": "key",
-															"grouping": "Properties",
-															"value": "Max",
-															"script": "",
-															"translation": []
-														}
-													],
-													"data": []
-												}
-											]
-										},
-										{
-											"fieldNo": "c10f1e25-c3fc-49ec-aa8a-a2fedbe5b5af",
-											"fieldName": "lblResizeTileHeight",
-											"fieldParent": "383e3420-3578-408e-a79e-0ee7e5ab85e2",
-											"fieldType": "sap.m.Label",
-											"script": "",
-											"customComponent": false,
-											"request": [],
-											"response": [],
-											"attributes": [
-												{
-													"attribute": "text",
-													"grouping": "Properties",
-													"value": "Height",
-													"script": "",
-													"translation": []
-												}
-											],
-											"data": []
-										},
-										{
-											"fieldNo": "6049a035-f057-460a-cbf6-e943f488d65f",
-											"fieldName": "selResizeTileHeight",
-											"fieldParent": "383e3420-3578-408e-a79e-0ee7e5ab85e2",
-											"fieldType": "sap.m.Select",
-											"script": "",
-											"customComponent": false,
-											"request": [],
-											"response": [],
-											"attributes": [
-												{
-													"attribute": "selectedKey",
-													"grouping": "Properties",
-													"value": "{/tile/cardHeight}",
-													"script": "",
-													"translation": []
-												},
-												{
-													"attribute": "change",
-													"grouping": "Events",
-													"value": "sap.n.Customization.onCardResize();",
-													"script": "sap.n.Customization.onCardResize();",
-													"translation": []
-												}
-											],
-											"data": [
-												{
-													"fieldNo": "f5d6a88d-f445-43a0-f42c-d39fa8aa6f20",
-													"fieldName": "resizeTileHeightDefault",
-													"fieldParent": "6049a035-f057-460a-cbf6-e943f488d65f",
-													"fieldType": "sap.ui.core.Item",
-													"script": "",
-													"customComponent": false,
-													"request": [],
-													"response": [],
-													"attributes": [
-														{
-															"attribute": "text",
-															"grouping": "Properties",
-															"value": "Default (1x)",
-															"script": "",
-															"translation": [
-																{
-																	"language": "PL",
-																	"value": "Domyślnie (1x)"
-																}
-															]
-														}
-													],
-													"data": []
-												},
-												{
-													"fieldNo": "b8040da0-8b7e-40f6-e68d-cbb1fc6ae4c2",
-													"fieldName": "resizeTileHeightTall",
-													"fieldParent": "6049a035-f057-460a-cbf6-e943f488d65f",
-													"fieldType": "sap.ui.core.Item",
-													"script": "",
-													"customComponent": false,
-													"request": [],
-													"response": [],
-													"attributes": [
-														{
-															"attribute": "text",
-															"grouping": "Properties",
-															"value": "Tall (2x)",
-															"script": "",
-															"translation": [
-																{
-																	"language": "PL",
-																	"value": "Wysoki (2x)"
-																}
-															]
-														},
-														{
-															"attribute": "key",
-															"grouping": "Properties",
-															"value": "Tall",
-															"script": "",
-															"translation": []
-														}
-													],
-													"data": []
-												},
-												{
-													"fieldNo": "40450159-9a93-4c56-b361-b33cd7e80545",
-													"fieldName": "resizeTileHeightTower",
-													"fieldParent": "6049a035-f057-460a-cbf6-e943f488d65f",
-													"fieldType": "sap.ui.core.Item",
-													"script": "",
-													"customComponent": false,
-													"request": [],
-													"response": [],
-													"attributes": [
-														{
-															"attribute": "text",
-															"grouping": "Properties",
-															"value": "Tower (3x)",
-															"script": "",
-															"translation": [
-																{
-																	"language": "PL",
-																	"value": "Wieża (3x)"
-																}
-															]
-														},
-														{
-															"attribute": "key",
-															"grouping": "Properties",
-															"value": "Tower",
-															"script": "",
-															"translation": []
-														}
-													],
-													"data": []
-												},
-												{
-													"fieldNo": "43f9add3-54ce-4127-a632-1e2b2ce23f8d",
-													"fieldName": "resizeTileHeightSkyscraper",
-													"fieldParent": "6049a035-f057-460a-cbf6-e943f488d65f",
-													"fieldType": "sap.ui.core.Item",
-													"script": "",
-													"customComponent": false,
-													"request": [],
-													"response": [],
-													"attributes": [
-														{
-															"attribute": "text",
-															"grouping": "Properties",
-															"value": "Skyscraper (4x)",
-															"script": "",
-															"translation": [
-																{
-																	"language": "PL",
-																	"value": "Wieżowiec (4x)"
-																}
-															]
-														},
-														{
-															"attribute": "key",
-															"grouping": "Properties",
-															"value": "Skyscraper",
-															"script": "",
-															"translation": []
-														}
-													],
-													"data": []
-												}
-											]
-										}
-									]
-								}
-							]
-						},
-						{
 							"fieldNo": "0e5b9d18-8a5b-4aff-9d85-d1edc4027c05",
 							"fieldName": "AppCacheUserDialog",
 							"fieldParent": "6cc710c1-161b-453f-bd50-b935559ffbe6",
@@ -14537,6 +14109,172 @@
 																			"attribute": "src",
 																			"grouping": "Properties",
 																			"value": "sap-icon://popup-window",
+																			"script": "",
+																			"translation": []
+																		}
+																	],
+																	"data": []
+																}
+															]
+														}
+													]
+												}
+											]
+										},
+										{
+											"fieldNo": "6ae2b0f0-fe48-4bcf-cccc-a5a953a7ba6e",
+											"fieldName": "pctSettings",
+											"fieldParent": "92c5ee10-2af6-4463-a3fa-65a540f767e7",
+											"fieldType": "sap.m.CustomListItem",
+											"script": "",
+											"customComponent": false,
+											"request": [],
+											"response": [],
+											"attributes": [
+												{
+													"attribute": "type",
+													"grouping": "Properties",
+													"value": "Active",
+													"script": "",
+													"translation": []
+												},
+												{
+													"attribute": "press",
+													"grouping": "Events",
+													"value": "AppCacheDiaSettings.open();",
+													"script": "AppCacheDiaSettings.open();",
+													"translation": []
+												}
+											],
+											"data": [
+												{
+													"fieldNo": "7878815f-0162-4b2b-80ed-62fd133ae158",
+													"fieldName": "pctHBox5",
+													"fieldParent": "6ae2b0f0-fe48-4bcf-cccc-a5a953a7ba6e",
+													"fieldType": "sap.m.HBox",
+													"script": "",
+													"customComponent": false,
+													"request": [],
+													"response": [],
+													"attributes": [
+														{
+															"attribute": "styleClass",
+															"grouping": "Properties",
+															"value": "nepEditHomeContainer",
+															"script": "",
+															"translation": []
+														},
+														{
+															"attribute": "renderType",
+															"grouping": "Properties",
+															"value": "Bare",
+															"script": "",
+															"translation": []
+														},
+														{
+															"attribute": "justifyContent",
+															"grouping": "Properties",
+															"value": "SpaceBetween",
+															"script": "",
+															"translation": []
+														},
+														{
+															"attribute": "alignItems",
+															"grouping": "Properties",
+															"value": "Center",
+															"script": "",
+															"translation": []
+														}
+													],
+													"data": [
+														{
+															"fieldNo": "205e11c9-e7cd-41d5-802d-91280d665b5a",
+															"fieldName": "pctHBoxLeft5",
+															"fieldParent": "7878815f-0162-4b2b-80ed-62fd133ae158",
+															"fieldType": "sap.m.VBox",
+															"script": "",
+															"customComponent": false,
+															"request": [],
+															"response": [],
+															"attributes": [
+																{
+																	"attribute": "styleClass",
+																	"grouping": "Properties",
+																	"value": "nepEditHomeTitle",
+																	"script": "",
+																	"translation": []
+																},
+																{
+																	"attribute": "renderType",
+																	"grouping": "Properties",
+																	"value": "Bare",
+																	"script": "",
+																	"translation": []
+																}
+															],
+															"data": [
+																{
+																	"fieldNo": "2172711b-8d1c-4401-aa84-afef1c721065",
+																	"fieldName": "popCustomizationTilesHBoxTitle5",
+																	"fieldParent": "205e11c9-e7cd-41d5-802d-91280d665b5a",
+																	"fieldType": "sap.m.Text",
+																	"script": "",
+																	"customComponent": false,
+																	"request": [],
+																	"response": [],
+																	"attributes": [
+																		{
+																			"attribute": "text",
+																			"grouping": "Properties",
+																			"value": "Settings",
+																			"script": "",
+																			"translation": []
+																		}
+																	],
+																	"data": []
+																}
+															]
+														},
+														{
+															"fieldNo": "9e55ca33-40a9-4ff9-8d8c-b6c6043bef1c",
+															"fieldName": "pctHBoxRight5",
+															"fieldParent": "7878815f-0162-4b2b-80ed-62fd133ae158",
+															"fieldType": "sap.m.VBox",
+															"script": "",
+															"customComponent": false,
+															"request": [],
+															"response": [],
+															"attributes": [
+																{
+																	"attribute": "styleClass",
+																	"grouping": "Properties",
+																	"value": "nepEditHomeIcon",
+																	"script": "",
+																	"translation": []
+																},
+																{
+																	"attribute": "renderType",
+																	"grouping": "Properties",
+																	"value": "Bare",
+																	"script": "",
+																	"translation": []
+																}
+															],
+															"data": [
+																{
+																	"fieldNo": "7ff55352-0ea6-48de-fe64-c1bcaac1185d",
+																	"fieldName": "popCustomizationTilesHBoxIcon5",
+																	"fieldParent": "9e55ca33-40a9-4ff9-8d8c-b6c6043bef1c",
+																	"fieldType": "sap.ui.core.Icon",
+																	"script": "",
+																	"customComponent": false,
+																	"request": [],
+																	"response": [],
+																	"attributes": [
+																		{
+																			"attribute": "src",
+																			"grouping": "Properties",
+																			"value": "sap-icon://settings",
 																			"script": "",
 																			"translation": []
 																		}
@@ -25268,7 +25006,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "23.2.16.1249",
+	"ver": "23.2.20.1426",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",

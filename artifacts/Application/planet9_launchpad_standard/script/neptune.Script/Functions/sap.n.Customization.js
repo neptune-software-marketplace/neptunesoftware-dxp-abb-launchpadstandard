@@ -91,8 +91,21 @@ const CustomizationStorage = {
 
         if (groupData) {
             const newTiles = this.newFromAvailable(group.tiles, groupData.tiles, data.tiles);
+            if (newTiles.length === 0) return;
+
             newTiles.forEach((tile) => {
-                group.tiles.push(this.formatTile(tile));
+                // find tile position relative to original position inside the tiles list
+                // try to place tile on that particular position
+                const placeAt = groupData.tiles.findIndex((groupTile) => groupTile.id === tile.id)
+                const formatted = this.formatTile(tile);
+
+                // if we are able to find a position to place the tile, then place the tile
+                // otherwise just push it the end
+                if (placeAt > -1) {
+                    group.tiles.splice(placeAt, 0, formatted);
+                } else {
+                    group.tiles.push(formatted);
+                }
             });
         }
     },
@@ -799,29 +812,6 @@ sap.n.Customization = {
         if (height) elm.classList.add(`nepTile${height}`);
     },
 
-    onCardResize() {
-        const width = selResizeTileWidth.getSelectedKey();
-        const height = selResizeTileHeight.getSelectedKey();
-        const { isFav, context, tileElm } = modelpopResizeTile.getData();
-        const tileId = context.tileId;
-
-        this.setCardSize(tileElm, width, height);
-        popResizeTile.close();
-
-        if (isFav) {
-            const fav = ModelData.FindFirst(AppCacheTilesFav, "id", tileId);
-            fav.cardWidth = width;
-            fav.cardHeight = height;
-
-            ModelData.Update(AppCacheTilesFav, "id", tileId, fav);
-            setCacheAppCacheTilesFav();
-            sap.n.Launchpad.saveFav();
-        } else {
-            const path = [...context.parent, tileId];
-            this.saveProperties(path, { width, height });
-        }
-    },
-
     showManagePagesDialog() {
         modelManagePages.setData(
             sap.n.Customization.getAllCategories().map((c) => ({
@@ -1086,5 +1076,170 @@ sap.n.Customization.Popover = {
     },
 };
 
+// used for resizing tiles
+sap.n.Customization.Resize = {
+    active: false,
+    context: null,
+
+    init() {
+        this.active = true;
+        this.context = {
+            config: null,
+
+            x1: -1,
+            y1: -1,
+            x2: -1,
+            y2: -1,
+
+            startWidth: -1,
+            startHeight: -1,
+            endWidth: -1,
+            endHeight: -1,
+        }
+    },
+
+    getTileSize() {
+        const rect = this.context.config.cardContainer.getDomRef().getBoundingClientRect();
+        return [rect.width, rect.height];
+    },
+
+    getTileWidthClass(width) {
+        if (width <= 215) return sap.n.Layout.tileWidth.SMALL;
+        else if (width > 215 && width <= 430) return sap.n.Layout.tileWidth.MEDIUM;
+        else if (width > 430 && width <= 645) return sap.n.Layout.tileWidth.WIDE;
+        else if (width > 645 && width <= 860) return sap.n.Layout.tileWidth.WIDER;
+        else if (width > 860) return sap.n.Layout.tileWidth.MAX;
+
+        return sap.n.Layout.tileWidth.SMALL; // default
+    },
+
+    getHeightClass(height) {
+        if (height <= 270) return sap.n.Layout.tileHeight.DEFAULT;
+        else if (height > 270 && height <= 540) return sap.n.Layout.tileHeight.TALL;
+        else if (height > 540 && height <= 710) return sap.n.Layout.tileHeight.TOWER;
+        else if (height > 710) return sap.n.Layout.tileHeight.SKYSCRAPER;
+
+        return sap.n.Layout.tileHeight.DEFAULT;
+    },
+
+    getCardFromCardContainer(container) {
+        const cards = container.getItems().filter(item => item.hasStyleClass('nepFCard'));
+        if (cards.length === 0) return null;
+        return cards[0];
+    },
+
+    setTileSize(width, height) {
+        const ref = this.context.config.cardContainer;
+        [
+            sap.n.Layout.tileWidth.SMALL,
+            sap.n.Layout.tileWidth.MEDIUM,
+            sap.n.Layout.tileWidth.WIDE,
+            sap.n.Layout.tileWidth.WIDER,
+            sap.n.Layout.tileWidth.MAX
+        ].forEach(size => ref.removeStyleClass(`nepTile${size}`));
+        const widthClass = this.getTileWidthClass(width);
+        ref.addStyleClass(`nepTile${widthClass}`);
+
+        [
+            sap.n.Layout.tileHeight.DEFAULT,
+            sap.n.Layout.tileHeight.TALL,
+            sap.n.Layout.tileHeight.TOWER,
+            sap.n.Layout.tileHeight.SKYSCRAPER,
+        ].forEach(size => ref.removeStyleClass(`nepTile${size}`));
+        
+        const heightClass = this.getHeightClass(height);
+        if (heightClass) ref.addStyleClass(`nepTile${heightClass}`);
+        console.log('nepTile', `nepTile${heightClass}`);
+        
+        const card = this.getCardFromCardContainer(ref);
+        if (!card) return;
+
+        card.setWidth(`${width}px`);
+        card.setHeight(`${height}px`);
+    },
+
+    onMouseDown(evt, config) {
+        this.init();
+        document.body.classList.add('resizing');
+
+        this.context.config = config;
+        [this.context.startWidth, this.context.startHeight] = this.getTileSize();
+        [this.context.x1, this.context.y1] = [evt.pageX, evt.pageY];
+    },
+    
+    onMouseMove(evt) {
+        if (!this.active) return;
+
+        const width = this.context.startWidth + (evt.pageX - this.context.x1);
+        const height = this.context.startHeight + (evt.pageY - this.context.y1);
+        this.setTileSize(width, height);
+    },
+
+    onMouseUp(evt) {
+        if (!this.active) return;
+
+        document.body.classList.remove('resizing');
+
+        const width = this.context.startWidth + (evt.pageX - this.context.x1);
+        const height = this.context.startHeight + (evt.pageY - this.context.y1);
+        
+        const widthClass = this.getTileWidthClass(width);
+        const heightClass = this.getHeightClass(height);
+
+        const card = this.getCardFromCardContainer(this.context.config.cardContainer);
+        card.setWidth('100%');
+        card.setHeight('100%');
+        
+        const { config } = this.context;
+        const tileId = config.dataTile.id;
+        if (config.isFav) {
+            const fav = ModelData.FindFirst(AppCacheTilesFav, "id", tileId);
+            fav.cardWidth = widthClass;
+            fav.cardHeight = heightClass;
+
+            ModelData.Update(AppCacheTilesFav, "id", tileId, fav);
+            setCacheAppCacheTilesFav();
+            sap.n.Launchpad.saveFav();
+        } else {
+            let path = null;
+            for (let parent = config.cardContainer.getDomRef(); parent; parent = parent.parentNode) {
+                const ds = parent.dataset;
+                if (!ds || !ds.context) continue;
+
+                if (ds.context === "page" || ds.context === "category-tiles") {
+                    path = [ds.categoryId, tileId];
+                    break;
+                } else if (ds.context === "tilegroup-tiles") {
+                    path = [ds.categoryId, ds.tilegroupId, tileId];
+                    break;
+                }
+            }
+
+            if (path) {
+                sap.n.Customization.saveProperties(path, { width: widthClass, height: heightClass });
+            }
+        }
+
+        this.active = false;
+        this.context = {
+            config: null,
+            x1: -1,
+            y1: -1,
+            x2: -1,
+            y2: -1,
+            initialWidth: -1,
+            initialHeight: -1,
+        };
+    }
+};
+
 // mousedown event to check and stop jiggling
 document.body.addEventListener("mousedown", sap.n.Customization.checkToStopJigglingOnMouseDown);
+
+// mouse up/move events for resizing tiles
+document.body.addEventListener("mousemove", (evt) => {
+    sap.n.Customization.Resize.onMouseMove(evt);
+});
+document.body.addEventListener("mouseup", (evt) => {
+    sap.n.Customization.Resize.onMouseUp(evt);
+});

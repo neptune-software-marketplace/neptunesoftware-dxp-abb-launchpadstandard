@@ -5,6 +5,7 @@ let dragDropProps = {
     opacity: 0.5,
     scroll: true,
     placeholder: 'dragPlaceholder',
+    cancel: '.nepResizable',
 };
 
 sap.n.DragDrop = {

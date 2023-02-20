@@ -786,28 +786,18 @@ sap.n.Card = {
             return;
         }
 
+        // without the popover
         let spacer = new sap.m.HBox(nepId(), { width: '100%' });
-        let btn = new sap.m.Button(nepId(), {
-            tooltip: AppCache_tResize.getText(),
-            icon: 'sap-icon://resize-corner',
-            type: 'Transparent',
-            press: function (oEvent) {
-                oEvent.cancelBubble();                
-                const tileId = config.dataTile.id;
-                const tileElm = sap.n.Customization.findTileElement(this.getDomRef())
-                modelpopResizeTile.setData({
-                    tileId,
-                    tileElm,
-                    isFav: config.isFav,
-                    context: sap.n.Customization.findTileDragContext(tileId, tileElm),
-                    tile: config.isFav ? ModelData.FindFirst(AppCacheTilesFav, 'id', tileId) : sap.n.Customization.getTile(tileId)
-                });
-                popResizeTile.openBy(this);
-            }
-        }).addStyleClass('nepActionConfig');
-
         container.addItem(spacer);
-        container.addItem(btn);
-        config.cardContainer.addStyleClass('dragCursor');
+
+        const resizeIcon = new sap.ui.core.Icon({
+            src: 'sap-icon://resize-corner'
+        }).addStyleClass('nepResizable');
+        
+        resizeIcon.attachBrowserEvent('mousedown', (evt) => {
+            sap.n.Customization.Resize.onMouseDown(evt, config);
+        });
+
+        container.addItem(resizeIcon);
     },
 };
