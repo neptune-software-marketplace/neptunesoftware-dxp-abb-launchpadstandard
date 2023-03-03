@@ -44,5 +44,7 @@
 	"connector": [],
 	"events": [],
 	"media_library": [],
-	"code_snippets": []
+	"code_snippets": [],
+	"wf_determination": [],
+	"wf_taskaction": []
 }

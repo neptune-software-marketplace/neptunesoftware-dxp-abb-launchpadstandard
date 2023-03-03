@@ -1038,7 +1038,7 @@ let AppCache = {
         if (!AppCacheNav.getPage(sap.n.currentView.sId)) AppCacheNav.addPage(sap.n.currentView);
 
         // Navigate
-        AppCacheNav.to(sap.n.currentView, modelAppCacheDiaSettings.oData.TRANSITION || 'fade');
+        AppCacheNav.to(sap.n.currentView, modelAppCacheDiaSettings.oData.TRANSITION || 'show');
 
         // Set Shell Title
         if (sap.n.Launchpad.SetHeader) sap.n.Launchpad.SetHeader();
@@ -1388,7 +1388,7 @@ let AppCache = {
         }
 
         if (dataTile.actionWebApp !== AppCache.StartWebApp) sap.n.Launchpad.handleNavButton(dataTile, dataCat);
-        AppCacheNav.to(AppCache_boxURL, modelAppCacheDiaSettings.oData.TRANSITION || 'fade');
+        AppCacheNav.to(AppCache_boxURL, modelAppCacheDiaSettings.oData.TRANSITION || 'show');
 
         // As Embedded
         AppCacheShellUI.setAppWidthLimited(!dataTile.openFullscreen);
@@ -2709,7 +2709,7 @@ let AppCache = {
         AppCache.translate(AppCache.userInfo.language);
 
         AppCache_boxPasscodeEntry.setVisible(true);
-        AppCacheNav.to('AppCache_boxPasscodeEntry', 'fade');
+        AppCacheNav.to('AppCache_boxPasscodeEntry', 'show');
         AppCache.handleUserMenu();
 
         // biometricAuthentication supported ? 
@@ -2766,7 +2766,7 @@ let AppCache = {
 
                 sap.n.Webauthn.register(AppCache.userInfo).then(function (userid) {
                     if (userid === 'ERROR') {
-                        AppCacheNav.to('AppCache_boxPasscode', 'fade');
+                        AppCacheNav.to('AppCache_boxPasscode', 'show');
                     } else {
                         // Store Authentication
                         const key = generatePBKDF2Key(userid, AppCache.deviceID)
@@ -2789,18 +2789,18 @@ let AppCache = {
                 })
 
             } else {
-                AppCacheNav.to('AppCache_boxPasscode', 'fade');
+                AppCacheNav.to('AppCache_boxPasscode', 'show');
             }
 
         } else {
-            AppCacheNav.to('AppCache_boxPasscode', 'fade');
+            AppCacheNav.to('AppCache_boxPasscode', 'show');
         }
     },
 
     setEnablePasswordScreen: function () {
         closeContentNavigator();
         sap.n.Launchpad.setHideTopButtons(true);
-        AppCacheNav.to('AppCache_boxPassword', 'fade');
+        AppCacheNav.to('AppCache_boxPassword', 'show');
         AppCache.handleUserMenu();
     },
 
@@ -2808,7 +2808,7 @@ let AppCache = {
         closeContentNavigator();
         sap.n.Launchpad.setHideTopButtons(true);
         AppCacheShellUser.setIcon('sap-icon://fa-solid/user-circle');
-        AppCacheNav.to('AppCache_boxUsers', 'fade');
+        AppCacheNav.to('AppCache_boxUsers', 'show');
         AppCache.handleUserMenu();
         AppCache.calculateUserScreen();
     },
@@ -2900,10 +2900,10 @@ let AppCache = {
                 AppCache.loginApp();
                 AppCache.setSettings(true);
             }
-            AppCacheNav.to('AppCache_boxLogonCustom', 'fade');
+            AppCacheNav.to('AppCache_boxLogonCustom', 'show');
             AppCacheShellUI.setAppWidthLimited(false);
         } else {
-            AppCacheNav.to('AppCache_boxLogon', 'fade');
+            AppCacheNav.to('AppCache_boxLogon', 'show');
         }
 
         AppCache.handleUserMenu();

@@ -34,6 +34,9 @@ function cordovaRequest(opts) {
             if (contentType.includes('json')) {
                 cordova.plugin.http.setDataSerializer('json');
             }
+            if(contentType.includes('application/x-www-form-urlencoded')) {
+                cordova.plugin.http.setDataSerializer('urlencoded');
+            }
         }
 
         // we pass json as string into jQuery.request
@@ -105,6 +108,25 @@ function cordovaRequest(opts) {
             },
         );
     });
+}
+
+if (isCordova() && cordova.plugin && cordova.plugin.http) {
+    function fnAjaxTransportProxy(options, originalOptions, jqXHR) {
+        return {
+            send: function (headers, onComplete) {
+                cordovaRequest(options).then((result) => {
+                    onComplete(200, 'success', {
+                        '*': result
+                    });
+                });
+            },
+            abort: function () {
+                // Abort code
+            },
+        };
+    }
+
+    jQuery.ajaxTransport('+*', fnAjaxTransportProxy);
 }
 
 function request(opts) {
