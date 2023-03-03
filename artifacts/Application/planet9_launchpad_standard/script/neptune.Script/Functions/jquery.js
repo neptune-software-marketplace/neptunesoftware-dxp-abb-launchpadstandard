@@ -110,24 +110,24 @@ function cordovaRequest(opts) {
     });
 }
 
-if (isCordova() && cordova.plugin && cordova.plugin.http) {
-    function fnAjaxTransportProxy(options, originalOptions, jqXHR) {
-        return {
-            send: function (headers, onComplete) {
-                cordovaRequest(options).then((result) => {
-                    onComplete(200, 'success', {
-                        '*': result
-                    });
-                });
-            },
-            abort: function () {
-                // Abort code
-            },
-        };
-    }
+// if (isCordova() && cordova.plugin && cordova.plugin.http) {
+//     function fnAjaxTransportProxy(options, originalOptions, jqXHR) {
+//         return {
+//             send: function (headers, onComplete) {
+//                 cordovaRequest(options).then((result) => {
+//                     onComplete(200, 'success', {
+//                         '*': result
+//                     });
+//                 });
+//             },
+//             abort: function () {
+//                 // Abort code
+//             },
+//         };
+//     }
 
-    jQuery.ajaxTransport('+*', fnAjaxTransportProxy);
-}
+//     jQuery.ajaxTransport('+*', fnAjaxTransportProxy);
+// }
 
 function request(opts) {
     if (typeof opts.url === undefined) throw new Error('request: no url provided for the request');
