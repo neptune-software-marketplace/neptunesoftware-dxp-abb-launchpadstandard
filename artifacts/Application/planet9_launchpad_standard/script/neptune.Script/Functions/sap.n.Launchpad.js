@@ -958,7 +958,7 @@ sap.n.Launchpad = {
             AppCacheNav.addPage(pageCat);
         }
 
-        if (!pageCat.getContent().length) {
+        if (pageCat.getContent().length === 0) {
 
             let versionParts = sap.ui.version.split(".");
 
@@ -1140,7 +1140,8 @@ sap.n.Launchpad = {
 
         // Navigate
         setTimeout(function () {
-            AppCacheNav.to(pageCat, modelAppCacheDiaSettings.oData.TRANSITION || 'show');
+            const transition = modelAppCacheDiaSettings.oData.TRANSITION || 'show';
+            AppCacheNav.to(pageCat, transition);
         }, 100);
 
         // Scrolling to SubMenu

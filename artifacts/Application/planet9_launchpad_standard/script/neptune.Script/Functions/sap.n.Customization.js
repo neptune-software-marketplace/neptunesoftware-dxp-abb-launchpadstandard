@@ -614,7 +614,16 @@ sap.n.Customization = {
 
     getTileGroups(id) {
         const result = this.findPath(id);
-        if (result === undefined) return [];
+        if (result === undefined) {
+            // exceptional case: tiles groups referenced from a tile group, which is linked as an action from a launchpad tile
+            // but that tile group is not included as part of standard tile groups in the launchpad
+            const tilegroup = sap.n.Customization.getTileGroup(id);
+            if (Array.isArray(tilegroup.tilegroups) && tilegroup.tilegroups.length > 0) {
+                return tilegroup.tilegroups;
+            }
+
+            return [];
+        }
 
         const { path } = this.findPath(id);
         if (path.length === 0) return [];
@@ -641,7 +650,6 @@ sap.n.Customization = {
             // the tiles inside it are not included directly as part of the launchpad
             const tileGroup = sap.n.Customization.getTileGroup(id);
             if (Array.isArray(tileGroup.tiles) && tileGroup.tiles.length > 0) {
-                // TODO can this be customized, because it would get a little bit weird to customize tiles that are not directly references
                 return tileGroup.tiles;
             }
 

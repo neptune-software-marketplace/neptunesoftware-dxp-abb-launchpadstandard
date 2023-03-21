@@ -162,6 +162,17 @@ sap.n.Card = {
         if (config.dataTile.openClickTile) card.addStyleClass('nepTileClickable');
         if (config.dataTile.cardHeightFit || config.dataCat.cardHeightFit) card.addStyleClass('sapFCardFitContent');
 
+        // Aria Label
+        card.onAfterRendering = function () {
+            var elem = card.getDomRef();
+
+            elem.setAttribute(
+                "aria-label",
+                sap.n.Launchpad.translateTile("title", config.dataTile) + " " + sap.n.Launchpad.translateTile("subTitle", config.dataTile)
+            );
+
+        };
+
         // Background Color
         sap.n.Card.setBackgroundShade(config.dataTile, config.dataCat, card);
 

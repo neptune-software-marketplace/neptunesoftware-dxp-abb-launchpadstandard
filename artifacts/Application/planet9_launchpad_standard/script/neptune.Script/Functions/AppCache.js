@@ -702,7 +702,7 @@ let AppCache = {
                                 // Replaces the parameter with the object's property with the same name
                                 // E.g.: Person = { Name1: 'Jørgen' }; Text = 'My name is ${Name1}'
                                 //       lfFormatMessage( Person, Text ) => 'My name is Jørgen'
-                                let lvMessage = pvMessage.replaceAll(
+                                let lvMessage = pvMessage.replace(
                                     /\$\{(\w*)\}/gi,
                                     function (match, contents, offset, input_string) {
                                         return poObject[contents];

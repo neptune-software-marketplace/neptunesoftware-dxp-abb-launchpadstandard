@@ -24589,6 +24589,18 @@
 					"attributes": [],
 					"data": [
 						{
+							"fieldNo": "f6e6a485-0a6f-4d4a-a7b3-cf02a10c34a1",
+							"fieldName": "types",
+							"fieldParent": "00323fe3-7d1a-4da1-a549-5fc51fb40e6a",
+							"fieldType": "neptune.Typescript",
+							"script": "",
+							"customComponent": false,
+							"request": [],
+							"response": [],
+							"attributes": [],
+							"data": []
+						},
+						{
 							"fieldNo": "2db642c8-fb46-4eb8-cac8-2a297b6ff606",
 							"fieldName": "jquery",
 							"fieldParent": "00323fe3-7d1a-4da1-a549-5fc51fb40e6a",
@@ -25006,7 +25018,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "23.3.3.1024",
+	"ver": "23.3.19.2017",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",
@@ -25042,7 +25054,7 @@
 	"ui5_bootstrap": false,
 	"ui5_ionic": false,
 	"useV2AppHandler": false,
-	"compilerTarget": 3,
+	"compilerTarget": 2,
 	"tabWidth": null,
 	"printWidth": null,
 	"apis": [],

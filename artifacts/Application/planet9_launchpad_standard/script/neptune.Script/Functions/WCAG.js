@@ -90,7 +90,7 @@ function applyWCAGFixes() {
 
             if (labels && labels.length) { 
                 for (const label of labels) {
-                    label.outerHTML = label.outerHTML.replaceAll('label', 'span');
+                    label.outerHTML = label.outerHTML.replace(/label/g, 'span');
                 }
             }
         }

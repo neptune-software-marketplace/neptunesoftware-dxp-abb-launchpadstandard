@@ -2,7 +2,7 @@
 let currentPage = AppCacheNav.getCurrentPage();
 
 // Only for Tile Group + Childs 
-if (currentPage.sId.indexOf('page') > -1 && !currentPage.getContent().length) {
+if (currentPage.getId().startsWith('page') && currentPage.getContent().length === 0) {
     let cat = currentPage.sId;
     cat = cat.split('page')[1];
 
