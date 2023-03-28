@@ -184,6 +184,10 @@ sap.n.Customization = {
         if (visible) {
             this.jiggle();
         }
+
+        this.tileSelectors.forEach((selector) => {
+            sap.n.DragDrop.setOption(selector, 'disabled', !visible);
+        });
     },
 
     isDeviceBased() {
@@ -771,6 +775,7 @@ sap.n.Customization = {
     },
 
     tilesDragDropClass: "tiles-drag-drop",
+    tileSelectors: new Set(),
     applyDragDropToTiles(sapElm) {
         if (this.isDisabled()) return;
 
@@ -804,7 +809,10 @@ sap.n.Customization = {
         }
 
         const selector = `#${sapElm.getId()} .${this.tilesDragDropClass}`;
+        this.tileSelectors.add(selector);
+        
         sap.n.DragDrop.connectWith(selector, onStart.bind(this), onStop.bind(this));
+        sap.n.DragDrop.setOption(selector, 'disabled', true);
     },
 
     setCardSize(elm, width, height) {

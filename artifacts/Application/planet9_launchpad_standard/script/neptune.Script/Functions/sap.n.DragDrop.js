@@ -26,4 +26,8 @@ sap.n.DragDrop = {
             connectWith: selector,
         });
     },
+
+    setOption(selector, attribute, value) {
+        jQuery(selector).sortable('option', attribute, value);
+    },
 };
