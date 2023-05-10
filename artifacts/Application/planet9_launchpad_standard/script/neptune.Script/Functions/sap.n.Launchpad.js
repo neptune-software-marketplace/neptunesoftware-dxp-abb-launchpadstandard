@@ -176,7 +176,6 @@ sap.n.Launchpad = {
         openAppMaster.setVisible((openApps.getItems().length > 0));
 
         setTimeout(function () {
-            sap.n.Launchpad.setLaunchpadContentWidth();
             sap.n.Layout.setHeaderPadding();
 
             setTabIndicesForContentMenu();
@@ -1561,9 +1560,7 @@ sap.n.Launchpad = {
 
         // Application
         if (dataTile.actionApplication) {
-
             if (dataTile.openDialog) {
-
                 AppCache.Load(dataTile.actionApplication, {
                     appGUID: dataTile.id,
                     appPath: dataTile.urlApplication,
@@ -1614,22 +1611,14 @@ sap.n.Launchpad = {
 
                 // Mark Open From 
                 if (sap.n.Shell.openSidePanelApps[dataTile.actionApplication]) sap.n.Shell.openSidepanel();
-
             }
+            
             return;
         }
-
     },
 
     handleAppTitle: function (appTitle) {
-        let showAppTitle = false;
-        if (sap.n.Launchpad.isPhone()) {
-            showAppTitle = !!AppCache.config.showAppTitleMobile;
-        } else { // assume desktop
-            showAppTitle = AppCache.config.showAppTitle;
-        }
-
-        if (showAppTitle && !AppCache.config.enableTopMenu) {
+        if (sap.n.Layout.showAppTitle() && !AppCache.config.enableTopMenu) {
             AppCacheShellAppTitle.setText(appTitle || '');
         }
     },
@@ -1710,18 +1699,8 @@ sap.n.Launchpad = {
             openAppMaster.setVisible(true);
         }
 
-        // Do not have action buttons for phones
-        if (sap.n.Launchpad.isPhone() && !isWidthGTE(1000)) return;
-
         // New Button - Side
-        let showActiveAppsSide = false;
-        if (sap.n.Launchpad.isPhone()) {
-            showActiveAppsSide = !!AppCache.config.activeAppsSideMobile;
-        } else { // assume desktop
-            showActiveAppsSide = AppCache.config.activeAppsSide;
-        }
-
-        if (showActiveAppsSide) {
+        if (sap.n.Layout.activeAppsSide()) {
             const blockCellId = `but${dataTile.id}`;
             let oBlockCell = sap.ui.getCore().byId(blockCellId);
             if (!oBlockCell) {
@@ -1821,22 +1800,11 @@ sap.n.Launchpad = {
                     });
                 }
 
-                if (launchpadContentNavigator.getWidth() === '0px') {
-                    launchpadContentNavigator.setWidth('70px');
-                    sap.n.Layout.setHeaderPadding();
-                }
+                sap.n.Layout.setHeaderPadding();
             }
         }
 
-        // Nav Button - Top
-        let showActiveAppsTop = false;
-        if (sap.n.Launchpad.isPhone()) {
-            showActiveAppsTop = !!AppCache.config.activeAppsTopMobile;
-        } else { // assume desktop
-            showActiveAppsTop = AppCache.config.activeAppsTop;
-        }
-
-        if (showActiveAppsTop) {
+        if (sap.n.Layout.activeAppsTop()) {
             // New Button
             let tileButton = sap.ui.getCore().byId(`butTop${dataTile.id}`);
             if (!tileButton) {

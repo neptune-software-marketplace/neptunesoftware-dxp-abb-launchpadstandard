@@ -2661,13 +2661,7 @@ let AppCache = {
 
         // Title
         sap.n.Launchpad.SetHeader();
-
-        // launchpad content width
-        if (openApps.getItems().length > 0) {
-            launchpadContentNavigator.setWidth('70px');
-            sap.n.Layout.setHeaderPadding();
-        }
-        sap.n.Launchpad.setLaunchpadContentWidth();
+        sap.n.Layout.setHeaderPadding();
     },
 
     setEnablePasscodeEntry: function () {

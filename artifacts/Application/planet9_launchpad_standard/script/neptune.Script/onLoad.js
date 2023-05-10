@@ -87,7 +87,7 @@ function onDeviceReady() {
                     cordovaRequest(options)
                         .then((result) => {
                             completeCallback(200, "success", {
-                                "*": result,
+                                "json": result,
                             });
                         })
                         .catch((err, status) => {

@@ -175,15 +175,8 @@ sap.ui.getCore().attachInit(function () {
         if (AppCache.config) {
             const c = AppCache.config;
             
-            let activeAppsDisplay = false;
-            if (sap.n.Launchpad.isPhone()) {
-                activeAppsDisplay = !c.activeAppsSideMobile && !c.showAppTitleMobile && !c.activeAppsTopMobile;
-            } else { // assume desktop
-                activeAppsDisplay = !c.activeAppsSide && !c.showAppTitle && !c.activeAppsTop;
-            }
-
             // Launchpad Simulate previous setup
-            if (!c.verticalMenu && !c.enableTopMenu && activeAppsDisplay) {
+            if (!c.verticalMenu && !c.enableTopMenu && sap.n.Layout.activeAppsDisplay()) {
                 AppCache.config.verticalMenu = false;
                 AppCache.config.enableTopMenu = true;
 

@@ -350,16 +350,12 @@ sap.n.Shell = {
         if (containerOpenApp) {
             openApps.removeItem(containerOpenApp);
             containerOpenApp.destroy();
-            if (openApps.getItems().length <= 0) openAppMaster.setVisible(false);
+            openAppMaster.setVisible(openApps.getItems().length > 0);
         }
 
         // reset launchpad content and navigator width, if all open apps have been closed
         if (openApps.getItems().length === 0) {
-            launchpadContentNavigator.setWidth('0px');
             sap.n.Layout.setHeaderPadding();
-            setTimeout(() => {
-                sap.n.Launchpad.setLaunchpadContentWidth();
-            }, 100);
         }
 
         // Destroy Buttons
