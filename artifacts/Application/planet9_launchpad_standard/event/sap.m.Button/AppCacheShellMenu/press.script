@@ -1,21 +1,34 @@
-if (sap.ui.Device.resize.width < sap.n.Launchpad.verticalMenuLimit) launchpadContentMenu.setWidth("0px");
+// verticalMenu = Pin main menu to the left side bar. Slide out from left on small screens
+if (AppCache.config.verticalMenu) {
+    if (launchpadContentMenu.getVisible()) {
+        sap.n.Launchpad.overflowMenuClose();
+    } else {
+        sap.n.Launchpad.overflowMenuOpen();
+    }
 
-if (AppCache.config.verticalMenu && sap.ui.Device.resize.width >= sap.n.Launchpad.verticalMenuLimit) {
-    let size = (launchpadContentMenu.getWidth() === "0px") ? "300px" : "0px";
-    launchpadContentMenu.addItem(pageVerticalMenu);
-    launchpadContentMenu.setWidth(size);
-    openAppMaster.setVisible((openApps.getItems().length > 0));
-} else {
-
-    launchpadOverflow.addItem(pageVerticalMenu);
-    openAppMaster.setVisible((openApps.getItems().length > 0));
-
-    applyCSSToElmId('launchpadOverflowContainer', { width: '100%' });
-    applyCSSToElmId('launchpadOverflowClickArea', { display: 'block' });
-
-    setTimeout(function () {
-        launchpadOverflow.addStyleClass("nepLaunchpadMenuOverflowOpen");
-    }, 10);
+    return;
 }
 
+if (launchpadContentMenu.getVisible()) {
+    sap.n.Launchpad.overflowMenuClose();
+    return;
+}
+
+const isSmallScreen = sap.ui.Device.resize.width < sap.n.Launchpad.verticalMenuLimit;
+if (isSmallScreen) launchpadContentMenu.setWidth("0px");
+
+if (isSmallScreen) {
+    launchpadOverflow.addItem(pageVerticalMenu);
+    applyCSSToElmId('launchpadOverflowContainer', { width: '100%' });
+    applyCSSToElmId('launchpadOverflowClickArea', { display: 'block' });
+} else {
+    let size = (launchpadContentMenu.getWidth() === "0px") ? "300px" : "0px";
+    launchpadContentMenu.addItem(pageVerticalMenu).setWidth(size);    
+}
+
+sap.n.Launchpad.setLaunchpadContentWidth();
+openAppMaster.setVisible(openApps.getItems().length > 0);
 sap.n.Layout.setHeaderPadding();
+
+sap.n.Launchpad.overflowMenuOpen();
+launchpadOverflowContainer.setVisible(true);

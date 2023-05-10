@@ -137,7 +137,7 @@ sap.ui.getCore().attachInit(function () {
     });
 
     applyWCAGFixes();
-
+    
     setTimeout(function () {
         // Browser Title 
         if (AppCache.launchpadTitle && AppCache.launchpadTitle !== 'null') document.title = AppCache.launchpadTitle;
@@ -174,11 +174,24 @@ sap.ui.getCore().attachInit(function () {
         // Config 
         if (AppCache.config) {
             const c = AppCache.config;
-            // Launchpad Simulate previous setup 
-            if (!c.verticalMenu && !c.enableTopMenu && !c.activeAppsSide && !c.showAppTitle && !c.activeAppsTop) {
+            
+            let activeAppsDisplay = false;
+            if (sap.n.Launchpad.isPhone()) {
+                activeAppsDisplay = !c.activeAppsSideMobile && !c.showAppTitleMobile && !c.activeAppsTopMobile;
+            } else { // assume desktop
+                activeAppsDisplay = !c.activeAppsSide && !c.showAppTitle && !c.activeAppsTop;
+            }
+
+            // Launchpad Simulate previous setup
+            if (!c.verticalMenu && !c.enableTopMenu && activeAppsDisplay) {
                 AppCache.config.verticalMenu = false;
                 AppCache.config.enableTopMenu = true;
-                AppCache.config.activeAppsSide = true;
+
+                if (sap.n.Launchpad.isPhone()) {
+                    AppCache.config.activeAppsSideMobile = true;
+                } else {
+                    AppCache.config.activeAppsSide = true;
+                }
             }
 
             // Settings
@@ -275,9 +288,15 @@ sap.ui.getCore().attachInit(function () {
             AppCache.enableExternalTools();
         }, 500);
 
+        // Assign tab indices to pinned left menu
+        setTimeout(() => {
+            if (AppCache.config.verticalMenu) {
+                setTabIndicesForContentMenu();
+            }
+        }, 1000);
+
         // Blackout tile message
         sap.n.Adaptive.editor(descBlackout, { editable: false, buttonList: [] });
-
     }, 100);
 });
 

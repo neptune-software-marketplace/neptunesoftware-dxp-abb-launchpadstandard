@@ -294,6 +294,9 @@ const NumPad = {
                         // Start App
                         AppCache.Encrypted = '';
                         AppCache.Update();
+
+                        // ensures non-usage of launchpad locks the screen
+                        AutoLockTimer.start();
                     } else {
                         NumPad.numPasscode = 0;
                         NumPad.Clear();

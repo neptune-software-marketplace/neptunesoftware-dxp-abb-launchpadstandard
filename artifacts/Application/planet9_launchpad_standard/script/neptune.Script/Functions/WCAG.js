@@ -28,11 +28,11 @@ function applyWCAGFixes() {
     sap.m.Panel.prototype.onAfterRendering = function () {
         const dom = this.getDomRef();
         if (dom && !this.getHeaderText()) {
-            dom.removeAttribute('aria-labelledby');
+            dom.removeAttribute("aria-labelledby");
         }
 
         panelAfterRender.apply(this);
-    }
+    };
 
     const buttonAfterRender = sap.m.Button.prototype.onAfterRendering;
     sap.m.Button.prototype.onAfterRendering = function () {
@@ -46,55 +46,124 @@ function applyWCAGFixes() {
         }
 
         buttonAfterRender.apply(this);
-    }
+    };
 
     const checkboxAfterRender = sap.m.CheckBox.prototype.onAfterRendering;
     sap.m.CheckBox.prototype.onAfterRendering = function () {
         const dom = this.getDomRef();
 
         if (dom) {
-            const input = dom.getElementsByTagName('input')[0];
-            const ariaLabel = dom.getAttribute('aria-labelledby');
+            const input = dom.getElementsByTagName("input")[0];
+            const ariaLabel = dom.getAttribute("aria-labelledby");
 
             if (ariaLabel) {
-                const splitLabel = ariaLabel.split(' ');
+                const splitLabel = ariaLabel.split(" ");
 
                 if (splitLabel && splitLabel.length) {
                     const formLabel = document.getElementById(splitLabel[0]);
 
                     if (formLabel) {
-                        formLabel.setAttribute('for', input.id);
+                        formLabel.setAttribute("for", input.id);
                     }
                 }
             }
 
             if (input && ariaLabel) {
-                input.setAttribute('aria-labelledby', ariaLabel);
+                input.setAttribute("aria-labelledby", ariaLabel);
             }
 
             const text = this.getText();
             if (input && !ariaLabel) {
-                input.setAttribute('aria-label', text);
+                input.setAttribute("aria-label", text);
             }
         }
 
         checkboxAfterRender.apply(this);
-    }
+    };
 
     const selectAfterRender = sap.m.Select.prototype.onAfterRendering;
     sap.m.Select.prototype.onAfterRendering = function () {
         const dom = this.getDomRef();
 
         if (dom) {
-            const labels = dom.getElementsByTagName('label');
+            const labels = dom.getElementsByTagName("label");
 
-            if (labels && labels.length) { 
+            if (labels && labels.length) {
                 for (const label of labels) {
-                    label.outerHTML = label.outerHTML.replace(/label/g, 'span');
+                    label.outerHTML = label.outerHTML.replace(/label/g, "span");
                 }
             }
         }
 
         selectAfterRender.apply(this);
+    };
+
+    navBar.addEventDelegate({
+        onAfterRendering: function () {
+            const dom = navBar.getDomRef();
+
+            if (dom) {
+                const current = dom.getAttribute("aria-label");
+
+                if (!current) {
+                    dom.setAttribute("aria-label", "Launchpad NavBar");
+                }
+            }
+        },
+    });
+
+    function setAriaLabel(obj, label) {
+        obj.addEventDelegate({
+            onAfterRendering: function () {
+                const dom = obj.getDomRef();
+
+                if (!dom) {
+                    return;
+                }
+
+                const current = dom.getAttribute("aria-label");
+
+                if (!current) {
+                    dom.setAttribute("aria-label", label);
+                }
+            },
+        });
     }
+
+    setAriaLabel(topMenu, "Launchpad Top Menu");
+    setAriaLabel(navBar, "Launchpad NavBar");
+    setAriaLabel(launchpadSettingsHeader, "Launchpad Settings Header");
+    setAriaLabel(launchpadOverflowHeader, "Launchpad Overflow Header");
+
+    function setAriaRole(item, role) {
+        item.addEventDelegate({
+            onAfterRendering: function () {
+                const dom = item.getDomRef();
+
+                if (!dom) {
+                    return;
+                }
+
+                dom.setAttribute("role", role);
+            },
+        });
+    }
+
+    AppCacheListMenu.addEventDelegate({
+        onAfterRendering: function () {
+            const dom = AppCacheListMenu.getDomRef();
+
+            if (!dom) {
+                return;
+            }
+
+            const listItem = dom.querySelector(".sapMListItems");
+            listItem.setAttribute("aria-label", "Launchpad Settings Menu");
+
+            if (listItem?.children) {
+                const children = Array.from(listItem.children);
+                children.forEach(child => child.setAttribute("role", "listitem"));
+            }
+        },
+    });
 }

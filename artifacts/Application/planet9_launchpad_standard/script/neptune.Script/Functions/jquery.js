@@ -110,35 +110,7 @@ function cordovaRequest(opts) {
     });
 }
 
-if (typeof cordova !== "undefined" && sap.ui.Device.os.name !== "iOS") {
-    var fnAjaxTransportProxy = function (options, originalOptions, jqXHR) {
-        return {
-            send: function (headers, completeCallback) {
-                if (isCordova() && cordova.plugin && cordova.plugin.http) {
-                    cordovaRequest(options)
-                        .then((result) => {
-                            completeCallback(200, "success", {
-                                "*": result,
-                            });
-                        })
-                        .catch((err, status) => {
-                            completeCallback(status, "error", {
-                                "*": err,
-                            });
-                        });
-                    return;
-                }
 
-                return jQuery.ajax(Object.assign({}, options));
-            },
-            abort: function () {
-                console.log("abort", options);
-            },
-        };
-    };
-
-    jQuery.ajaxTransport("+*", fnAjaxTransportProxy);
-}
 
 function request(opts) {
     if (typeof opts.url === undefined) throw new Error('request: no url provided for the request');

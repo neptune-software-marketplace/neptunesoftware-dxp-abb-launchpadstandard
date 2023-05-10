@@ -1,2 +1,2 @@
-//
 sap.n.Launchpad.settingsMenuClose();
+AppCacheShellUser.focus();

@@ -1,3 +1,5 @@
+let globalTabIndex = -1;
+
 function isTouchScreen() {
     return sap.ui.Device.support.touch;
 }

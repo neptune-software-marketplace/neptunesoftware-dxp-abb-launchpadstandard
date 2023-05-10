@@ -1,5 +1,9 @@
-ContentMenu.expandToLevel(0);
+ContentMenu.collapseAll();
 sap.n.Launchpad.setMenuActiveState();
 
 sap.n.Launchpad.openAppExpanded = false;
 sap.n.Launchpad.setOpenAppsExpanded();
+
+setTimeout(() => {
+    setTabIndicesForContentMenu();
+}, 500);

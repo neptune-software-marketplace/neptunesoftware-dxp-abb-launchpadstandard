@@ -38,7 +38,6 @@ let AppCache = {
     hideTopHeader: false,
     hideGlobalAjaxError: false,
     setupResetHandler: false,
-    inactivityTimer: '',
     sapCAICustomData: {},
     cssGridBreakpoints: {
         xxxlarge: 2360,
@@ -380,8 +379,6 @@ let AppCache = {
         sap.n.Launchpad.currentTile = {};
         sap.n.currentView = '';
 
-        clearTimeout(AppCache.inactivityTimer);
-
         AppCache.isRestricted = true;
         location.hash = '';
 
@@ -460,42 +457,10 @@ let AppCache = {
         AppCache.coreLanguageHandler.updateResourceBundlesNewLang(language);
     },
 
-    inactivitySetup: function () {
-        if (!AppCache.setupResetHandler) {
-            window.addEventListener('mousemove', AppCache.inactivityReset, false);
-            window.addEventListener('mousedown', AppCache.inactivityReset, false);
-            window.addEventListener('keypress', AppCache.inactivityReset, false);
-            window.addEventListener('DOMMouseScroll', AppCache.inactivityReset, false);
-            window.addEventListener('mousewheel', AppCache.inactivityReset, false);
-            window.addEventListener('touchmove', AppCache.inactivityReset, false);
-            window.addEventListener('MSPointerMove', AppCache.inactivityReset, false);
-            AppCache.setupResetHandler = true;
-        }
-
-        AppCache.inactivityStart();
-    },
-
-    inactivityReset: function () {
-        clearTimeout(AppCache.inactivityTimer);
-        if (!AppCache.isRestricted) AppCache.inactivityStart();
-    },
-
-    inactivityStart: function () {
-        AppCache.inactivityTimer = setTimeout(AppCache.inactivityTrigger, AppCache.timerLock * 1000);
-    },
-
-    inactivityTrigger: function () {
-        appCacheLog('Inactivity Timer: Triggering Autolock');
-        clearTimeout(AppCache.inactivityTimer);
-        AppCache.Lock();
-    },
-
     restrictedDisable: function () {
-        // AutoLock 
-        if (!isCordova() && AppCache.timerLock) AppCache.inactivitySetup();
-
         AppCacheUserActionSettings.setVisible(true);
         AppCache_boxPasscodeEntry.setVisible(false);
+        AppCacheShellTitle.setVisible(false);
         AppCacheShellTitle.setText();
 
         if (!AppCache.StartApp && !AppCache.StartWebApp) AppCacheShellMenu.setVisible(true);
@@ -1426,6 +1391,8 @@ let AppCache = {
             }
         }
 
+        AutoLockTimer.stop();
+
         // Logoff 
         if (AppCache.userInfo.logonData && AppCache.userInfo.logonData.type) {
             switch (AppCache.userInfo.logonData.type) {
@@ -1481,6 +1448,9 @@ let AppCache = {
                 appCacheError('Enhancement BeforeLogout ' + e);
             }
         }
+
+        AutoLockTimer.stop();
+
         if (AppCache.isMobile) {
             // Restricted Area
             AppCache.restrictedEnable();
@@ -2622,7 +2592,6 @@ let AppCache = {
     },
 
     _Back: function () {
-
         // Clear HashNavigation
         location.hash = '';
 
@@ -2656,7 +2625,6 @@ let AppCache = {
         if (AppCacheNav.getCurrentPage().sId.indexOf('page') > -1) {
             AppCacheNav.back();
         } else {
-
             if (!sap.n.Launchpad.backApp) {
                 AppCache.Home();
             } else if (sap.n.Launchpad.backApp && sap.n.currentView && sap.n.currentView.sViewName === sap.n.Launchpad.backApp.sViewName) {
@@ -2664,7 +2632,6 @@ let AppCache = {
             } else {
                 AppCacheNav.backToPage(sap.n.Launchpad.backApp);
             }
-
         }
 
         //  Back Button - Only hide when top menu. 
@@ -2695,6 +2662,12 @@ let AppCache = {
         // Title
         sap.n.Launchpad.SetHeader();
 
+        // launchpad content width
+        if (openApps.getItems().length > 0) {
+            launchpadContentNavigator.setWidth('70px');
+            sap.n.Layout.setHeaderPadding();
+        }
+        sap.n.Launchpad.setLaunchpadContentWidth();
     },
 
     setEnablePasscodeEntry: function () {
@@ -2947,6 +2920,7 @@ let AppCache = {
                 'AppCache_boxUsers': AppCache_Screen_Users.getText(),
             };
             if (sap.n.Launchpad.isPhone() && titles[pageId] !== undefined) {
+                AppCacheShellTitle.setVisible(true);
                 AppCacheShellTitle.setText(titles[pageId]);
             }
         }

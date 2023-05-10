@@ -499,6 +499,13 @@
 													"value": "Transparent",
 													"script": "",
 													"translation": []
+												},
+												{
+													"attribute": "accessibleRole",
+													"grouping": "Properties",
+													"value": "Region",
+													"script": "",
+													"translation": []
 												}
 											],
 											"data": [
@@ -1091,6 +1098,13 @@
 																					"request": [],
 																					"response": [],
 																					"attributes": [
+																						{
+																							"attribute": "visible",
+																							"grouping": "Properties",
+																							"value": "false",
+																							"script": "",
+																							"translation": []
+																						},
 																						{
 																							"attribute": "titleStyle",
 																							"grouping": "Properties",
@@ -3111,6 +3125,13 @@
 																	"attribute": "backgroundDesign",
 																	"grouping": "Properties",
 																	"value": "Transparent",
+																	"script": "",
+																	"translation": []
+																},
+																{
+																	"attribute": "accessibleRole",
+																	"grouping": "Properties",
+																	"value": "Region",
 																	"script": "",
 																	"translation": []
 																}
@@ -10595,7 +10616,7 @@
 										{
 											"attribute": "visible",
 											"grouping": "Properties",
-											"value": true,
+											"value": "false",
 											"script": "",
 											"translation": []
 										},
@@ -10922,8 +10943,8 @@
 																				{
 																					"attribute": "press",
 																					"grouping": "Events",
-																					"value": "Anonymous Function",
-																					"script": "file://event/sap.m.Button/launchpadOverflowBtn/press.script",
+																					"value": "sap.n.Launchpad.overflowMenuClose();",
+																					"script": "sap.n.Launchpad.overflowMenuClose();",
 																					"translation": []
 																				}
 																			],
@@ -10951,7 +10972,7 @@
 												{
 													"attribute": "visible",
 													"grouping": "Properties",
-													"value": true,
+													"value": "false",
 													"script": "",
 													"translation": []
 												},
@@ -10978,6 +10999,13 @@
 									"request": [],
 									"response": [],
 									"attributes": [
+										{
+											"attribute": "width",
+											"grouping": "Properties",
+											"value": "100%",
+											"script": "",
+											"translation": []
+										},
 										{
 											"attribute": "visible",
 											"grouping": "Properties",
@@ -12259,7 +12287,7 @@
 												{
 													"attribute": "visible",
 													"grouping": "Properties",
-													"value": true,
+													"value": "false",
 													"script": "",
 													"translation": []
 												},
@@ -24709,6 +24737,18 @@
 							"data": []
 						},
 						{
+							"fieldNo": "0c3ad877-e6c0-42b8-af73-e02048d621fc",
+							"fieldName": "AutoLockTimer",
+							"fieldParent": "00323fe3-7d1a-4da1-a549-5fc51fb40e6a",
+							"fieldType": "neptune.Script",
+							"script": "file://script/neptune.Script/Functions/AutoLockTimer.js",
+							"customComponent": false,
+							"request": [],
+							"response": [],
+							"attributes": [],
+							"data": []
+						},
+						{
 							"fieldNo": "09951d87-4238-45a3-cfc7-7e64e42d19e2",
 							"fieldName": "sap.n.Fingerprint",
 							"fieldParent": "00323fe3-7d1a-4da1-a549-5fc51fb40e6a",
@@ -25007,6 +25047,18 @@
 							"response": [],
 							"attributes": [],
 							"data": []
+						},
+						{
+							"fieldNo": "03812a79-55d1-4e00-eae8-5d8e9e89c995",
+							"fieldName": "TabIndexing",
+							"fieldParent": "00323fe3-7d1a-4da1-a549-5fc51fb40e6a",
+							"fieldType": "neptune.Script",
+							"script": "file://script/neptune.Script/Functions/TabIndexing.js",
+							"customComponent": false,
+							"request": [],
+							"response": [],
+							"attributes": [],
+							"data": []
 						}
 					]
 				}
@@ -25018,7 +25070,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "23.3.24.1452",
+	"ver": "23.5.9.1228",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",

@@ -1052,10 +1052,11 @@ html[dir=rtl] .nepTreeItemAction .sapMSTIIcon {
 }
 
 .nepLaunchpadOverflowClickArea {
-  position: absolute;
+  position: fixed;
   top: 0;
   z-index: 98;
   bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 html[dir=ltr] .nepLaunchpadOverflowClickArea {
@@ -1231,6 +1232,10 @@ html[dir=rtl] .nepLaunchpadMenuSettingsOpen {
 
 .nepLaunchpadShell {
   position: relative;
+}
+
+.nepLaunchpadContentMenu {
+  z-index: 100;
 }
 
 .nepLaunchpadMenuOverflow > .sapMFlexItem:last-child,

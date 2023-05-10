@@ -27,6 +27,8 @@ jQuery(document).ajaxError(function (_event, request, _settings) {
         if (AppCache.enableAutoLogin) AppCacheLogonLocal.Relog(decrypted, r);
     } else if ([0, 400, 404, 500].includes(code)) {
     } else {
-        if (!AppCache.isOffline) sap.m.MessageToast.show(`${request.status} - ${request.statusText}`);
+        if (!AppCache.isOffline) {
+            // sap.m.MessageToast.show(`${request.status} - ${request.statusText}`);
+        } 
     }
 });

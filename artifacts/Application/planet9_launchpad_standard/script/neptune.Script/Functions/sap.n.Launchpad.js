@@ -87,17 +87,10 @@ sap.n.Launchpad = {
         applyCSSToElmId('launchpadSettings', { display: 'flex' });
         applyCSSToElmId('launchpadSettingsContainer', { width: '100%' });
         applyCSSToElmId('launchpadSettingsClickArea', { display: 'block' });
-        setTimeout(function () {
-            addClass(launchpadSettings.getDomRef(), ['nepLaunchpadMenuSettingsOpen']);
-            launchpadSettingsBtn.focus();
-        }, 10);
     },
 
     settingsMenuClose: function () {
-        removeClass(launchpadSettings.getDomRef(), ['nepLaunchpadMenuSettingsOpen']);
-        applyCSSToElmId('launchpadSettingsContainer', { width: '0' });
-        applyCSSToElmId('launchpadSettingsClickArea', { display: 'none' });
-        applyCSSToElmId('launchpadSettings', { display: 'none' });
+        unsetTabIndicesForAppCacheListMenu();
     },
 
     setOpenAppsExpanded: function () {
@@ -154,7 +147,9 @@ sap.n.Launchpad = {
                 break;
         }
 
-        sap.n.Launchpad.overflowMenuClose();
+        if (!AppCache.config.verticalMenu) {
+            sap.n.Launchpad.overflowMenuClose();
+        }
     },
 
     overflowMenuClose: function () {
@@ -162,20 +157,35 @@ sap.n.Launchpad = {
         applyCSSToElmId('launchpadOverflowContainer', { width: '0' });
         applyCSSToElmId('launchpadOverflowClickArea', { display: 'none' });
         launchpadContentMenu.setVisible(false);
+        
+        unsetTabIndicesForContentMenu();
+        if (!AppCache.config.verticalMenu) {
+            setTabIndex(launchpadOverflowBtn, -1);
+            setTabIndex(AppCacheShellMenu, 1);
+        }
+
+        setTimeout(() => {
+            sap.n.Launchpad.setLaunchpadContentWidth();
+        }, 100);
     },
 
     overflowMenuOpen: function () {
+        launchpadOverflow.addStyleClass('nepLaunchpadMenuOverflowOpen');
         launchpadContentMenu.setVisible(true);
-        const size = (launchpadContentMenu.getWidth() === '0px') ? '300px' : '0px';
-        launchpadContentMenu.addItem(pageVerticalMenu);
-        launchpadContentMenu.setWidth(size);
+        launchpadContentMenu.addItem(pageVerticalMenu).setWidth('300px');
         openAppMaster.setVisible((openApps.getItems().length > 0));
 
         setTimeout(function () {
             sap.n.Launchpad.setLaunchpadContentWidth();
             sap.n.Layout.setHeaderPadding();
-        }, 300);
 
+            setTabIndicesForContentMenu();
+            if (!AppCache.config.verticalMenu) {
+                setTabIndex(AppCacheShellMenu, -1);
+                setTabIndex(launchpadOverflowBtn, 1);
+                launchpadOverflowBtn.focus();
+            }
+        }, 100);
     },
 
     setLaunchpadContentWidth: function () {
@@ -281,7 +291,7 @@ sap.n.Launchpad = {
             const btnAddCard = new sap.m.Button();
             btnAddCard.tooltip = new sap.ui.core.TooltipBase().setText('');
             btnAddCard.setIcon('sap-icon://add');
-            btnAddCard.setIcon
+            btnAddCard.addStyleClass('nepAddCard');
             btnAddCard.setType(sap.m.ButtonType.Default);
             btnAddCard.setWidth('100%');
             btnAddCard.attachPress(() => {
@@ -293,7 +303,7 @@ sap.n.Launchpad = {
     },
 
     setInitialGridWidth: function (grid) {
-        let navWidth = getWidth('#AppCacheNav');
+        let navWidth = getWidth(elById('AppCacheNav'));
 
         let c = '';
         if (navWidth < 380) c = 'nepGridXSmall';
@@ -1612,7 +1622,16 @@ sap.n.Launchpad = {
     },
 
     handleAppTitle: function (appTitle) {
-        if (AppCache.config.showAppTitle && !AppCache.config.enableTopMenu) AppCacheShellAppTitle.setText(appTitle || '');
+        let showAppTitle = false;
+        if (sap.n.Launchpad.isPhone()) {
+            showAppTitle = !!AppCache.config.showAppTitleMobile;
+        } else { // assume desktop
+            showAppTitle = AppCache.config.showAppTitle;
+        }
+
+        if (showAppTitle && !AppCache.config.enableTopMenu) {
+            AppCacheShellAppTitle.setText(appTitle || '');
+        }
     },
 
     handleRunListApp: function (dataTile) {
@@ -1695,7 +1714,14 @@ sap.n.Launchpad = {
         if (sap.n.Launchpad.isPhone() && !isWidthGTE(1000)) return;
 
         // New Button - Side
-        if (AppCache.config.activeAppsSide) {
+        let showActiveAppsSide = false;
+        if (sap.n.Launchpad.isPhone()) {
+            showActiveAppsSide = !!AppCache.config.activeAppsSideMobile;
+        } else { // assume desktop
+            showActiveAppsSide = AppCache.config.activeAppsSide;
+        }
+
+        if (showActiveAppsSide) {
             const blockCellId = `but${dataTile.id}`;
             let oBlockCell = sap.ui.getCore().byId(blockCellId);
             if (!oBlockCell) {
@@ -1803,7 +1829,14 @@ sap.n.Launchpad = {
         }
 
         // Nav Button - Top
-        if (AppCache.config.activeAppsTop) {
+        let showActiveAppsTop = false;
+        if (sap.n.Launchpad.isPhone()) {
+            showActiveAppsTop = !!AppCache.config.activeAppsTopMobile;
+        } else { // assume desktop
+            showActiveAppsTop = AppCache.config.activeAppsTop;
+        }
+
+        if (showActiveAppsTop) {
             // New Button
             let tileButton = sap.ui.getCore().byId(`butTop${dataTile.id}`);
             if (!tileButton) {
@@ -2060,7 +2093,7 @@ sap.n.Launchpad = {
         // unique CSS class for this header
         let id = `${nepPrefix()}CatHeader${dataCat.id}`;
 
-        let panel = new sap.m.Panel(`${sectionPrefix()}${dataCat.id}`, {
+        let panel = new sap.m.Panel(`${sectionPrefix()}-header-${dataCat.id}`, {
             backgroundDesign: 'Transparent',
             width: '100%'
         }).addStyleClass('nepCatPanel ' + id + ' sapUiNoContentPadding');
@@ -2245,12 +2278,48 @@ sap.n.Launchpad = {
         return oBlockCell;
     },
 
+    // device = mobile, tablet or desktop
+    getTileGroupHeaderBackgroundCSS: function (dataCat, device) {
+        let url;
+        let position, defaultPosition = 'center center';
+        let size, defaultSize = 'cover';
+        let repeat, defaultRepeat = 'no-repeat';
+        let height, defaultHeight = '82px';
+
+        if (device === 'mobile') {
+            url = dataCat.imageMobile;
+            position = dataCat.imageMobilePlacement;
+            size = dataCat.imageMobileSize;
+            repeat = dataCat.imageMobileRepeat;
+            height = dataCat.imageMobileHeight;
+        } else if (device === 'tablet') {
+            url = dataCat.imageTablet;
+            position = dataCat.imageTabletPlacement;
+            size = dataCat.imageTabletSize;
+            repeat = dataCat.imageTabletRepeat;
+            height = dataCat.imageTabletHeight;
+        } else if (device === 'desktop') {
+            url = dataCat.image;
+            position = dataCat.imagePlacement;
+            size = dataCat.imageSize;
+            repeat = dataCat.imageRepeat;
+            height = dataCat.imageHeight;
+        }
+
+        // TODO - Support for offline images
+        return `
+            height: ${height || defaultHeight} !important;
+            background-image: url('${AppCache.Url}${url}');
+            background-repeat: ${repeat || defaultRepeat};
+            background-position: ${position || defaultPosition};
+            background-size: ${size || defaultSize};
+        `;
+    },
+
     buildHeaderCss: function (dataCat) {
         let css = '';
-        let imageUrl;
         let id = `${nepPrefix()}CatHeader${dataCat.id}`;
         let borderWidth = dataCat.headBorderWidth || '3px';
-        let backroundPosition, backroundSize, backgroundHeight;
 
         const idClass = `.${id}`;
         if (dataCat.headColor) css += `${idClass} { background-color: ${dataCat.headColor}; }`;
@@ -2259,58 +2328,26 @@ sap.n.Launchpad = {
         if (dataCat.headBorderClr) css += `${idClass} { border-bottom: ${borderWidth} solid ${dataCat.headBorderClr}; }`;
 
         if (dataCat.imageMobile) {
-            imageUrl = AppCache.Url + dataCat.imageMobile;
-
-            backroundPosition = dataCat.imageMobilePlacement || 'center center';
-            backroundSize = dataCat.imageMobileSize || 'cover';
-            backgroundRepeat = dataCat.imageMobileRepeat || 'no-repeat';
-            backgroundHeight = dataCat.imageMobileHeight || '82px';
-
             css += `
                 .nepGridSmall .${id} .sapMPanelContent,
                 .nepGridXSmall .${id} .sapMPanelContent {
-                    background: url('${imageUrl}');
-                    background-repeat: no-repeat;';
-                    background-position: ${backroundPosition};
-                    background-size: ${backroundSize};
-                    height: ${backgroundHeight};
+                    ${this.getTileGroupHeaderBackgroundCSS(dataCat, 'mobile')}
                 }
             `;
         }
 
         if (dataCat.imageTablet) {
-            imageUrl = AppCache.Url + dataCat.imageTablet;
-
-            backroundPosition = dataCat.imageTabletPlacement || 'center center';
-            backroundSize = dataCat.imageTabletSize || 'cover';
-            backgroundRepeat = dataCat.imageTabletRepeat || 'no-repeat';
-            backgroundHeight = dataCat.imageTabletHeight || '82px';
-
             css += `
                 .nepGridMedium .${id} .sapMPanelContent {
-                    background: url('${imageUrl}');
-                    background-position: ${backroundPosition};
-                    background-size: ${backroundSize};
-                    height: ${backgroundHeight};
+                    ${this.getTileGroupHeaderBackgroundCSS(dataCat, 'tablet')}
                 }
             `;
         }
 
         if (dataCat.image) {
-            // TODO - Offline images
-            imageUrl = AppCache.Url + dataCat.image;
-
-            backroundPosition = dataCat.imagePlacement || 'center center';
-            backroundSize = dataCat.imageSize || 'cover';
-            backgroundRepeat = dataCat.imageRepeat || 'no-repeat';
-            backgroundHeight = dataCat.imageHeight || '82px';
-
             css += `
                 .${id} .sapMPanelContent {
-                    background: url('${imageUrl}');
-                    background-position: ${backroundPosition};
-                    background-size: ${backroundSize};
-                    height: ${backgroundHeight} !important;
+                    ${this.getTileGroupHeaderBackgroundCSS(dataCat, 'desktop')}
                 }
             `;
         }

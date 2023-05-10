@@ -345,6 +345,9 @@ sap.n.Card = {
 
                 let focusableCardHeader = dom.querySelector(".sapFCardHeaderWrapper");
                 if (focusableCardHeader) focusableCardHeader.removeAttribute("tabindex");
+
+                const ariaHeader = dom.querySelector('[role="heading"]');
+                if (ariaHeader) ariaHeader.setAttribute('aria-level', '2');
             }
         };
         cardHeader.addEventDelegate(_cardHeader_delegate);
@@ -638,7 +641,8 @@ sap.n.Card = {
                             let _cardActionParent_delegate = {
                                 onAfterRendering: function () {
                                     let elem = config.cardActionParent.getDomRef();
-                                    elem.setAttribute("tabindex", "0");
+                                    // TODO Fix tabindex
+                                    // elem.setAttribute("tabindex", "0");
                                     elem.setAttribute("role", "button");
                                     elem.removeAttribute("aria-labelledby");
                                 }

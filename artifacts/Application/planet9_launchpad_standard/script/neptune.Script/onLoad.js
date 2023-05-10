@@ -78,6 +78,36 @@ function onDeviceReady() {
 
     // InAppBrowser 
     if (isCordova()) window.open = cordova.InAppBrowser.open;
+
+    if (typeof cordova !== "undefined" && sap.ui.Device.os.name !== "iOS") {
+    var fnAjaxTransportProxy = function (options, originalOptions, jqXHR) {
+        return {
+            send: function (headers, completeCallback) {
+                if (isCordova() && cordova.plugin && cordova.plugin.http) {
+                    cordovaRequest(options)
+                        .then((result) => {
+                            completeCallback(200, "success", {
+                                "*": result,
+                            });
+                        })
+                        .catch((err, status) => {
+                            completeCallback(status, "error", {
+                                "*": err,
+                            });
+                        });
+                    return;
+                }
+
+                return jQuery.ajax(Object.assign({}, options));
+            },
+            abort: function () {
+                console.log("abort", options);
+            },
+        };
+    };
+
+    jQuery.ajaxTransport("+*", fnAjaxTransportProxy);
+}
 }
 
 function onOffline() {
@@ -113,10 +143,6 @@ function onOnline() {
 function onPause() {
     AppCache.inBackground = true;
 
-    // Inactivity
-    if (AppCache.timerLock && !AppCache.isRestricted) lockStart = Date.now();
-
-
     if (typeof sap.n.Phonegap.onPauseCustom === 'function') {
         sap.n.Phonegap.onPauseCustom();
         return;
@@ -129,13 +155,6 @@ function onResume() {
 
         if (typeof navigator.splashscreen !== 'undefined') navigator.splashscreen.hide();
         sap.ui.core.BusyIndicator.hide();
-
-        // Inactivity
-        if (AppCache.timerLock && !AppCache.isRestricted) {
-            let lockEnd = Date.now();
-            let lockDiff = (lockEnd - lockStart) / 1000.
-            if (lockDiff > AppCache.timerLock) AppCache.Lock();
-        }
 
         if (typeof sap.n.Phonegap.onResumeCustom === 'function') {
             sap.n.Phonegap.onResumeCustom();
