@@ -236,6 +236,14 @@ sap.n.Customization = {
         querySelector("html").classList.remove("lp-is-customizable");
     },
 
+    initOffline() {
+        if (!this.isDisabled()) {
+            this.addCustomizableClass();
+        }
+        
+        return Promise.resolve();
+    },
+
     init(data) {
         if (this.isDisabled()) {
             this.setCustomizationsInContext(this.formatForStorage(data));

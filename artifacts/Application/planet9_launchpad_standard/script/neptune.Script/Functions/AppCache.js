@@ -1133,6 +1133,7 @@ let AppCache = {
 
                 // Set App Initialized
                 AppCache.Initialized = true;
+                AppCache.isOffline = isOffline();
 
                 // Update Application Data 
                 if (value !== 'cockpit_doc_reader') {
@@ -1392,6 +1393,9 @@ let AppCache = {
         }
 
         AutoLockTimer.stop();
+        setTimeout(() => {
+            sap.n.Layout.setHeaderPadding();
+        }, 100);
 
         // Logoff 
         if (AppCache.userInfo.logonData && AppCache.userInfo.logonData.type) {
@@ -2260,6 +2264,17 @@ let AppCache = {
 
             appCacheLog('AppCache.UpdateGetData: Apps to check update before getTiles');
             appCacheLog(dataRequest);
+
+            if (AppCache.isOffline) {
+                sap.n.Customization.initOffline().then(() => {
+                    if (!AppCache.StartApp && !AppCache.StartWebApp) {
+                        sap.n.Launchpad.BuildMenu();
+                    }
+
+                    sap.n.Customization.Popover.init();
+                });
+                return;
+            }
 
             // Get Tiles 
             sap.n.Planet9.function({

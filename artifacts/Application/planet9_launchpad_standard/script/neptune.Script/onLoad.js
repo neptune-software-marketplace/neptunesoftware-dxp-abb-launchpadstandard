@@ -58,8 +58,15 @@ function onDeviceReady() {
     }
 
     document.addEventListener('menubutton', onMenuButton, false);
-    window.addEventListener('offline', onOffline, false);
-    window.addEventListener('online', onOnline, false);
+
+    if (isCordova()) {
+        document.addEventListener('online', onOnline, false);
+        document.addEventListener('offline', onOffline, false);
+    } else {
+        window.addEventListener('online', onOnline, false);
+        window.addEventListener('offline', onOffline, false);
+    }
+
     document.addEventListener('searchbutton', onSearchButton, false);
     document.addEventListener('volumedownbutton', onVolumeDownButton, false);
     document.addEventListener('volumeupbutton', onVolumeUpButton, false);
@@ -79,35 +86,43 @@ function onDeviceReady() {
     // InAppBrowser 
     if (isCordova()) window.open = cordova.InAppBrowser.open;
 
-    if (typeof cordova !== "undefined" && sap.ui.Device.os.name !== "iOS") {
-    var fnAjaxTransportProxy = function (options, originalOptions, jqXHR) {
-        return {
-            send: function (headers, completeCallback) {
-                if (isCordova() && cordova.plugin && cordova.plugin.http) {
-                    cordovaRequest(options)
-                        .then((result) => {
-                            completeCallback(200, "success", {
-                                "json": result,
+    if (isCordova() && sap.ui.Device.os.name !== "iOS") {
+        let fnAjaxTransportProxy = function (options, originalOptions, jqXHR) {
+            return {
+                send: function (headers, completeCallback) {
+                    if (isCordova() && cordova.plugin && cordova.plugin.http) {
+                        cordovaRequest(options)
+                            .then((result) => {
+                                completeCallback(200, "success", {
+                                    json: result,
+                                });
+                            })
+                            .catch((err, status) => {
+                                completeCallback(status, "error", {
+                                    "*": err,
+                                });
                             });
-                        })
-                        .catch((err, status) => {
-                            completeCallback(status, "error", {
-                                "*": err,
-                            });
-                        });
-                    return;
-                }
+                        return;
+                    }
 
-                return jQuery.ajax(Object.assign({}, options));
-            },
-            abort: function () {
-                console.log("abort", options);
-            },
+                    return jQuery.ajax(Object.assign({}, options));
+                },
+                abort: function () {
+                    console.log("abort", options);
+                },
+            };
         };
-    };
 
-    jQuery.ajaxTransport("+*", fnAjaxTransportProxy);
+        jQuery.ajaxTransport("+*", fnAjaxTransportProxy);
+    }
 }
+
+function isOffline() {
+    if (isCordova()) {
+        return navigator.connection.type === Connection.NONE;
+    }
+
+    return !window.navigator.onLine;
 }
 
 function onOffline() {
@@ -126,7 +141,12 @@ function onOffline() {
 }
 
 function onOnline() {
-    AppCache.isOffline = false;
+    if (isCordova()) {
+        AppCache.isOffline = navigator.connection.type !== Connection.NONE;
+    } else {
+        AppCache.isOffline = false;
+    }
+    
     AppCacheShellNetwork.setVisible(false);
     AppCache_butNewUser.setEnabled(true);
 
@@ -140,6 +160,9 @@ function onOnline() {
     }
 }
 
+window.onOffline = onOffline;
+window.onOnline = onOnline;
+
 function onPause() {
     AppCache.inBackground = true;
 
@@ -152,6 +175,7 @@ function onPause() {
 function onResume() {
     setTimeout(function () {
         AppCache.inBackground = false;
+        AppCache.isOffline = isOffline();
 
         if (typeof navigator.splashscreen !== 'undefined') navigator.splashscreen.hide();
         sap.ui.core.BusyIndicator.hide();
@@ -211,6 +235,3 @@ function onVolumeUpButton() {
     }
 
 }
-
-window.onOffline = onOffline;
-window.onOnline = onOnline;

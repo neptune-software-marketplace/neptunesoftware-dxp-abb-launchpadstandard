@@ -294,7 +294,7 @@ sap.n.Shell = {
             if (sap.n.Launchpad.currentTile.id === tileData.id) {
                 AppCacheNav.back();
 
-                if (AppCache.StartApp.trim().length > 0) {
+                if (typeof AppCache.StartApp === 'string' && AppCache.StartApp.trim().length > 0) {
                     return;
                 }
 
