@@ -11620,12 +11620,12 @@
 																			"value": "Redigera skärm"
 																		},
 																		{
-																			"language": "EN",
-																			"value": "Edit Screen"
-																		},
-																		{
 																			"language": "AR",
 																			"value": "تحرير الشاشة"
+																		},
+																		{
+																			"language": "EN",
+																			"value": "Edit Screen"
 																		}
 																	]
 																},
@@ -25070,7 +25070,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "23.5.10.1624",
+	"ver": "23.5.16.1143",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",
