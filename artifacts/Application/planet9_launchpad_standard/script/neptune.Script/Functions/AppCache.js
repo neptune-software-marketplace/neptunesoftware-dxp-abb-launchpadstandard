@@ -604,6 +604,32 @@ let AppCache = {
         }
     },
 
+    GetInstallationDir: async function () {
+        return new Promise((resolve, reject) => {
+            window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, function(fs) {
+                resolve(fs.root.nativeURL);
+            }, reject);
+        });
+    },
+
+    DownloadFile: async function(url, filePath) {
+        return new Promise((resolve, reject) => {
+            const requestId = cordova.plugin.http.downloadFile(url, undefined, undefined, filePath, resolve, reject);
+            AppCache.abortDownload = function() {
+                cordova.plugin.http.abort(requestId, () => {}, () => {});
+            }
+        });
+    },
+
+    OpenFile: async function(filePath, contentType) {
+        return new Promise((resolve, reject) => {
+            cordova.plugins.fileOpener2.open(filePath, contentType, {
+                success: resolve,
+                error: reject,
+            });
+        });
+    },
+
     UpdateMobileApp: function (fileUrl, version) {
         // Update App - device check
         if (sap.ui.Device.os.name !== 'iOS' && sap.ui.Device.os.name !== 'Android' && sap.ui.Device.os.name !== 'win') return;
@@ -633,6 +659,18 @@ let AppCache = {
         AppCache_diaDownload.open();
         AppCache_diaDownload.setText(AppCache_tDownloading.getText() + ' (v.' + version + ')...');
 
+        try {
+            const filePath = await AppCache.GetInstallationDir() + localFile;            
+            await AppCache.DownloadFile(remoteFile, filePath);
+            await AppCache.OpenFile(filePath, contentType);
+            AppCache_diaDownload.close();
+        } catch (error) {
+            const message = error?.message || 'Error installing new version';
+            AppCache_diaDownload.setText(message);
+            console.error(error);
+        }
+
+        /*
         // Delete Old File
         window.resolveLocalFileSystemURL(localFile, function (fileEntry) {
             fileEntry.remove();
@@ -738,7 +776,7 @@ let AppCache = {
             sap.m.MessageToast.show(AppCache_tErrorDownloading.getText());
             AppCache.downloadXhr = null;
         };
-
+        */
     },
 
     clearCookies: function () {

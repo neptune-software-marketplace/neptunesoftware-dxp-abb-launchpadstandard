@@ -12734,8 +12734,9 @@
 								{
 									"attribute": "close",
 									"grouping": "Events",
-									"value": "AppCache.downloadXhr.abort();",
-									"script": "AppCache.downloadXhr.abort();",
+									"value": "Anonymous Function",
+									"script": "file://event/sap.m.BusyDialog/AppCache_diaDownload/close.js",
+									"language": "javascript",
 									"translation": []
 								}
 							],
@@ -25070,7 +25071,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "23.5.16.1143",
+	"ver": "23.6.15.169",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",
