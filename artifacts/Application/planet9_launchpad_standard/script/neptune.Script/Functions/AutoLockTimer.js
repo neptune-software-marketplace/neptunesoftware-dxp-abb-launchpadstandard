@@ -108,7 +108,7 @@ sap.n.Phonegap.onResumeCustom = function () {
     // Handle the resume event
     // in P9 AppCache.Initialized might not excist. Just use if (AppCache)
     if (AppCache.Initialized) {
-        if (this.hasElapsed()) {
+        if (AutoLockTimer.hasElapsed()) {
             AppCache.Lock();
             AutoLockTimer.stop();
         } else {

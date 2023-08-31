@@ -142,9 +142,13 @@ function onOffline() {
 
 function onOnline() {
     if (isCordova()) {
-        AppCache.isOffline = navigator.connection.type !== Connection.NONE;
+        AppCache.isOffline = navigator.connection.type === Connection.NONE;
     } else {
         AppCache.isOffline = false;
+    }
+
+    if (!AppCache.isOffline) {
+        fetchAppUpdates();
     }
     
     AppCacheShellNetwork.setVisible(false);

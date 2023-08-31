@@ -44,23 +44,35 @@ function onKeyPressFocusOnInput(obj) {
 function setTabIndicesForContentMenu() {
     if (!launchpadContentMenu.getVisible()) return;
 
-    if (!AppCache.config.verticalMenu) {
+    if (!sap.n.Layout.isVerticalMenuPinned()) {
         launchpadOverflowClickArea.setVisible(true);
     }
     
     disableTabIndicesLessThan0();
 
-    setTabIndex(launchpadOverflowBtn, 4);
-    setTabIndex(toolVerticalMenuFilter, 5);
-    setTabIndexOnElm(toolVerticalMenuFilter.getDomRef().querySelector('[type="search"]'), 6);
+    let index = sap.n.Layout.isVerticalMenuPinned() ? 4000 : 0;
 
-    setTabIndex(toolVerticalMenuExpand, 7);
-    setTabIndex(toolVerticalMenuCollapse, 8);
+    index += 4;
+    setTabIndex(launchpadOverflowBtn, index);
 
-    globalTabIndex = 15;
+    index += 1;
+    setTabIndex(toolVerticalMenuFilter, index);
+
+    index += 1;
+    setTabIndexOnElm(toolVerticalMenuFilter.getDomRef().querySelector('[type="search"]'), index);
+
+    index += 1;
+    setTabIndex(toolVerticalMenuExpand, index);
+
+    index += 1;
+    setTabIndex(toolVerticalMenuCollapse, index);
+
+    index += 10;
+    globalTabIndex = index;
     setTabIndicesForOpenApps();
 
-    globalTabIndex = 40;
+    index += 25;
+    globalTabIndex = index;
     setTabIndexOnItemsRecursively(ContentMenu);
 
     const refCollapse = toolVerticalMenuCollapse.getDomRef();
@@ -115,7 +127,15 @@ function unsetTabIndicesForContentMenu() {
     unsetTabIndicesForOpenApps();
     unsetTabIndexOnItemsRecursively(ContentMenu);
 
-    AppCacheShellMenu.focus();
+    if (sap.n.Layout.isVerticalMenuPinned()) {
+        if (sap.n.Launchpad.isPhone()) {
+            AppCacheShellLogoMobile.focus()
+        } else {
+            AppCacheShellLogoDesktop.focus();
+        }
+    } else {
+        AppCacheShellMenu.focus();
+    }
 }
 
 function setTabIndicesForAppCacheListMenu() {
@@ -208,12 +228,44 @@ function disableTabIndicesLessThan0() {
         .forEach(([e]) => e.setAttribute("tabindex", -1));
 }
 
+function onKeyDownInContentMenu(evt) {
+    if (evt.which === 9) {
+        setTimeout(() => {
+            if (!launchpadContentMenu.getDomRef().contains(document.activeElement)) {
+                Array.from(ContentMenu.getDomRef().querySelectorAll('[tabindex]'))
+                    .map((e) => [e, parseInt(e.getAttribute("tabindex"))])
+                    .filter(([_, tabindex]) => tabindex === 0)
+                    .forEach(([e]) => e.setAttribute("tabindex", -1));
+                
+                const elm = launchpadContentMenu.getDomRef();
+                if (elm) {
+                    elm.removeEventListener('keydown', onKeyDownInContentMenu);
+                }
+            }
+        }, 250);
+    }
+}
+
+// ui5 sets tabindex for some elements from -1 to 0
+// which interrupts tab flow
+function detectContentMenuBlurForTabIndexReset() {
+    const elm = launchpadContentMenu.getDomRef();
+    if (elm) {
+        elm.removeEventListener('keydown', onKeyDownInContentMenu);
+        elm.addEventListener('keydown', onKeyDownInContentMenu);
+    }
+}
+
 function setTabIndices() {
     // App Navigation
-    setTabIndex(AppCacheShellMenu, 1);
-    unsetTabIndicesForContentMenu();
+    if (sap.n.Layout.isVerticalMenuPinned()) {
+        setTabIndex(AppCacheShellMenu, -1);
+    } else {
+        setTabIndex(AppCacheShellMenu, 1);
+    }
 
-    if (AppCache.config.verticalMenu) {
+    unsetTabIndicesForContentMenu();
+    if (sap.n.Layout.isVerticalMenuPinned()) {
         setTabIndicesForContentMenu();
     }
 
@@ -238,6 +290,9 @@ function setTabIndices() {
     setTabIndex(AppCachePageSideTab, -1);
 
     disableTabIndicesLessThan0();
+
+    // Content Menu
+    detectContentMenuBlurForTabIndexReset();
 }
 
 AppCacheNav.onAfterRendering = () => {

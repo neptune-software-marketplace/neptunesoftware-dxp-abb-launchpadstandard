@@ -4316,3 +4316,18 @@ html[dir=rtl] body.resizing {
     animation-timing-function: ease-out;
   }
 }
+#diaPWAInstall .sapMTB.sapMTBStandard {
+  border-bottom: 0;
+}
+
+#pwaInstallAppLogo {
+  width: 48px;
+}
+
+#pwaInstallAppTitle {
+  font-size: 22px;
+}
+
+#diaPWAInstallFooter {
+  border-top: 1px solid #d3d7d9;
+}

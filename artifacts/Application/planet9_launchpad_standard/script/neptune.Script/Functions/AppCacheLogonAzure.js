@@ -55,7 +55,6 @@ let AppCacheLogonAzure = {
         let logonWin = this._openPopup(this._loginUrl(loginHint));
 
         if (!isCordova()) {
-
             if (location.protocol === 'file:') {
                 sap.m.MessageToast.show('Testing Azure AD from file is not allowed due to CSRF issues. Please test in mobile app');
                 return;
@@ -64,13 +63,11 @@ let AppCacheLogonAzure = {
             if (logonWin.focus) logonWin.focus();
 
             // Browser
-            this._waitForPopupDesktop(logonWin, function (url) {
-
+            this._waitForPopupDesktop(logonWin, (url) => {
                 let authResponse = AppCacheLogonAzure._getHashParams(url);
 
                 // Get response
                 if (authResponse) {
-
                     if (authResponse.error) {
                         sap.m.MessageToast.show(authResponse.error);
                         sap.ui.core.BusyIndicator.hide();
@@ -88,20 +85,14 @@ let AppCacheLogonAzure = {
 
                     // Request Access/Refresh Tokens 
                     AppCacheLogonAzure._getToken(authResponse);
-
                 } else {
                     console.log('No token response, or window closed manually');
                 }
-
-            }.bind(this));
-
+            });
         } else {
-
             // Mobile InAppBrowser
-            logonWin.addEventListener('loadstop', function () {
-
-                logonWin.executeScript({ code: 'location.search' }, function (url) {
-
+            logonWin.addEventListener('loadstop', () => {
+                logonWin.executeScript({ code: 'location.search' }, (url) => {
                     let authResponse = AppCacheLogonAzure._getHashParams(url[0]);
 
                     // Get response
@@ -119,7 +110,6 @@ let AppCacheLogonAzure = {
                         }
 
                         if (authResponse.state && authResponse.code) {
-
                             logonWin.close();
 
                             // Prevent cross-site request forgery attacks
@@ -130,14 +120,10 @@ let AppCacheLogonAzure = {
 
                             // Request Access/Refresh Tokens 
                             AppCacheLogonAzure._getToken(authResponse);
-
                         }
-
                     }
                 });
-
             });
-
         }
     },
 
@@ -157,7 +143,6 @@ let AppCacheLogonAzure = {
     },
 
     Signout: function () {
-
         localStorage.removeItem('p9azuretoken');
         localStorage.removeItem('p9azuretokenv2');
 
@@ -165,19 +150,22 @@ let AppCacheLogonAzure = {
             let signoutFrame = document.getElementById('azureSignout');
             if (signoutFrame) signoutFrame.setAttribute('src', 'https://login.microsoftonline.com/common/oauth2/logout');
         } else {
+            const signOut = window.open('https://login.microsoftonline.com/common/oauth2/logout', '_blank', 'location=no,width=5,height=5,left=-1000,top=3000');
+            signOut.blur && signOut.blur();
 
-            let signOut = window.open('https://login.microsoftonline.com/common/oauth2/logout', '_blank', 'location=no,width=5,height=5,left=-1000,top=3000');
+            if (isCordova()) {
+                signOut.addEventListener('loadstop', () => {
+                    signOut.close();
+                });
+            } else {
+                signOut.onload = () => {
+                    signOut.close();
+                };
 
-            signOut.blur();
-
-            signOut.onload = function () {
-                signOut.close();
-            };
-
-            setTimeout(function () {
-                signOut.close();
-            }, 1000);
-
+                setTimeout(() => {
+                    signOut.close();
+                }, 1000);
+            }
         }
     },
 
@@ -335,6 +323,9 @@ let AppCacheLogonAzure = {
     },
 
     _onTokenReady: function (data, resourceToken) {
+        if (!AppCache.userInfo) {
+            AppCache.userInfo = {};
+        }
 
         if (!data.expires_on) {
             data.expires_on = new Date();

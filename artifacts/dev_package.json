@@ -8,7 +8,7 @@
 	},
 	"name": "neptunesoftware-dxp-abb-launchpadstandard",
 	"description": null,
-	"ver": "23.3.21.1210",
+	"ver": "23.8.31.1121",
 	"enableCICD": true,
 	"apps": [
 		{
@@ -43,7 +43,6 @@
 	"wf_definition": [],
 	"connector": [],
 	"events": [],
-	"media_library": [],
 	"code_snippets": [],
 	"wf_determination": [],
 	"wf_taskaction": []

@@ -9,17 +9,15 @@ let AppCacheLogonSaml = {
         setTimeout(function () {
             loginWin.addEventListener('loadstart', function (event) {
                 // Check for login ok
-                sap.n.Planet9.function({
-                    id: dataSet,
-                    method: 'GetUserInfo',
-                    success: function (data) {
+                fetchUserInfo(
+                    function (data) {
                         AppCache.afterUserInfo(false, data);
                         loginWin.close();
                     },
-                    error: function (result, error) {
+                    function (result, error) {
                         // Not logged on
                     }
-                });
+                );
             });
         }, 500);
     },
@@ -32,10 +30,8 @@ let AppCacheLogonSaml = {
             // apply event handler for inAppBrowser
             loginWin.addEventListener('loadstart', function (event) {
                 // check for login
-                sap.n.Planet9.function({
-                    id: dataSet,
-                    method: 'GetUserInfo',
-                    success: function (data) {
+                fetchUserInfo(
+                    function (data) {
                         // Clear
                         NumPad.numPasscode = 0;
                         NumPad.Clear();
@@ -47,10 +43,10 @@ let AppCacheLogonSaml = {
 
                         loginWin.close();
                     },
-                    error: function (result, error) {
+                    function (result, error) {
                         // Not logged on
                     }
-                });
+                );
             });
         }, 500);
     },

@@ -223,11 +223,12 @@ sap.n.Card = {
             if (AppCache.isMobile && config.dataTile.imageData) imageSource = config.dataTile.imageData;
 
             let cardImage = new sap.m.Image(nepId(), {
-                src: imageSource,
+                src: emptyBase64Image(),
                 width: '100%',
                 height: inlineHeight,
                 densityAware: false,
             }).addStyleClass('nepFCardInlineImage tileInlineImage' + config.dataTile.id);
+            lazyLoadImage(imageSource, cardImage, 'sap-component');
 
             cardBody.addItem(cardImage);
         }
@@ -251,7 +252,7 @@ sap.n.Card = {
             };
 
             Object.entries({
-                'src': imageSource,
+                'src': emptyBase64Image(),
                 'alt': '',
                 'aria-hidden': 'true',
                 'role': 'presentation',
@@ -259,6 +260,7 @@ sap.n.Card = {
             }).forEach(function ([k, v]) {
                 img.setAttribute(k, v);
             });
+            lazyLoadImage(imageSource, img, 'element');
 
             addClass(img, ['sapMImg', 'nepFCardTopImage', 'tileTopImage', tileId, `tileTopImage${tileId}`]);
             img.style.cssText = `

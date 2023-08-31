@@ -355,7 +355,9 @@ sap.n.Shell = {
 
         // reset launchpad content and navigator width, if all open apps have been closed
         if (openApps.getItems().length === 0) {
-            sap.n.Layout.setHeaderPadding();
+            setTimeout(() => {
+                sap.n.Layout.setHeaderPadding();
+            }, 100);
         }
 
         // Destroy Buttons
@@ -426,7 +428,7 @@ sap.n.Shell = {
         delete AppCache.ViewChild['undefined'];
 
         blockRunningRow.destroyContent();
-        AppCacheAppButton.removeAllItems();
+        sap.n.Layout.clearAppCacheAppButtonItems();
         openApps.removeAllItems();
 
         AppCache.Home();

@@ -288,6 +288,10 @@ sap.ui.getCore().attachInit(function () {
             }
         }, 1000);
 
+        if (sap.n.Layout.isVerticalMenuPinned()) {
+            AppCacheShellMenu.setVisible(false);
+        }
+        
         // Blackout tile message
         sap.n.Adaptive.editor(descBlackout, { editable: false, buttonList: [] });
     }, 100);

@@ -1,0 +1,12 @@
+pwaInstallAppTitle.setText(AppCache.launchpadTitle ?? '');
+pwaInstallAppUrl.setText(window.location.host);
+
+if (AppCache.CustomLogo && AppCache.CustomLogo !== 'null') {
+    if (isCordova() || location.protocol === 'file:') {
+        pwaInstallAppLogo.setSrc('public/customlogo');
+    } else {
+        pwaInstallAppLogo.setSrc(AppCache.CustomLogo);
+    }
+} else {
+    pwaInstallAppLogo.setSrc('data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZGF0YS1uYW1lPSJMYXllciAxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMTIiIGhlaWdodD0iMjEyIiB2aWV3Qm94PSIwIDAgNjAuNjIgNjAuNjkiPjxkZWZzPjxzdHlsZT4ubmVwU1ZHTG9nb1Jpbmd7ZmlsbDp0cmFuc3BhcmVudDt9Lm5lcFNWR0xvZ29QbGFuZXR7ZmlsbDojZjZiMjIxO308L3N0eWxlPjwvZGVmcz48Y2lyY2xlIGNsYXNzPSJuZXBTVkdMb2dvUmluZyIgY3g9IjMyLjcxIiBjeT0iMzMuOTQiIHI9IjIxLjI3Ii8+PHBhdGggY2xhc3M9Im5lcFNWR0xvZ29QbGFuZXQiIGQ9Ik01OS4yNCw2OC4zQTEyLjIsMTIuMiwwLDEsMSw3MS40Miw1Ni4xLDEyLjIsMTIuMiwwLDAsMSw1OS4yNCw2OC4zTTUxLjQ3LDI1YTMwLjM1LDMwLjM1LDAsMSwwLDMwLjMsMzAuMzVBMzAuMzMsMzAuMzMsMCwwLDAsNTEuNDcsMjUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMS4xNiAtMjQuOTgpIi8+PHBhdGggY2xhc3M9Im5lcFNWR0xvZ29QbGFuZXQiIGQ9Ik01OS4yNCw0Ni4wNUExMC4wNiwxMC4wNiwwLDEsMCw2OS4yOSw1Ni4xLDEwLjA2LDEwLjA2LDAsMCwwLDU5LjI0LDQ2LjA1IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjEuMTYgLTI0Ljk4KSIvPjwvc3ZnPg==');
+}

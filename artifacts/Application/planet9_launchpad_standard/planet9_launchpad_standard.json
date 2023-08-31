@@ -115,306 +115,6 @@
 							],
 							"data": [
 								{
-									"fieldNo": "c4f9114f-174e-425b-faa9-3118b594c945",
-									"fieldName": "actionPWA",
-									"fieldParent": "63351f31-547d-43db-8b6a-898b9977f552",
-									"fieldType": "sap.m.Bar",
-									"script": "",
-									"customComponent": false,
-									"request": [],
-									"response": [],
-									"attributes": [
-										{
-											"attribute": "visible",
-											"grouping": "Properties",
-											"value": "false",
-											"script": "",
-											"translation": []
-										},
-										{
-											"attribute": "position",
-											"grouping": "Parent",
-											"value": "setSubHeader",
-											"script": "",
-											"translation": []
-										}
-									],
-									"data": [
-										{
-											"fieldNo": "00046d71-c91f-4ad9-b64c-48ef3319d5da",
-											"fieldName": "Left",
-											"fieldParent": "c4f9114f-174e-425b-faa9-3118b594c945",
-											"fieldType": "neptune.BarContent",
-											"script": "",
-											"customComponent": false,
-											"request": [],
-											"response": [],
-											"attributes": [
-												{
-													"attribute": "position",
-													"grouping": "Parent",
-													"value": "ContentLeft",
-													"script": "",
-													"translation": []
-												}
-											],
-											"data": [
-												{
-													"fieldNo": "22ae1e0d-5e3a-46df-cdcc-6c929e30c127",
-													"fieldName": "toolPWA",
-													"fieldParent": "00046d71-c91f-4ad9-b64c-48ef3319d5da",
-													"fieldType": "sap.m.Toolbar",
-													"script": "",
-													"customComponent": false,
-													"request": [],
-													"response": [],
-													"attributes": [
-														{
-															"attribute": "styleClass",
-															"grouping": "Properties",
-															"value": "nepPWAToolbar",
-															"script": "",
-															"translation": []
-														},
-														{
-															"attribute": "position",
-															"grouping": "Parent",
-															"value": "HeaderToolbar",
-															"script": "",
-															"translation": []
-														}
-													],
-													"data": [
-														{
-															"fieldNo": "8d1bf547-3303-4e8c-fa06-3df565bd62fa",
-															"fieldName": "toolPWATitle",
-															"fieldParent": "22ae1e0d-5e3a-46df-cdcc-6c929e30c127",
-															"fieldType": "sap.m.Text",
-															"script": "",
-															"customComponent": false,
-															"request": [],
-															"response": [],
-															"attributes": [
-																{
-																	"attribute": "text",
-																	"grouping": "Properties",
-																	"value": "Add to homescreen",
-																	"script": "",
-																	"translation": [
-																		{
-																			"language": "DA",
-																			"value": "Føj til hjemmeskærmen"
-																		},
-																		{
-																			"language": "FR",
-																			"value": "Ajouter à l'écran d'accueil"
-																		},
-																		{
-																			"language": "DE",
-																			"value": "Zum Startbildschirm hinzufügen"
-																		},
-																		{
-																			"language": "IT",
-																			"value": "Aggiungere alla schermata Home"
-																		},
-																		{
-																			"language": "NO",
-																			"value": "Legg til på hjemmeskjermen"
-																		},
-																		{
-																			"language": "PL",
-																			"value": "Dodaj do ekranu głównego"
-																		},
-																		{
-																			"language": "PT",
-																			"value": "Adicionar à tela inicial"
-																		},
-																		{
-																			"language": "ES",
-																			"value": "Añadir a la pantalla principal"
-																		},
-																		{
-																			"language": "SV",
-																			"value": "Lägg till på hemskärmen"
-																		},
-																		{
-																			"language": "EN",
-																			"value": "Add to homescreen"
-																		}
-																	]
-																}
-															],
-															"data": []
-														},
-														{
-															"fieldNo": "8ba8c775-92c0-4b52-808d-e6b10ff9163c",
-															"fieldName": "toolPWASpacer",
-															"fieldParent": "22ae1e0d-5e3a-46df-cdcc-6c929e30c127",
-															"fieldType": "sap.m.ToolbarSpacer",
-															"script": "",
-															"customComponent": false,
-															"request": [],
-															"response": [],
-															"attributes": [],
-															"data": []
-														},
-														{
-															"fieldNo": "cdb17e90-8132-46f6-a784-ba0b9432444c",
-															"fieldName": "toolPWAInstall",
-															"fieldParent": "22ae1e0d-5e3a-46df-cdcc-6c929e30c127",
-															"fieldType": "sap.m.Button",
-															"script": "",
-															"customComponent": false,
-															"request": [],
-															"response": [],
-															"attributes": [
-																{
-																	"attribute": "type",
-																	"grouping": "Properties",
-																	"value": "Accept",
-																	"script": "",
-																	"translation": []
-																},
-																{
-																	"attribute": "text",
-																	"grouping": "Properties",
-																	"value": "Install",
-																	"script": "",
-																	"translation": [
-																		{
-																			"language": "DA",
-																			"value": "Installere"
-																		},
-																		{
-																			"language": "FR",
-																			"value": "Installer"
-																		},
-																		{
-																			"language": "DE",
-																			"value": "Installieren"
-																		},
-																		{
-																			"language": "IT",
-																			"value": "Installare"
-																		},
-																		{
-																			"language": "NO",
-																			"value": "Installere"
-																		},
-																		{
-																			"language": "PL",
-																			"value": "zainstalować"
-																		},
-																		{
-																			"language": "PT",
-																			"value": "Instalar"
-																		},
-																		{
-																			"language": "ES",
-																			"value": "Instalar en pc"
-																		},
-																		{
-																			"language": "SV",
-																			"value": "Installera"
-																		},
-																		{
-																			"language": "EN",
-																			"value": "Install"
-																		}
-																	]
-																},
-																{
-																	"attribute": "press",
-																	"grouping": "Events",
-																	"value": "Anonymous Function",
-																	"script": "file://event/sap.m.Button/toolPWAInstall/press.script",
-																	"translation": []
-																}
-															],
-															"data": []
-														},
-														{
-															"fieldNo": "f30dc30d-79aa-479a-f3bf-dd78a2122163",
-															"fieldName": "toolPWANotNow",
-															"fieldParent": "22ae1e0d-5e3a-46df-cdcc-6c929e30c127",
-															"fieldType": "sap.m.Button",
-															"script": "",
-															"customComponent": false,
-															"request": [],
-															"response": [],
-															"attributes": [
-																{
-																	"attribute": "type",
-																	"grouping": "Properties",
-																	"value": "Reject",
-																	"script": "",
-																	"translation": []
-																},
-																{
-																	"attribute": "text",
-																	"grouping": "Properties",
-																	"value": "Not now",
-																	"script": "",
-																	"translation": [
-																		{
-																			"language": "DA",
-																			"value": "Ikke nu"
-																		},
-																		{
-																			"language": "FR",
-																			"value": "Pas maintenant"
-																		},
-																		{
-																			"language": "DE",
-																			"value": "Nicht jetzt"
-																		},
-																		{
-																			"language": "IT",
-																			"value": "Non adesso"
-																		},
-																		{
-																			"language": "NO",
-																			"value": "Ikke nå"
-																		},
-																		{
-																			"language": "PL",
-																			"value": "Nie teraz"
-																		},
-																		{
-																			"language": "PT",
-																			"value": "Agora não"
-																		},
-																		{
-																			"language": "ES",
-																			"value": "Ahora no"
-																		},
-																		{
-																			"language": "SV",
-																			"value": "Inte nu"
-																		},
-																		{
-																			"language": "EN",
-																			"value": "Not now"
-																		}
-																	]
-																},
-																{
-																	"attribute": "press",
-																	"grouping": "Events",
-																	"value": "Anonymous Function",
-																	"script": "file://event/sap.m.Button/toolPWANotNow/press.script",
-																	"translation": []
-																}
-															],
-															"data": []
-														}
-													]
-												}
-											]
-										}
-									]
-								},
-								{
 									"fieldNo": "b8bab2c5-8e19-4416-eae9-ff3a28d1cf24",
 									"fieldName": "launchpadContainer",
 									"fieldParent": "63351f31-547d-43db-8b6a-898b9977f552",
@@ -11530,6 +11230,54 @@
 															"data": []
 														},
 														{
+															"fieldNo": "67b387e1-3725-4edc-a8ec-3467821a0568",
+															"fieldName": "AppCacheInstallPWASettings",
+															"fieldParent": "b8737006-c98d-42a6-d22a-4cc385959ab5",
+															"fieldType": "sap.m.StandardListItem",
+															"script": "",
+															"customComponent": false,
+															"request": [],
+															"response": [],
+															"attributes": [
+																{
+																	"attribute": "visible",
+																	"grouping": "Properties",
+																	"value": "false",
+																	"script": "",
+																	"translation": []
+																},
+																{
+																	"attribute": "type",
+																	"grouping": "Properties",
+																	"value": "Active",
+																	"script": "",
+																	"translation": []
+																},
+																{
+																	"attribute": "title",
+																	"grouping": "Properties",
+																	"value": "Install Application",
+																	"script": "",
+																	"translation": []
+																},
+																{
+																	"attribute": "icon",
+																	"grouping": "Properties",
+																	"value": "sap-icon://home-share",
+																	"script": "",
+																	"translation": []
+																},
+																{
+																	"attribute": "press",
+																	"grouping": "Events",
+																	"value": "promptForPWAInstall();",
+																	"script": "promptForPWAInstall();",
+																	"translation": []
+																}
+															],
+															"data": []
+														},
+														{
 															"fieldNo": "00815957-de6a-425a-a5ee-8eada95a10e1",
 															"fieldName": "AppCacheUserActionEditScreen",
 															"fieldParent": "b8737006-c98d-42a6-d22a-4cc385959ab5",
@@ -12734,8 +12482,9 @@
 								{
 									"attribute": "close",
 									"grouping": "Events",
-									"value": "AppCache.downloadXhr.abort();",
-									"script": "AppCache.downloadXhr.abort();",
+									"value": "Anonymous Function",
+									"script": "file://event/sap.m.BusyDialog/AppCache_diaDownload/close.js",
+									"language": "javascript",
 									"translation": []
 								}
 							],
@@ -12884,6 +12633,33 @@
 									"grouping": "Properties",
 									"value": "true",
 									"script": "",
+									"translation": []
+								}
+							],
+							"data": []
+						},
+						{
+							"fieldNo": "90c0c787-bfda-4b6b-878d-82f80209f941",
+							"fieldName": "butSupportedBrowsersClose",
+							"fieldParent": "6cc710c1-161b-453f-bd50-b935559ffbe6",
+							"fieldType": "sap.m.Button",
+							"script": "",
+							"customComponent": false,
+							"request": [],
+							"response": [],
+							"attributes": [
+								{
+									"attribute": "icon",
+									"grouping": "Properties",
+									"value": "sap-icon://sys-cancel",
+									"script": "",
+									"translation": []
+								},
+								{
+									"attribute": "press",
+									"grouping": "Events",
+									"value": "popSupportedBrowsers.close();",
+									"script": "popSupportedBrowsers.close();",
 									"translation": []
 								}
 							],
@@ -15252,33 +15028,6 @@
 									]
 								}
 							]
-						},
-						{
-							"fieldNo": "90c0c787-bfda-4b6b-878d-82f80209f941",
-							"fieldName": "butSupportedBrowsersClose",
-							"fieldParent": "2af20b8c-2c59-4dc5-e76a-6871398cb8b1",
-							"fieldType": "sap.m.Button",
-							"script": "",
-							"customComponent": false,
-							"request": [],
-							"response": [],
-							"attributes": [
-								{
-									"attribute": "icon",
-									"grouping": "Properties",
-									"value": "sap-icon://sys-cancel",
-									"script": "",
-									"translation": []
-								},
-								{
-									"attribute": "press",
-									"grouping": "Events",
-									"value": "popSupportedBrowsers.close();",
-									"script": "popSupportedBrowsers.close();",
-									"translation": []
-								}
-							],
-							"data": []
 						},
 						{
 							"fieldNo": "157cb86d-df52-49bc-be84-1bea786f6c9a",
@@ -19548,6 +19297,13 @@
 									"script": "file://event/sap.m.Dialog/diaManagePages/afterOpen.js",
 									"language": "javascript",
 									"translation": []
+								},
+								{
+									"attribute": "afterClose",
+									"grouping": "Events",
+									"value": "sap.n.Launchpad.BuildTreeMenu();",
+									"script": "sap.n.Launchpad.BuildTreeMenu();",
+									"translation": []
 								}
 							],
 							"data": [
@@ -20145,6 +19901,13 @@
 									"translation": []
 								},
 								{
+									"attribute": "afterClose",
+									"grouping": "Events",
+									"value": "sap.n.Launchpad.BuildTreeMenu();",
+									"script": "sap.n.Launchpad.BuildTreeMenu();",
+									"translation": []
+								},
+								{
 									"attribute": "endButton",
 									"grouping": "Associations",
 									"value": "diaAddTileCloseBtn",
@@ -20633,6 +20396,348 @@
 													]
 												}
 											]
+										}
+									]
+								}
+							]
+						},
+						{
+							"fieldNo": "18aeaa7b-edd6-47b7-f2f3-181c6902e5c3",
+							"fieldName": "diaPWAInstall",
+							"fieldParent": "2af20b8c-2c59-4dc5-e76a-6871398cb8b1",
+							"fieldType": "sap.m.Dialog",
+							"script": "",
+							"customComponent": false,
+							"bindingValue": "Generic Object",
+							"bindingType": "u",
+							"bindingSource": "P9",
+							"request": [],
+							"response": [],
+							"attributes": [
+								{
+									"attribute": "setInitLoad",
+									"grouping": "Model",
+									"value": "cache",
+									"script": "",
+									"translation": []
+								},
+								{
+									"attribute": "setEnableCache",
+									"grouping": "Model",
+									"value": "true",
+									"script": "",
+									"translation": []
+								},
+								{
+									"attribute": "setCacheType",
+									"grouping": "Model",
+									"value": "IndexedDB",
+									"script": "",
+									"translation": []
+								},
+								{
+									"attribute": "beforeOpen",
+									"grouping": "Events",
+									"value": "Anonymous Function",
+									"script": "file://event/sap.m.Dialog/diaPWAInstall/beforeOpen.script",
+									"translation": []
+								}
+							],
+							"data": [
+								{
+									"fieldNo": "34054e54-855f-40da-9e6e-94beb7036139",
+									"fieldName": "diaPWAInstallHeaderBar",
+									"fieldParent": "18aeaa7b-edd6-47b7-f2f3-181c6902e5c3",
+									"fieldType": "sap.m.Bar",
+									"script": "",
+									"customComponent": false,
+									"request": [],
+									"response": [],
+									"attributes": [
+										{
+											"attribute": "position",
+											"grouping": "Parent",
+											"value": "setCustomHeader",
+											"script": "",
+											"translation": []
+										}
+									],
+									"data": [
+										{
+											"fieldNo": "d929cd76-5bac-4157-f24e-bb99d6aad4db",
+											"fieldName": "diaPWAInstallHeaderBarLeft",
+											"fieldParent": "34054e54-855f-40da-9e6e-94beb7036139",
+											"fieldType": "neptune.BarContent",
+											"script": "",
+											"customComponent": false,
+											"request": [],
+											"response": [],
+											"attributes": [
+												{
+													"attribute": "position",
+													"grouping": "Parent",
+													"value": "ContentLeft",
+													"script": "",
+													"translation": []
+												}
+											],
+											"data": [
+												{
+													"fieldNo": "f9c4d786-1f2c-49ca-9323-69dc4539c413",
+													"fieldName": "diaPWAInstallHeaderBarTitle",
+													"fieldParent": "d929cd76-5bac-4157-f24e-bb99d6aad4db",
+													"fieldType": "sap.m.Title",
+													"script": "",
+													"customComponent": false,
+													"request": [],
+													"response": [],
+													"attributes": [
+														{
+															"attribute": "text",
+															"grouping": "Properties",
+															"value": "Add to homescreen",
+															"script": "",
+															"translation": []
+														}
+													],
+													"data": []
+												}
+											]
+										},
+										{
+											"fieldNo": "4016debf-ba7c-4bce-d945-cd39c3f412f5",
+											"fieldName": "diaPWAInstallHeaderBarRight",
+											"fieldParent": "34054e54-855f-40da-9e6e-94beb7036139",
+											"fieldType": "neptune.BarContent",
+											"script": "",
+											"customComponent": false,
+											"request": [],
+											"response": [],
+											"attributes": [
+												{
+													"attribute": "position",
+													"grouping": "Parent",
+													"value": "ContentRight",
+													"script": "",
+													"translation": []
+												}
+											],
+											"data": [
+												{
+													"fieldNo": "0f3f6362-002f-445a-afe2-dc0d610fa315",
+													"fieldName": "diaPWAInstallClose",
+													"fieldParent": "4016debf-ba7c-4bce-d945-cd39c3f412f5",
+													"fieldType": "sap.m.Button",
+													"script": "",
+													"customComponent": false,
+													"request": [],
+													"response": [],
+													"attributes": [
+														{
+															"attribute": "styleClass",
+															"grouping": "Properties",
+															"value": "nepCloseBtn",
+															"script": "",
+															"translation": []
+														},
+														{
+															"attribute": "icon",
+															"grouping": "Properties",
+															"value": "sap-icon://decline",
+															"script": "",
+															"translation": []
+														},
+														{
+															"attribute": "press",
+															"grouping": "Events",
+															"value": "setPWAInstallQueryStatus();",
+															"script": "setPWAInstallQueryStatus();",
+															"translation": []
+														}
+													],
+													"data": []
+												}
+											]
+										}
+									]
+								},
+								{
+									"fieldNo": "10918632-f5f2-4eca-8a0d-841fae82eb24",
+									"fieldName": "diaPWAInstallContent",
+									"fieldParent": "18aeaa7b-edd6-47b7-f2f3-181c6902e5c3",
+									"fieldType": "sap.m.FlexBox",
+									"script": "",
+									"customComponent": false,
+									"request": [],
+									"response": [],
+									"attributes": [
+										{
+											"attribute": "styleClassMargin",
+											"grouping": "Properties",
+											"value": "sapUiSmallMargin",
+											"script": "",
+											"translation": []
+										},
+										{
+											"attribute": "direction",
+											"grouping": "Properties",
+											"value": "Row",
+											"script": "",
+											"translation": []
+										}
+									],
+									"data": [
+										{
+											"fieldNo": "6f046584-1508-4bd7-85c7-632256583780",
+											"fieldName": "pwaInstallAppLogo",
+											"fieldParent": "10918632-f5f2-4eca-8a0d-841fae82eb24",
+											"fieldType": "sap.m.Image",
+											"script": "",
+											"customComponent": false,
+											"request": [],
+											"response": [],
+											"attributes": [
+												{
+													"attribute": "styleClassMargin",
+													"grouping": "Properties",
+													"value": "sapUiSmallMarginEnd",
+													"script": "",
+													"translation": []
+												}
+											],
+											"data": []
+										},
+										{
+											"fieldNo": "cc43c01a-f535-42fb-a158-828c6dcd2620",
+											"fieldName": "diaPWAInstallContentInfo",
+											"fieldParent": "10918632-f5f2-4eca-8a0d-841fae82eb24",
+											"fieldType": "sap.m.FlexBox",
+											"script": "",
+											"customComponent": false,
+											"request": [],
+											"response": [],
+											"attributes": [
+												{
+													"attribute": "direction",
+													"grouping": "Properties",
+													"value": "Column",
+													"script": "",
+													"translation": []
+												}
+											],
+											"data": [
+												{
+													"fieldNo": "aa6b88f3-ceab-423f-9bc4-626bc163c084",
+													"fieldName": "pwaInstallAppTitle",
+													"fieldParent": "cc43c01a-f535-42fb-a158-828c6dcd2620",
+													"fieldType": "sap.m.Text",
+													"script": "",
+													"customComponent": false,
+													"request": [],
+													"response": [],
+													"attributes": [],
+													"data": []
+												},
+												{
+													"fieldNo": "0796b257-a476-41bd-c40d-43a1d2fd7763",
+													"fieldName": "pwaInstallAppUrl",
+													"fieldParent": "cc43c01a-f535-42fb-a158-828c6dcd2620",
+													"fieldType": "sap.m.Text",
+													"script": "",
+													"customComponent": false,
+													"request": [],
+													"response": [],
+													"attributes": [],
+													"data": []
+												}
+											]
+										}
+									]
+								},
+								{
+									"fieldNo": "86bf8cfb-304c-48f4-a5f0-27243caac238",
+									"fieldName": "diaPWAInstallFooter",
+									"fieldParent": "18aeaa7b-edd6-47b7-f2f3-181c6902e5c3",
+									"fieldType": "sap.m.Toolbar",
+									"script": "",
+									"customComponent": false,
+									"request": [],
+									"response": [],
+									"attributes": [
+										{
+											"attribute": "position",
+											"grouping": "Parent",
+											"value": "InfoToolbar",
+											"script": "",
+											"translation": []
+										}
+									],
+									"data": [
+										{
+											"fieldNo": "16c23231-61b2-4669-f0e3-783c27c64719",
+											"fieldName": "diaPWAInstallFooterSpacer",
+											"fieldParent": "86bf8cfb-304c-48f4-a5f0-27243caac238",
+											"fieldType": "sap.m.ToolbarSpacer",
+											"script": "",
+											"customComponent": false,
+											"request": [],
+											"response": [],
+											"attributes": [],
+											"data": []
+										},
+										{
+											"fieldNo": "5470e9c8-8d5f-492a-8289-8c884965c4f0",
+											"fieldName": "diaPWAInstallCancel",
+											"fieldParent": "86bf8cfb-304c-48f4-a5f0-27243caac238",
+											"fieldType": "sap.m.Button",
+											"script": "",
+											"customComponent": false,
+											"request": [],
+											"response": [],
+											"attributes": [
+												{
+													"attribute": "text",
+													"grouping": "Properties",
+													"value": "Cancel",
+													"script": "",
+													"translation": []
+												},
+												{
+													"attribute": "press",
+													"grouping": "Events",
+													"value": "setPWAInstallQueryStatus();",
+													"script": "setPWAInstallQueryStatus();",
+													"translation": []
+												}
+											],
+											"data": []
+										},
+										{
+											"fieldNo": "2377bee0-485d-43f5-b7c0-0e682f39c34e",
+											"fieldName": "diaPWAInstallApp",
+											"fieldParent": "86bf8cfb-304c-48f4-a5f0-27243caac238",
+											"fieldType": "sap.m.Button",
+											"script": "",
+											"customComponent": false,
+											"request": [],
+											"response": [],
+											"attributes": [
+												{
+													"attribute": "text",
+													"grouping": "Properties",
+													"value": "Install Application",
+													"script": "",
+													"translation": []
+												},
+												{
+													"attribute": "press",
+													"grouping": "Events",
+													"value": "Anonymous Function",
+													"script": "file://event/sap.m.Button/diaPWAInstallApp/press.script",
+													"translation": []
+												}
+											],
+											"data": []
 										}
 									]
 								}
@@ -25070,7 +25175,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "23.5.16.1143",
+	"ver": "23.8.31.1110",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",
@@ -25109,6 +25214,8 @@
 	"compilerTarget": 2,
 	"tabWidth": null,
 	"printWidth": null,
+	"generateVersionOnActivation": false,
+	"activationHistoryCount": 0,
 	"apis": [],
 	"package": "ae5dd690-2555-ed11-ade6-000d3ab237df"
 }

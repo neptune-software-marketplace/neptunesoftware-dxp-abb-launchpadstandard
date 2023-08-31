@@ -71,18 +71,30 @@ sap.n.Layout = {
     },
 
     showAppTitle: function () {
+        if (typeof AppCache.config.showAppTitle === 'undefined') {
+            return true;
+        }
+
         return sap.n.Launchpad.isPhone()
             ? !!AppCache.config.showAppTitleMobile
             : AppCache.config.showAppTitle;
     },
 
     activeAppsSide: function () {
+        if (typeof AppCache.config.activeAppsSide === 'undefined') {
+            return true;
+        }
+
         return sap.n.Launchpad.isPhone()
             ? !!AppCache.config.activeAppsSideMobile
             : AppCache.config.activeAppsSide;
     },
 
     activeAppsTop: function () {
+        if (typeof AppCache.config.activeAppsTop === 'undefined') {
+            return true;
+        }
+
         return sap.n.Launchpad.isPhone()
             ? !!AppCache.config.activeAppsTopMobile
             : AppCache.config.activeAppsTop;
@@ -97,5 +109,17 @@ sap.n.Layout = {
                   !AppCache.config.activeAppsSide &&
                   !AppCache.config.showAppTitle &&
                   !AppCache.config.activeAppsTop);
+    },
+
+    isVerticalMenuPinned: function() {
+        return sap.n.Launchpad.isDesktop() && AppCache.config.verticalMenu;
+    },
+
+    clearAppCacheAppButtonItems: function () {
+        AppCacheAppButton.getItems().forEach((item) => {
+            if (item.sId !== 'AppCacheShellAppTitle') {
+                item.remove && item.remove();
+            }
+        });
     },
 };

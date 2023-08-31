@@ -1,8 +1,7 @@
 let AppCacheLogonOIDC = {
     state: null,
     options: {},
-    loginScopes: ['email', 'profile', 'openid', 'offline_access'],
-
+    
     Logon: function () {
         this.options = this._getLogonData();
 
@@ -100,33 +99,25 @@ let AppCacheLogonOIDC = {
     },
 
     Signout: function () {
-
         this.options = this._getLogonData();
-
-        let signOut = window.open(AppCache.Url + '/user/logon/openid-connect/' + AppCacheLogonOIDC.options.path + '/logout', '_blank', 'location=no,width=5,height=5,left=-1000,top=3000');
+        const signOut = window.open(AppCache.Url + '/user/logon/openid-connect/' + AppCacheLogonOIDC.options.path + '/logout', '_blank', 'location=no,width=5,height=5,left=-1000,top=3000');
 
         if (isCordova()) {
-
             signOut.hide();
-
-            signOut.addEventListener('loadstop', function () {
+            signOut.addEventListener('loadstop', () => {
                 signOut.close();
             })
-
         } else {
-
-            signOut.onload = function () {
+            signOut.onload = () => {
                 signOut.close();
             };
 
-            signOut.blur();
+            signOut.blur && signOut.blur();
 
-            setTimeout(function () {
+            setTimeout(() => {
                 signOut.close();
             }, 5000);
-
         }
-
     },
 
     GetTokenWithRefreshToken: function (refreshToken, process) {
@@ -274,6 +265,9 @@ let AppCacheLogonOIDC = {
     },
 
     _onTokenReady: function (data, resourceToken) {
+        if (!AppCache.userInfo) {
+            AppCache.userInfo = {};
+        }
 
         AppCache.userInfo.oidcToken = data;
         AppCache.userInfo.oidcUser = AppCacheLogonAzure._parseJwt(AppCache.userInfo.oidcToken.id_token);

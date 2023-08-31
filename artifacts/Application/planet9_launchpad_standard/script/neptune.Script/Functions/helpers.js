@@ -181,25 +181,29 @@ function showLaunchpadNotFoundError(status) {
     });
 }
 
-function setiOSPwaIcons() {
+const iconTypes = ['shortcut icon', 'icon', 'apple-touch-icon'];
+function setiOSPWAIcons() {
     if (!sap.ui.Device.os.ios) {
         return;
     }
     
-    jsonRequest({ type: 'GET', url: `${AppCache.Url}/public/launchpad/${AppCache.launchpadID}/pwa.json` }).then((data) => {
-        function setIcon(icon, href) {
-            document.querySelector(`link[rel='${icon}'`).setAttribute('href', href);
-        }
-
+    jsonRequest({
+        type: 'GET',
+        url: `${AppCache.Url}/public/launchpad/${AppCache.launchpadID}/pwa.json`,
+    }).then((data) => {
         if (!data.icons.length) {
             return;
         }
-        
-        const src = data.icons[0].src;
 
-        setIcon('shortcut icon', src);
-        setIcon('icon', src);
-        setIcon('apple-touch-icon', src);
+        function setIcon(rel, href) {
+            if (!href) return;
+            document.querySelector(`link[rel='${rel}'`).setAttribute('href', href);
+        }
+        
+        const { src } = data.icons[0];
+        iconTypes.forEach((rel) => {
+            setIcon(rel, src)
+        });
     });
 }
 
@@ -210,4 +214,145 @@ function setSelectedLoginType(type) {
 
 function clearSelectedLoginType() {
     localStorage.removeItem('selectedLoginType');
+}
+
+function emptyBase64Image() {
+    return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xw8AAoMBgDTD2qgAAAAASUVORK5CYII=';
+}
+
+const _lazyLoadImagesList = [];
+let downloadingImage = false;
+function lazyLoadImage(src, target, type) {
+    _lazyLoadImagesList.push({ src, target, type });
+    downloadLazyLoadImages();
+}
+
+if (document.readyState === 'complete') {
+    downloadLazyLoadImages();
+} else {
+    window.addEventListener('load', () => {
+        downloadLazyLoadImages();
+    });
+}
+
+function downloadLazyLoadImages() {
+    if (document.readyState !== 'complete' || downloadingImage || _lazyLoadImagesList.length === 0) {
+        return;
+    }
+
+    downloadingImage = true;
+
+    function setImageSrc(src, target, type) {
+        if (type === 'element' && target instanceof HTMLImageElement) {
+            target.setAttribute('src', src);
+        } else if (type === 'sap-component') {
+            target.setSrc(src);
+        } else if (type === 'style') {
+            appendStyle(
+                elById('NeptuneStyleDivDynamic'),
+                createStyle(`
+                    ${target} {
+                        background-image: url(${src});
+                    }
+                `)
+            );
+        }
+    }
+
+    const { src, target, type } = _lazyLoadImagesList.shift();
+    if (src.startsWith('data:')) {
+        setImageSrc(src, target, type);
+        downloadLazyLoadImages();
+        return;
+    }
+
+    fetch(src).then(res => {
+        if (!res.ok) return;
+        return res.blob();
+    }).then(res => {
+        setImageSrc(URL.createObjectURL(res), target, type);
+        downloadingImage = false;
+        downloadLazyLoadImages();
+    }).catch(() => {
+        downloadingImage = false;
+        downloadLazyLoadImages();
+    });
+}
+
+function setPWAInstallQueryStatus() {
+    diaPWAInstall.close();
+    modeldiaPWAInstall.setData({ visible: false });
+    setCachediaPWAInstall();
+}
+
+function promptForPWAInstall() {
+    _pwadeferredPrompt.prompt();
+    _pwadeferredPrompt.userChoice
+    .then(function(choiceResult) {
+        if (choiceResult.outcome === 'accepted') {
+            diaPWAInstall.close();
+        }
+        _pwadeferredPrompt = null;        
+    });
+}
+
+function setLaunchpadIcons() {
+    iconTypes.forEach((rel) => {
+        let href = '';
+        if (typeof AppCache.CustomLogo === 'string' && AppCache.CustomLogo.trim().length > 0) {
+            href = AppCache.CustomLogo;
+        } else {
+            if (rel.includes('shortcut')) {
+                href = '/public/images/favicon.png';
+            } else {
+                href = '/public/images/NeptuneIcon192px.png';
+            }
+        }
+
+        const link = document.createElement('link');
+        link.href = href;
+        link.rel = rel;
+
+        if (rel.includes('shortcut')) {
+            link.type = 'image/x-icon';
+        }
+
+        document.head.appendChild(link);
+    });
+}
+
+function fetchUserInfo(success, error){
+    return sap.n.Planet9.function({
+        id: dataSet,
+        method: 'GetUserInfo',
+        success,
+        error,
+    });
+}
+
+function downloadApp(tile) {
+    // Application
+    if (tile.actionApplication) {
+        AppCache.Load(tile.actionApplication, {
+            load: 'download',
+            appPath: tile.urlApplication ?? '',
+            appType: tile.urlType ?? '',
+            appAuth: tile.urlAuth ?? '',
+            sapICFNode: tile.sapICFNode,
+        });
+    }
+
+    // Application in Tile
+    if (tile.type === 'application' && tile.tileApplication) {
+        AppCache.Load(tile.tileApplication, {
+            load: 'download',
+        });
+    }
+}
+
+function fetchAppUpdates() {
+    appCacheLog(`FetchAppUpdates`);
+    Array.isArray(modelAppCacheTiles.oData) && modelAppCacheTiles.oData.forEach(function (tile) {
+        downloadApp(tile);
+    });
 }

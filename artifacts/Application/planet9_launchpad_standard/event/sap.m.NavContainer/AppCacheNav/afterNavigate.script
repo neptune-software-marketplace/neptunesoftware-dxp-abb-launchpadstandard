@@ -7,7 +7,7 @@ if (currentPage.getId().startsWith('page') && currentPage.getContent().length ==
     cat = cat.split('page')[1];
 
     const category = sap.n.Customization.getCategory(cat);
-    if (category) {
+    if (category && (category.tiles.length > 0 || category.tilegroups.length > 0)) {
         sap.n.Launchpad.BuildTiles(category);
     } else {
         const tilegroup = sap.n.Customization.getTileGroup(cat);

@@ -582,7 +582,9 @@ sap.n.Customization = {
 
     getCategory(categoryId) {
         const category = ModelData.FindFirst(AppCacheCategory, "id", categoryId);
-        if (category) return category;
+        if (category) return Object.assign({}, JSON.parse(JSON.stringify(category)), {
+            status: "active",
+        });
 
         return this.getCategories().find((category) => category.id === categoryId);
     },
@@ -693,6 +695,7 @@ sap.n.Customization = {
     stopJiggling() {
         this.setActivation(false);
         this.jiggleElement().classList.remove("jiggle");
+        sap.n.Launchpad.BuildTreeMenu();
     },
 
     checkToStopJigglingOnMouseDown(e) {

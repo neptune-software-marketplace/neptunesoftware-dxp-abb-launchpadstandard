@@ -171,7 +171,7 @@ const NumPad = {
 
     Logon: function () {
         appCacheLog(`NumPad.Logon: Starting with auth ${AppCache.Encrypted}`);
-
+        
         if (!AppCache.Encrypted) {
             appCacheLog('NumPad.Logon: No auth found');
             appCacheLog(AppCache.userInfo);
@@ -229,6 +229,8 @@ const NumPad = {
 
         AppCache.userInfo.authDecrypted = auth;
         sap.ui.core.BusyIndicator.show(0);
+
+        sap.n.Launchpad.handleAppTitle(AppCache.launchpadTitle);
 
         // Re-Logon 
         if (AppCache.isOffline) {

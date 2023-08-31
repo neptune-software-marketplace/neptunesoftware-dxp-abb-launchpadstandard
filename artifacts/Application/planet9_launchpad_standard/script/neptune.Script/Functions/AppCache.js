@@ -318,7 +318,7 @@ let AppCache = {
 
         // Turn off
         blockRunningRow.destroyContent();
-        AppCacheAppButton.removeAllItems();
+        sap.n.Layout.clearAppCacheAppButtonItems();
 
         // Close all Tiles - Clear memory
         for (let key in AppCache.View) {
@@ -457,24 +457,10 @@ let AppCache = {
         AppCache.coreLanguageHandler.updateResourceBundlesNewLang(language);
     },
 
-    restrictedDisable: function () {
-        AppCacheUserActionSettings.setVisible(true);
-        AppCache_boxPasscodeEntry.setVisible(false);
-        AppCacheShellTitle.setVisible(false);
-        AppCacheShellTitle.setText();
-
-        if (!AppCache.StartApp && !AppCache.StartWebApp) AppCacheShellMenu.setVisible(true);
-
-        // Config
-        if (AppCache.config) {
-            if (AppCache.config.hideTopHeader) topMenu.setHeight('0px');
-            if (AppCache.config.verticalMenu && sap.ui.Device.resize.width >= sap.n.Launchpad.verticalMenuLimit) sap.n.Launchpad.overflowMenuOpen();
-        }
-
+    waitForAppCacheLoadOnRestrictedDisable: function (onLoad) {
         appCacheLog('AppCache.restrictedDisable: Before get data from database');
         getCacheAppCacheDiaSettings(true);
-
-        // Get User Data
+        
         cacheLoaded = 0;
         getCacheAppCacheTiles(true);
         getCacheAppCacheCategory(true);
@@ -483,7 +469,17 @@ let AppCache = {
         getCacheAppCacheTilesFav(true);
         getCacheAppCacheCustomization(true);
 
-        // Init IDP Provider  
+        function waiting() {
+            if (cacheLoaded >= 6) {
+                onLoad();
+            } else {
+                setTimeout(waiting, 50);
+            }
+        }
+        waiting();
+    },
+
+    initIDPProvider: function () {
         if (AppCache.userInfo.logonData && AppCache.userInfo.logonData.type) {
             switch (AppCache.userInfo.logonData.type) {
                 case 'local':
@@ -504,59 +500,75 @@ let AppCache = {
                     break;
             }
         }
+    },
 
-        (function () {
-            function waitForCache() {
-                if (cacheLoaded >= 6) {
-                    AppCache.isRestricted = false;
-                    AppCache.Encrypted = '';
-
-                    appCacheLog('AppCache.restrictedDisable: All data fetched from database');
-
-                    if (AppCache.enablePasscode) {
-                        AppCacheUserActionLock.setVisible(true);
-                        AppCacheUserActionSwitch.setVisible(false);
-                    } else {
-                        AppCacheUserActionLogoff.setVisible(true);
-                    }
-
-                    // Enhancement
-                    if (sap.n.Enhancement.RestrictedDisable) {
-                        try {
-                            sap.n.Enhancement.RestrictedDisable();
-                        } catch (e) {
-                            appCacheError('Enhancement RestrictedDisable ' + e);
-                        }
-                    }
-
-                    if (AppCache.enablePasscode && !AppCache.isOffline) {
-                        AppCache.updateUserInfo().then(function (status) {
-                            // TODO - Consider to move on even if updateUserInfo fails ? 
-                            if (status === 'Ok') {
-                                AppCache.UpdateGetData();
-                            } else {
-                                appCacheError('User logoff due to error in updateUserInfo');
-                                AppCache.Lock();
-                            }
-                        });
-                    } else {
-                        AppCache.UpdateGetData();
-                    }
-
-                } else {
-                    setTimeout(waitForCache, 50);
-                }
-            }
-            waitForCache();
-        })();
-
-        // Update users Login Time 
+    updateUserLoginTime: function () {
         let user = ModelData.FindFirst(AppCacheUsers, 'username', AppCache.userInfo.username);
         if (user) {
             user.lastLogin = Date.now();
             ModelData.Update(AppCacheUsers, 'username', AppCache.userInfo.username, user);
             setCacheAppCacheUsers();
         }
+    },
+
+    restrictedDisable: function () {
+        AppCacheUserActionSettings.setVisible(true);
+        AppCache_boxPasscodeEntry.setVisible(false);
+        AppCacheShellTitle.setVisible(false);
+        AppCacheShellTitle.setText();
+
+        if (!AppCache.StartApp && !AppCache.StartWebApp) AppCacheShellMenu.setVisible(true);
+
+        // Config
+        if (AppCache.config) {
+            if (AppCache.config.hideTopHeader) topMenu.setHeight('0px');
+            if (AppCache.config.verticalMenu && sap.ui.Device.resize.width >= sap.n.Launchpad.verticalMenuLimit) sap.n.Launchpad.overflowMenuOpen();
+        }
+
+        this.initIDPProvider();
+
+        if (AppCache.enablePasscode) {
+            AppCacheUserActionLock.setVisible(true);
+            AppCacheUserActionSwitch.setVisible(false);
+        } else {
+            AppCacheUserActionLogoff.setVisible(true);
+        }
+
+        function onAppCacheLoad() {
+            AppCache.isRestricted = false;
+            AppCache.Encrypted = '';
+
+            appCacheLog('AppCache.restrictedDisable: All data fetched from database');
+
+            // Enhancement
+            if (sap.n.Enhancement.RestrictedDisable) {
+                try {
+                    sap.n.Enhancement.RestrictedDisable();
+                } catch (e) {
+                    appCacheError('Enhancement RestrictedDisable ' + e);
+                }
+            }
+        }
+
+        if (AppCache.enablePasscode && !AppCache.isOffline) {
+            AppCache.updateUserInfo().then((status) => {
+                // TODO - Consider to move on even if updateUserInfo fails ? 
+                if (status === 'Ok') {
+                    AppCache.UpdateGetData().then(() => {
+                        this.waitForAppCacheLoadOnRestrictedDisable(onAppCacheLoad);
+                    });
+                } else {
+                    appCacheError('User logoff due to error in updateUserInfo');
+                    AppCache.Lock();
+                }
+            });
+        } else {
+            AppCache.UpdateGetData().then(() => {
+                this.waitForAppCacheLoadOnRestrictedDisable(onAppCacheLoad);
+            });
+        }
+
+        this.updateUserLoginTime();
     },
 
     AutoUpdateMobileApp: function () {
@@ -604,7 +616,33 @@ let AppCache = {
         }
     },
 
-    UpdateMobileApp: function (fileUrl, version) {
+    GetInstallationDir: async function () {
+        return new Promise((resolve, reject) => {
+            window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, function(fs) {
+                resolve(fs.root.nativeURL);
+            }, reject);
+        });
+    },
+
+    DownloadFile: async function(url, filePath) {
+        return new Promise((resolve, reject) => {
+            const requestId = cordova.plugin.http.downloadFile(url, undefined, undefined, filePath, resolve, reject);
+            AppCache.abortDownload = function() {
+                cordova.plugin.http.abort(requestId, () => {}, () => {});
+            }
+        });
+    },
+
+    OpenFile: async function(filePath, contentType) {
+        return new Promise((resolve, reject) => {
+            cordova.plugins.fileOpener2.open(filePath, contentType, {
+                success: resolve,
+                error: reject,
+            });
+        });
+    },
+
+    UpdateMobileApp: async function (fileUrl, version) {
         // Update App - device check
         if (sap.ui.Device.os.name !== 'iOS' && sap.ui.Device.os.name !== 'Android' && sap.ui.Device.os.name !== 'win') return;
 
@@ -633,6 +671,18 @@ let AppCache = {
         AppCache_diaDownload.open();
         AppCache_diaDownload.setText(AppCache_tDownloading.getText() + ' (v.' + version + ')...');
 
+        try {
+            const filePath = await AppCache.GetInstallationDir() + localFile;            
+            await AppCache.DownloadFile(remoteFile, filePath);
+            await AppCache.OpenFile(filePath, contentType);
+            AppCache_diaDownload.close();
+        } catch (error) {
+            const message = error?.message || 'Error installing new version';
+            AppCache_diaDownload.setText(message);
+            console.error(error);
+        }
+
+        /*
         // Delete Old File
         window.resolveLocalFileSystemURL(localFile, function (fileEntry) {
             fileEntry.remove();
@@ -738,7 +788,7 @@ let AppCache = {
             sap.m.MessageToast.show(AppCache_tErrorDownloading.getText());
             AppCache.downloadXhr = null;
         };
-
+        */
     },
 
     clearCookies: function () {
@@ -1680,16 +1730,13 @@ let AppCache = {
     },
 
     getUserInfo: function () {
-        // Fetch UserData
-        sap.n.Planet9.function({
-            id: dataSet,
-            method: 'GetUserInfo',
-            success: function (data) {
+        fetchUserInfo(
+            function (data) {
                 appCacheLog('Successfully received User Info from P9');
                 appCacheLog(data);
                 AppCache.afterUserInfo(false, data);
             },
-            error: function (result, error) {
+            function (result, error) {
                 appCacheError('Error getting User Info (getUserInfo)');
 
                 // Cookie Disabled ? 
@@ -1699,19 +1746,15 @@ let AppCache = {
 
                 AppCache.afterUserInfo(true);
             }
-        });
-
+        );
     },
 
     updateUserInfo: function () {
         return new Promise(function (resolve) {
             appCacheLog('AppCache.updateUserInfo: Starting');
 
-            // Fetch UserData
-            sap.n.Planet9.function({
-                id: dataSet,
-                method: 'GetUserInfo',
-                success: function (userInfo) {
+            fetchUserInfo(
+                function (userInfo) {
                     appCacheLog('AppCache.updateUserInfo: Successfully received User Info from P9');
                     appCacheLog(userInfo);
 
@@ -1737,12 +1780,12 @@ let AppCache = {
                     }
                     resolve('Ok');
                 },
-                error: function (result, _err) {
+                function (result, _err) {
                     appCacheError('Error getting User Info from (updateUserInfo)');
                     appCacheError(result);
                     resolve('Error');
                 }
-            });
+            );
         });
     },
 
@@ -1765,6 +1808,10 @@ let AppCache = {
 
         if (AppCache.loginApp) AppCacheShellUI.setAppWidthLimited(true);
 
+        // User Information
+        if (userData) AppCache.userInfo = userData;
+        AppCache.setUserInfo();
+
         // Azure/OIDC - No PIN Code
         if (!AppCache.enablePasscode) {
             if (AppCache.userInfo && AppCache.userInfo.azureToken) userData.azureToken = AppCache.userInfo.azureToken;
@@ -1784,9 +1831,13 @@ let AppCache = {
 
         }
 
-        // User Information
-        if (userData) AppCache.userInfo = userData;
-        AppCache.setUserInfo();
+        // Set Layout
+        getCacheAppCacheDiaSettings(true);
+        if (AppCache.layout) {
+            if (modelAppCacheDiaSettings.oData && modelAppCacheDiaSettings.oData.userTheme) {
+                sap.n.Launchpad.applyUserTheme();
+            }
+        }
 
         // Desktop 
         if (!AppCache.isMobile) {
@@ -1820,6 +1871,7 @@ let AppCache = {
             }
 
             if (AppCache.enablePasscode) {
+                NumPad.Verify = true;
                 AppCache.setEnablePasscodeScreen();
             } else {
                 NumPad.Verify = true;
@@ -2136,7 +2188,7 @@ let AppCache = {
 
     Update: function () {
         appCacheLog('AppCache.Update: Starting');
-        setiOSPwaIcons();
+        setiOSPWAIcons();
 
         let afterPromise = function () {
             if (AppCache.isMobile) {
@@ -2220,8 +2272,6 @@ let AppCache = {
                 AppCacheShellUI.setAppWidthLimited(false);
                 sap.ui.core.BusyIndicator.hide();
             } else {
-                // move after sap.n.Customizations.init
-                // sap.n.Launchpad.BuildMenu();
                 if (!AppCache.isPublic && !modelAppCacheTiles.oData.length) busyDialogStartup.open();
             }
 
@@ -2273,7 +2323,7 @@ let AppCache = {
 
                     sap.n.Customization.Popover.init();
                 });
-                return;
+                return resolve();
             }
 
             // Get Tiles 
@@ -2286,7 +2336,7 @@ let AppCache = {
 
                     if (data.status && isLaunchpadNotFound(data.status)) {
                         showLaunchpadNotFoundError(data.status);
-                        return;
+                        return resolve();
                     }
 
                     // Blackout
@@ -2305,7 +2355,7 @@ let AppCache = {
                                 }
                             }
                         });
-                        return;
+                        return resolve();
                     }
 
                     if (!data.categoryChilds) data.categoryChilds = [];
@@ -2398,6 +2448,7 @@ let AppCache = {
                             sap.n.Launchpad.BuildMenu();
                         }
 
+                        busyDialogStartup.close();
                         sap.n.Customization.Popover.init();
                     });
                 },
@@ -2415,7 +2466,7 @@ let AppCache = {
 
                     if (result.responseJSON && result.responseJSON.status && isLaunchpadNotFound(result.responseJSON.status)) {
                         showLaunchpadNotFoundError(result.responseJSON.status);
-                        return;
+                        return resolve();
                     }
 
                     resolve();
@@ -2598,8 +2649,8 @@ let AppCache = {
 
         // Title
         sap.n.Launchpad.SetHeader();
+        sap.n.Layout.setHeaderPadding();
         sap.n.Launchpad.handleAppTitle(AppCache.launchpadTitle);
-
     },
 
     Back: function () {
@@ -2729,6 +2780,8 @@ let AppCache = {
     },
 
     setEnablePasscodeScreen: function () {
+        if (!NumPad.Verify) return;
+
         closeContentNavigator();
         sap.n.Launchpad.setHideTopButtons(true);
         AppCache_inPasscode1.setEnabled(true);
@@ -3242,6 +3295,9 @@ let AppCache = {
         // Reset Password Link
         if (AppCache.passUrlReset && AppCache.passUrlReset !== 'null') AppCache_resetPassword.setVisible(true);
 
+        // Set Launchpad Icons
+        setLaunchpadIcons();
+
         // Get Cache
         appCacheLog('AppCache.Startup: Loading Apps');
         getCacheAppCacheData();
@@ -3288,7 +3344,6 @@ let AppCache = {
                 (function () {
                     function waitForCache() {
                         if (cacheLoaded >= 1) {
-
                             appCacheLog('AppCache.Startup: Got users from database');
 
                             // If localStorage fails to decrypt
@@ -3431,8 +3486,16 @@ let AppCache = {
         // PWA Install
         setTimeout(function () {
             if (_pwaInstall) {
-                pageShell.setShowSubHeader(true);
-                actionPWA.setVisible(true);
+                AppCacheInstallPWASettings.setVisible(true);
+
+                if (modeldiaPWAInstall && modeldiaPWAInstall.oData) {
+                    const { visible } = modeldiaPWAInstall.getData()
+                    if (visible !== false) {
+                        diaPWAInstall.open();
+                    }
+                } else {
+                    diaPWAInstall.open();
+                }
             }
         }, 500);
 

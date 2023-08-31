@@ -123,7 +123,7 @@ sap.n.Launchpad = {
                 break;
 
             case 'cat':
-                dataCat = ModelData.FindFirst(AppCacheCategory, 'id', data.id);
+                dataCat = sap.n.Customization.getCategory(data.id);
                 if (!dataCat) dataCat = ModelData.FindFirst(AppCacheCategoryChild, 'id', data.id);
                 sap.n.Launchpad.handleAppTitle(AppCache.launchpadTitle);
                 location.hash = 'neptopmenu&' + dataCat.id;
@@ -241,6 +241,10 @@ sap.n.Launchpad = {
         if (config.isFav) {
             tiles = modelAppCacheTilesFav.oData;
             rowId = `${nepPrefix()}CatFav${config.dataCat.id}`;
+
+            if (tiles.length === 0) {
+                tiles = sap.n.Customization.getTiles(config.dataCat.id);
+            }
         } else {
             tiles = sap.n.Customization.getTiles(config.dataCat.id);
         }
@@ -403,12 +407,15 @@ sap.n.Launchpad = {
         const el = document.querySelector('html');
         removeClass(el, ['nepLayout', 'nepThemeLight', 'nepThemeDark']);
 
-        if (theme === 'sap_fiori_3_dark' || theme === 'sap_horizon_dark' || theme === 'neptune_horizon_dark') addClass(el, ['nepLayout', 'nepThemeDark']);
-        else addClass(el, ['nepLayout', 'nepThemeLight']);
+        if (theme.endsWith('_dark')) {
+            addClass(el, ['nepLayout', 'nepThemeDark']);
+        } else {
+            addClass(el, ['nepLayout', 'nepThemeLight']);
+        }
     },
 
     applyUserTheme: function () {
-        if (modelAppCacheDiaSettings.oData.userTheme) {
+        if (modelAppCacheDiaSettings.oData && modelAppCacheDiaSettings.oData.userTheme) {
             AppCache.layout.forEach(function (data) {
                 if (data.id === modelAppCacheDiaSettings.oData.userTheme) {
                     let layout = JSON.parse(JSON.stringify(data));
@@ -475,7 +482,6 @@ sap.n.Launchpad = {
             AppCacheNav.to(pageCat);
 
         }
-
     },
 
     BuildMenuTop: function () {
@@ -701,13 +707,18 @@ sap.n.Launchpad = {
             }
         }
 
-        modelAppCacheCategory.oData.forEach(function (dataCat) {
+        sap.n.Customization.getCategories().forEach(function (dataCat) {
             if (dataCat.hideFromMenu) return;
+
+            let title = sap.n.Launchpad.translateTile('title', dataCat);
+            if (!title && dataCat.isCustom && dataCat.status === 'active') {
+                title = dataCat.props.menuText || dataCat.props.title;
+            }
 
             treeData.push({
                 id: dataCat.id,
                 parent: '',
-                title: sap.n.Launchpad.translateTile('title', dataCat),
+                title,
                 type: 'cat',
             });
 
@@ -809,9 +820,10 @@ sap.n.Launchpad = {
     },
 
     MarkTopMenu: function (menuID) {
+        const activeId = `${nepPrefix()}${menuID}`;
         AppCacheAppButton.getItems().forEach(function (item) {
-            if (item.removeStyleClass) item.removeStyleClass('nepTopMenuActive');
-            if (item.sId === `${nepPrefix()}${menuID}`) item.addStyleClass('nepTopMenuActive');
+            if (item.removeStyleClass && item.sId !== activeId) item.removeStyleClass('nepTopMenuActive');
+            if (item.sId === activeId) item.addStyleClass('nepTopMenuActive');
         });
     },
 
@@ -996,6 +1008,10 @@ sap.n.Launchpad = {
                     isFav: !!dataCat.inclFav,
                     path: [dataCat.id],
                 });
+
+                if (!!dataCat.inclFav) {
+                    cards.addStyleClass('favorite-cards');
+                }
 
                 gridContainer.addItem(sap.n.Launchpad.GetGroupHeader(dataCat, cards));
                 gridContainer.addItem(cards);
@@ -2274,10 +2290,13 @@ sap.n.Launchpad = {
             height = dataCat.imageHeight;
         }
 
-        // TODO - Support for offline images
+        if (url) {
+            let id = `${nepPrefix()}CatHeader${dataCat.id}`;
+            lazyLoadImage(`${AppCache.Url}${url}`, `.${id} .sapMPanelContent`, 'style');
+        }
+
         return `
             height: ${height || defaultHeight} !important;
-            background-image: url('${AppCache.Url}${url}');
             background-repeat: ${repeat || defaultRepeat};
             background-position: ${position || defaultPosition};
             background-size: ${size || defaultSize};
@@ -2354,6 +2373,8 @@ sap.n.Launchpad = {
                 let position = (!!dataTile.imagePlacement) ? dataTile.imagePlacement : 'center';
 
                 if (dataTile.imagePosition === 'cover') {
+                    lazyLoadImage(imageUrl, `.tile${dataTile.id}`, 'style');
+                    imageUrl = emptyBase64Image();
                     css += `
                         .tile${dataTile.id} {
                             background-image: url('${imageUrl}');
