@@ -17,7 +17,7 @@ function serializeDataForQueryString(data) {
  */
 function cordovaRequest(opts) {
     return new Promise((resolve, reject) => {
-        const url = new URL(opts.url);
+        const url = opts.url[0] === '/' ? new URL(opts.url, AppCache.Url) : new URL(opts.url);
         const method = opts.type.toLowerCase();
         let data = {};
         let headers = {};

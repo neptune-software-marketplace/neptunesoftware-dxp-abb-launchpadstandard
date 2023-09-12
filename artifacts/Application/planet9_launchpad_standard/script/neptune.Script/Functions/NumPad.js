@@ -210,7 +210,7 @@ const NumPad = {
             if (navigator.notification && navigator.notification.vibrate) navigator.notification.vibrate(250);
             boxNumpad02.addStyleClass('animated shake');
 
-            sap.m.MessageBox.error('Wrong Pin Code!', {
+            sap.m.MessageBox.error(AppCache_tWrongPin.getText(), {
                 onClose: () => {
                     butNumpad1.focus();
                 },

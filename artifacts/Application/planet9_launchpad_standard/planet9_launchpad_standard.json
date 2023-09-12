@@ -405,6 +405,10 @@
 																									"value": "Меню"
 																								},
 																								{
+																									"language": "EN",
+																									"value": "Menu"
+																								},
+																								{
 																									"language": "DE",
 																									"value": "Menü"
 																								},
@@ -431,10 +435,6 @@
 																								{
 																									"language": "SV",
 																									"value": "Meny"
-																								},
-																								{
-																									"language": "EN",
-																									"value": "Menu"
 																								}
 																							]
 																						},
@@ -1408,6 +1408,10 @@
 																							"value": "Меню на потребителя"
 																						},
 																						{
+																							"language": "EN",
+																							"value": "User Menu"
+																						},
+																						{
 																							"language": "DE",
 																							"value": "Benutzermenü"
 																						},
@@ -1434,10 +1438,6 @@
 																						{
 																							"language": "SV",
 																							"value": "Användarmeny"
-																						},
-																						{
-																							"language": "EN",
-																							"value": "User Menu"
 																						}
 																					]
 																				},
@@ -1828,6 +1828,10 @@
 																											"value": "Филтриране по тагове"
 																										},
 																										{
+																											"language": "EN",
+																											"value": "Filter by tags"
+																										},
+																										{
 																											"language": "DE",
 																											"value": "Nach Tags filtern"
 																										},
@@ -1854,10 +1858,6 @@
 																										{
 																											"language": "SV",
 																											"value": "Filtrera efter taggar"
-																										},
-																										{
-																											"language": "EN",
-																											"value": "Filter by tags"
 																										}
 																									]
 																								},
@@ -1968,6 +1968,10 @@
 																											"value": "Разширете"
 																										},
 																										{
+																											"language": "EN",
+																											"value": "Expand"
+																										},
+																										{
 																											"language": "DE",
 																											"value": "Erweitern"
 																										},
@@ -1994,10 +1998,6 @@
 																										{
 																											"language": "SV",
 																											"value": "Bygga ut"
-																										},
-																										{
-																											"language": "EN",
-																											"value": "Expand"
 																										}
 																									]
 																								},
@@ -2108,6 +2108,10 @@
 																											"value": "колапс"
 																										},
 																										{
+																											"language": "EN",
+																											"value": "Collapse"
+																										},
+																										{
 																											"language": "DE",
 																											"value": "Zusammenbruch"
 																										},
@@ -2134,10 +2138,6 @@
 																										{
 																											"language": "SV",
 																											"value": "Kollaps"
-																										},
-																										{
-																											"language": "EN",
-																											"value": "Collapse"
 																										}
 																									]
 																								},
@@ -2356,6 +2356,10 @@
 																											"value": "Филтриране по тагове"
 																										},
 																										{
+																											"language": "EN",
+																											"value": "Filter by tags"
+																										},
+																										{
 																											"language": "DE",
 																											"value": "Nach Tags filtern"
 																										},
@@ -2382,10 +2386,6 @@
 																										{
 																											"language": "SV",
 																											"value": "Filtrera efter taggar"
-																										},
-																										{
-																											"language": "EN",
-																											"value": "Filter by tags"
 																										}
 																									]
 																								},
@@ -2518,6 +2518,10 @@
 																											"value": "Активни приложения"
 																										},
 																										{
+																											"language": "EN",
+																											"value": "Active Apps"
+																										},
+																										{
 																											"language": "DE",
 																											"value": "Aktive Apps"
 																										},
@@ -2544,10 +2548,6 @@
 																										{
 																											"language": "SV",
 																											"value": "Aktiva appar"
-																										},
-																										{
-																											"language": "EN",
-																											"value": "Active Apps"
 																										}
 																									]
 																								},
@@ -3360,6 +3360,10 @@
 																																			"value": "Gepubliceerd"
 																																		},
 																																		{
+																																			"language": "EN",
+																																			"value": "Published"
+																																		},
+																																		{
 																																			"language": "FI",
 																																			"value": "Julkaistu"
 																																		},
@@ -3398,10 +3402,6 @@
 																																		{
 																																			"language": "SV",
 																																			"value": "Publicerad"
-																																		},
-																																		{
-																																			"language": "EN",
-																																			"value": "Published"
 																																		}
 																																	]
 																																},
@@ -3451,6 +3451,10 @@
 																																			"value": "Uitgeverij"
 																																		},
 																																		{
+																																			"language": "EN",
+																																			"value": "Publisher"
+																																		},
+																																		{
 																																			"language": "FI",
 																																			"value": "Kustantaja"
 																																		},
@@ -3489,10 +3493,6 @@
 																																		{
 																																			"language": "SV",
 																																			"value": "Utgivare"
-																																		},
-																																		{
-																																			"language": "EN",
-																																			"value": "Publisher"
 																																		}
 																																	]
 																																},
@@ -3542,6 +3542,10 @@
 																																			"value": "Omschrijving"
 																																		},
 																																		{
+																																			"language": "EN",
+																																			"value": "Description"
+																																		},
+																																		{
 																																			"language": "FI",
 																																			"value": "Kuvaus"
 																																		},
@@ -3580,10 +3584,6 @@
 																																		{
 																																			"language": "SV",
 																																			"value": "Beskrivning"
-																																		},
-																																		{
-																																			"language": "EN",
-																																			"value": "Description"
 																																		}
 																																	]
 																																},
@@ -3653,6 +3653,10 @@
 																																			"value": "Schrijver"
 																																		},
 																																		{
+																																			"language": "EN",
+																																			"value": "Author"
+																																		},
+																																		{
 																																			"language": "FI",
 																																			"value": "kirjailija"
 																																		},
@@ -3691,10 +3695,6 @@
 																																		{
 																																			"language": "SV",
 																																			"value": "Författare"
-																																		},
-																																		{
-																																			"language": "EN",
-																																			"value": "Author"
 																																		}
 																																	]
 																																},
@@ -3975,6 +3975,10 @@
 																																			"value": "Installeren"
 																																		},
 																																		{
+																																			"language": "EN",
+																																			"value": "Install"
+																																		},
+																																		{
 																																			"language": "FI",
 																																			"value": "Asentaa"
 																																		},
@@ -4013,10 +4017,6 @@
 																																		{
 																																			"language": "SV",
 																																			"value": "Installera"
-																																		},
-																																		{
-																																			"language": "EN",
-																																			"value": "Install"
 																																		}
 																																	]
 																																},
@@ -4159,6 +4159,10 @@
 																																	"value": "Klik om te vergroten"
 																																},
 																																{
+																																	"language": "EN",
+																																	"value": "Click to enlarge"
+																																},
+																																{
 																																	"language": "FI",
 																																	"value": "Klikkaa suurentaaksesi"
 																																},
@@ -4197,10 +4201,6 @@
 																																{
 																																	"language": "SV",
 																																	"value": "Klicka för att förstora"
-																																},
-																																{
-																																	"language": "EN",
-																																	"value": "Click to enlarge"
 																																}
 																															]
 																														},
@@ -4522,6 +4522,10 @@
 																															"value": "Login-provider"
 																														},
 																														{
+																															"language": "EN",
+																															"value": "Login Provider"
+																														},
+																														{
 																															"language": "FI",
 																															"value": "Kirjaudu palveluntarjoajalle"
 																														},
@@ -4560,10 +4564,6 @@
 																														{
 																															"language": "SV",
 																															"value": "Inloggningsleverantör"
-																														},
-																														{
-																															"language": "EN",
-																															"value": "Login Provider"
 																														}
 																													]
 																												},
@@ -4640,6 +4640,10 @@
 																															"value": "Gebruikersnaam"
 																														},
 																														{
+																															"language": "EN",
+																															"value": "Username"
+																														},
+																														{
 																															"language": "FI",
 																															"value": "Käyttäjätunnus"
 																														},
@@ -4678,10 +4682,6 @@
 																														{
 																															"language": "SV",
 																															"value": "Användarnamn"
-																														},
-																														{
-																															"language": "EN",
-																															"value": "Username"
 																														}
 																													]
 																												},
@@ -4758,6 +4758,10 @@
 																															"value": "Wachtwoord"
 																														},
 																														{
+																															"language": "EN",
+																															"value": "Password"
+																														},
+																														{
 																															"language": "FI",
 																															"value": "Salasana"
 																														},
@@ -4796,10 +4800,6 @@
 																														{
 																															"language": "SV",
 																															"value": "Lösenord"
-																														},
-																														{
-																															"language": "EN",
-																															"value": "Password"
 																														}
 																													]
 																												},
@@ -4890,6 +4890,10 @@
 																															"value": "Taal"
 																														},
 																														{
+																															"language": "EN",
+																															"value": "Language"
+																														},
+																														{
 																															"language": "FI",
 																															"value": "Kieli"
 																														},
@@ -4928,10 +4932,6 @@
 																														{
 																															"language": "SV",
 																															"value": "Språk"
-																														},
-																														{
-																															"language": "EN",
-																															"value": "Language"
 																														}
 																													]
 																												},
@@ -5017,6 +5017,10 @@
 																															"value": "Laat wachtwoord zien"
 																														},
 																														{
+																															"language": "EN",
+																															"value": "Show password"
+																														},
+																														{
 																															"language": "FI",
 																															"value": "Näytä salasana"
 																														},
@@ -5047,10 +5051,6 @@
 																														{
 																															"language": "SV",
 																															"value": "Visa lösenord"
-																														},
-																														{
-																															"language": "EN",
-																															"value": "Show password"
 																														}
 																													]
 																												},
@@ -5108,12 +5108,12 @@
 																													"script": "",
 																													"translation": [
 																														{
-																															"language": "PL",
-																															"value": "Zapamiętaj mnie"
-																														},
-																														{
 																															"language": "EN",
 																															"value": "Remember me"
+																														},
+																														{
+																															"language": "PL",
+																															"value": "Zapamiętaj mnie"
 																														}
 																													]
 																												}
@@ -5190,6 +5190,10 @@
 																															"value": "Inloggen"
 																														},
 																														{
+																															"language": "EN",
+																															"value": "Sign in"
+																														},
+																														{
 																															"language": "FI",
 																															"value": "Kirjaudu sisään"
 																														},
@@ -5228,10 +5232,6 @@
 																														{
 																															"language": "SV",
 																															"value": "Logga in"
-																														},
-																														{
-																															"language": "EN",
-																															"value": "Sign in"
 																														}
 																													]
 																												},
@@ -5295,6 +5295,10 @@
 																															"value": "Wachtwoord vergeten"
 																														},
 																														{
+																															"language": "EN",
+																															"value": "Forgot Password"
+																														},
+																														{
 																															"language": "FI",
 																															"value": "Unohtuiko salasana"
 																														},
@@ -5333,10 +5337,6 @@
 																														{
 																															"language": "SV",
 																															"value": "Glömt ditt lösenord"
-																														},
-																														{
-																															"language": "EN",
-																															"value": "Forgot Password"
 																														}
 																													]
 																												},
@@ -6191,6 +6191,10 @@
 																													"value": "Wachtwoord wijzigen"
 																												},
 																												{
+																													"language": "EN",
+																													"value": "Change Password"
+																												},
+																												{
 																													"language": "FI",
 																													"value": "Vaihda salasana"
 																												},
@@ -6229,10 +6233,6 @@
 																												{
 																													"language": "SV",
 																													"value": "Ändra lösenord"
-																												},
-																												{
-																													"language": "EN",
-																													"value": "Change Password"
 																												}
 																											]
 																										},
@@ -6275,6 +6275,10 @@
 																													"value": "Oud"
 																												},
 																												{
+																													"language": "EN",
+																													"value": "Old"
+																												},
+																												{
 																													"language": "FI",
 																													"value": "Vanha"
 																												},
@@ -6313,10 +6317,6 @@
 																												{
 																													"language": "SV",
 																													"value": "Gammal"
-																												},
-																												{
-																													"language": "EN",
-																													"value": "Old"
 																												}
 																											]
 																										},
@@ -6393,6 +6393,10 @@
 																													"value": "nieuwe"
 																												},
 																												{
+																													"language": "EN",
+																													"value": "New"
+																												},
+																												{
 																													"language": "FI",
 																													"value": "Uusi"
 																												},
@@ -6431,10 +6435,6 @@
 																												{
 																													"language": "SV",
 																													"value": "Ny"
-																												},
-																												{
-																													"language": "EN",
-																													"value": "New"
 																												}
 																											]
 																										},
@@ -6504,6 +6504,10 @@
 																													"value": "Herhaling"
 																												},
 																												{
+																													"language": "EN",
+																													"value": "Repeat"
+																												},
+																												{
 																													"language": "FI",
 																													"value": "Toistaa"
 																												},
@@ -6542,10 +6546,6 @@
 																												{
 																													"language": "SV",
 																													"value": "Upprepa"
-																												},
-																												{
-																													"language": "EN",
-																													"value": "Repeat"
 																												}
 																											]
 																										},
@@ -6629,6 +6629,10 @@
 																													"value": "Bevestigen"
 																												},
 																												{
+																													"language": "EN",
+																													"value": "Confirm"
+																												},
+																												{
 																													"language": "FI",
 																													"value": "Vahvistaa"
 																												},
@@ -6667,10 +6671,6 @@
 																												{
 																													"language": "SV",
 																													"value": "Bekräfta"
-																												},
-																												{
-																													"language": "EN",
-																													"value": "Confirm"
 																												}
 																											]
 																										},
@@ -6920,6 +6920,10 @@
 																															"value": "Pincode"
 																														},
 																														{
+																															"language": "EN",
+																															"value": "Pin Code"
+																														},
+																														{
 																															"language": "FI",
 																															"value": "Pin-koodi"
 																														},
@@ -6958,10 +6962,6 @@
 																														{
 																															"language": "SV",
 																															"value": "Pinkod"
-																														},
-																														{
-																															"language": "EN",
-																															"value": "Pin Code"
 																														}
 																													]
 																												},
@@ -7011,6 +7011,10 @@
 																															"value": "Stel Pin in"
 																														},
 																														{
+																															"language": "EN",
+																															"value": "Set Pin"
+																														},
+																														{
 																															"language": "FI",
 																															"value": "Aseta Pin"
 																														},
@@ -7049,10 +7053,6 @@
 																														{
 																															"language": "SV",
 																															"value": "Ställ in pin"
-																														},
-																														{
-																															"language": "EN",
-																															"value": "Set Pin"
 																														}
 																													]
 																												},
@@ -7109,6 +7109,10 @@
 																															"value": "Alleen numeriek"
 																														},
 																														{
+																															"language": "EN",
+																															"value": "Numeric only"
+																														},
+																														{
 																															"language": "FI",
 																															"value": "Vain numeerinen"
 																														},
@@ -7147,10 +7151,6 @@
 																														{
 																															"language": "SV",
 																															"value": "Endast numerisk"
-																														},
-																														{
-																															"language": "EN",
-																															"value": "Numeric only"
 																														}
 																													]
 																												},
@@ -7200,6 +7200,10 @@
 																															"value": "Herhaal Pin"
 																														},
 																														{
+																															"language": "EN",
+																															"value": "Repeat Pin"
+																														},
+																														{
 																															"language": "FI",
 																															"value": "Toista Pin"
 																														},
@@ -7238,10 +7242,6 @@
 																														{
 																															"language": "SV",
 																															"value": "Upprepa Pin"
-																														},
-																														{
-																															"language": "EN",
-																															"value": "Repeat Pin"
 																														}
 																													]
 																												},
@@ -7298,6 +7298,10 @@
 																															"value": "Alleen numeriek"
 																														},
 																														{
+																															"language": "EN",
+																															"value": "Numeric only"
+																														},
+																														{
 																															"language": "FI",
 																															"value": "Vain numeerinen"
 																														},
@@ -7336,10 +7340,6 @@
 																														{
 																															"language": "SV",
 																															"value": "Endast numerisk"
-																														},
-																														{
-																															"language": "EN",
-																															"value": "Numeric only"
 																														}
 																													]
 																												},
@@ -7403,6 +7403,10 @@
 																															"value": "Bevestigen"
 																														},
 																														{
+																															"language": "EN",
+																															"value": "Confirm"
+																														},
+																														{
 																															"language": "FI",
 																															"value": "Vahvistaa"
 																														},
@@ -7441,10 +7445,6 @@
 																														{
 																															"language": "SV",
 																															"value": "Bekräfta"
-																														},
-																														{
-																															"language": "EN",
-																															"value": "Confirm"
 																														}
 																													]
 																												},
@@ -7923,6 +7923,10 @@
 																															"value": "Pincode"
 																														},
 																														{
+																															"language": "EN",
+																															"value": "Users"
+																														},
+																														{
 																															"language": "FI",
 																															"value": "Pin-koodi"
 																														},
@@ -7961,10 +7965,6 @@
 																														{
 																															"language": "SV",
 																															"value": "Användare"
-																														},
-																														{
-																															"language": "EN",
-																															"value": "Users"
 																														}
 																													]
 																												},
@@ -8047,12 +8047,12 @@
 																															"script": "",
 																															"translation": [
 																																{
-																																	"language": "PL",
-																																	"value": "Nazwa"
-																																},
-																																{
 																																	"language": "EN",
 																																	"value": "Name"
+																																},
+																																{
+																																	"language": "PL",
+																																	"value": "Nazwa"
 																																}
 																															]
 																														},
@@ -8083,12 +8083,12 @@
 																															"script": "",
 																															"translation": [
 																																{
-																																	"language": "PL",
-																																	"value": "Data"
-																																},
-																																{
 																																	"language": "EN",
 																																	"value": "Date"
+																																},
+																																{
+																																	"language": "PL",
+																																	"value": "Data"
 																																}
 																															]
 																														},
@@ -8347,6 +8347,10 @@
 																																			"value": "Sidste login"
 																																		},
 																																		{
+																																			"language": "EN",
+																																			"value": "Last Login"
+																																		},
+																																		{
 																																			"language": "FR",
 																																			"value": "Dernière connexion"
 																																		},
@@ -8377,10 +8381,6 @@
 																																		{
 																																			"language": "SV",
 																																			"value": "Senaste inloggning"
-																																		},
-																																		{
-																																			"language": "EN",
-																																			"value": "Last Login"
 																																		}
 																																	]
 																																},
@@ -8457,6 +8457,10 @@
 																													"value": "Inloggen"
 																												},
 																												{
+																													"language": "EN",
+																													"value": "Login new user"
+																												},
+																												{
 																													"language": "FI",
 																													"value": "Kirjaudu sisään"
 																												},
@@ -8495,10 +8499,6 @@
 																												{
 																													"language": "SV",
 																													"value": "Logga in"
-																												},
-																												{
-																													"language": "EN",
-																													"value": "Login new user"
 																												}
 																											]
 																										},
@@ -10603,11 +10603,11 @@
 																							"value": "Меню"
 																						},
 																						{
-																							"language": "PL",
+																							"language": "EN",
 																							"value": "Menu"
 																						},
 																						{
-																							"language": "EN",
+																							"language": "PL",
 																							"value": "Menu"
 																						}
 																					]
@@ -11018,12 +11018,12 @@
 																					"value": "Меню на потребителя"
 																				},
 																				{
-																					"language": "PL",
-																					"value": "Menu użytkownika"
-																				},
-																				{
 																					"language": "EN",
 																					"value": "User Menu"
+																				},
+																				{
+																					"language": "PL",
+																					"value": "Menu użytkownika"
 																				}
 																			]
 																		},
@@ -11167,6 +11167,10 @@
 																			"value": "instellingen"
 																		},
 																		{
+																			"language": "EN",
+																			"value": "Settings"
+																		},
+																		{
 																			"language": "FI",
 																			"value": "asetukset"
 																		},
@@ -11205,10 +11209,6 @@
 																		{
 																			"language": "SV",
 																			"value": "inställningar"
-																		},
-																		{
-																			"language": "EN",
-																			"value": "Settings"
 																		}
 																	]
 																},
@@ -11308,6 +11308,10 @@
 																	"script": "",
 																	"translation": [
 																		{
+																			"language": "AR",
+																			"value": "تحرير الشاشة"
+																		},
+																		{
 																			"language": "ZH",
 																			"value": "编辑屏幕"
 																		},
@@ -11322,6 +11326,10 @@
 																		{
 																			"language": "NL",
 																			"value": "Scherm bewerken"
+																		},
+																		{
+																			"language": "EN",
+																			"value": "Edit Screen"
 																		},
 																		{
 																			"language": "FI",
@@ -11366,14 +11374,6 @@
 																		{
 																			"language": "SV",
 																			"value": "Redigera skärm"
-																		},
-																		{
-																			"language": "AR",
-																			"value": "تحرير الشاشة"
-																		},
-																		{
-																			"language": "EN",
-																			"value": "Edit Screen"
 																		}
 																	]
 																},
@@ -11437,6 +11437,10 @@
 																			"value": "Zijpaneel"
 																		},
 																		{
+																			"language": "EN",
+																			"value": "Change password"
+																		},
+																		{
 																			"language": "FI",
 																			"value": "Sivupaneeli"
 																		},
@@ -11475,10 +11479,6 @@
 																		{
 																			"language": "SV",
 																			"value": "Sidopanel"
-																		},
-																		{
-																			"language": "EN",
-																			"value": "Change password"
 																		}
 																	]
 																},
@@ -11542,6 +11542,10 @@
 																			"value": "Zijpaneel"
 																		},
 																		{
+																			"language": "EN",
+																			"value": "Sidepanel"
+																		},
+																		{
 																			"language": "FI",
 																			"value": "Sivupaneeli"
 																		},
@@ -11580,10 +11584,6 @@
 																		{
 																			"language": "SV",
 																			"value": "Sidopanel"
-																		},
-																		{
-																			"language": "EN",
-																			"value": "Sidepanel"
 																		}
 																	]
 																},
@@ -11647,6 +11647,10 @@
 																			"value": "Slot"
 																		},
 																		{
+																			"language": "EN",
+																			"value": "Lock"
+																		},
+																		{
 																			"language": "FI",
 																			"value": "Lukko"
 																		},
@@ -11685,10 +11689,6 @@
 																		{
 																			"language": "SV",
 																			"value": "Låsa"
-																		},
-																		{
-																			"language": "EN",
-																			"value": "Lock"
 																		}
 																	]
 																},
@@ -11752,6 +11752,10 @@
 																			"value": "Verander gebruiker"
 																		},
 																		{
+																			"language": "EN",
+																			"value": "Switch User"
+																		},
+																		{
 																			"language": "FI",
 																			"value": "Vaihda käyttäjää"
 																		},
@@ -11790,10 +11794,6 @@
 																		{
 																			"language": "SV",
 																			"value": "Byt användare"
-																		},
-																		{
-																			"language": "EN",
-																			"value": "Switch User"
 																		}
 																	]
 																},
@@ -11857,6 +11857,10 @@
 																			"value": "Uitloggen"
 																		},
 																		{
+																			"language": "EN",
+																			"value": "Login new user"
+																		},
+																		{
 																			"language": "FI",
 																			"value": "Kirjautua ulos"
 																		},
@@ -11895,10 +11899,6 @@
 																		{
 																			"language": "SV",
 																			"value": "Logga ut"
-																		},
-																		{
-																			"language": "EN",
-																			"value": "Login new user"
 																		}
 																	]
 																},
@@ -11955,6 +11955,10 @@
 																			"value": "Uitloggen"
 																		},
 																		{
+																			"language": "EN",
+																			"value": "Logout"
+																		},
+																		{
 																			"language": "FI",
 																			"value": "Kirjautua ulos"
 																		},
@@ -11993,10 +11997,6 @@
 																		{
 																			"language": "SV",
 																			"value": "Logga ut"
-																		},
-																		{
-																			"language": "EN",
-																			"value": "Logout"
 																		}
 																	]
 																},
@@ -12179,6 +12179,10 @@
 													"value": "Sluit alles"
 												},
 												{
+													"language": "EN",
+													"value": "Close All"
+												},
+												{
 													"language": "FI",
 													"value": "Sulje kaikki"
 												},
@@ -12217,10 +12221,6 @@
 												{
 													"language": "SV",
 													"value": "Stäng alla"
-												},
-												{
-													"language": "EN",
-													"value": "Close All"
 												}
 											]
 										},
@@ -12300,6 +12300,10 @@
 											"value": "Vent venligst"
 										},
 										{
+											"language": "EN",
+											"value": "Please wait"
+										},
+										{
 											"language": "FR",
 											"value": "S'il vous plaît, attendez"
 										},
@@ -12330,10 +12334,6 @@
 										{
 											"language": "SV",
 											"value": "Vänta"
-										},
-										{
-											"language": "EN",
-											"value": "Please wait"
 										}
 									]
 								},
@@ -12384,6 +12384,10 @@
 											"value": "Downloader ny version ..."
 										},
 										{
+											"language": "EN",
+											"value": "Downloading new version..."
+										},
+										{
 											"language": "FR",
 											"value": "Téléchargement de la nouvelle version ..."
 										},
@@ -12414,10 +12418,6 @@
 										{
 											"language": "SV",
 											"value": "Hämtar ny version ..."
-										},
-										{
-											"language": "EN",
-											"value": "Downloading new version..."
 										}
 									]
 								},
@@ -12519,6 +12519,10 @@
 											"value": "Even geduld aub"
 										},
 										{
+											"language": "EN",
+											"value": "Please wait"
+										},
+										{
 											"language": "FI",
 											"value": "Odota"
 										},
@@ -12557,10 +12561,6 @@
 										{
 											"language": "SV",
 											"value": "Vänta"
-										},
-										{
-											"language": "EN",
-											"value": "Please wait"
 										}
 									]
 								},
@@ -12581,6 +12581,10 @@
 										{
 											"language": "NL",
 											"value": "Tegels voor de eerste keer laden"
+										},
+										{
+											"language": "EN",
+											"value": "Loading tiles for the first time"
 										},
 										{
 											"language": "FI",
@@ -12621,10 +12625,6 @@
 										{
 											"language": "SV",
 											"value": "Laddar kakel för första gången"
-										},
-										{
-											"language": "EN",
-											"value": "Loading tiles for the first time"
 										}
 									]
 								},
@@ -12694,6 +12694,10 @@
 											"value": "Compatibel op"
 										},
 										{
+											"language": "EN",
+											"value": "Compatible On"
+										},
+										{
 											"language": "FI",
 											"value": "Yhteensopiva päällä"
 										},
@@ -12732,10 +12736,6 @@
 										{
 											"language": "SV",
 											"value": "Kompatibel På"
-										},
-										{
-											"language": "EN",
-											"value": "Compatible On"
 										}
 									]
 								},
@@ -14136,6 +14136,10 @@
 											"value": "Bekræfte"
 										},
 										{
+											"language": "EN",
+											"value": "Confirm"
+										},
+										{
 											"language": "FR",
 											"value": "Confirmer"
 										},
@@ -14166,10 +14170,6 @@
 										{
 											"language": "SV",
 											"value": "Bekräfta"
-										},
-										{
-											"language": "EN",
-											"value": "Confirm"
 										}
 									]
 								},
@@ -14356,6 +14356,10 @@
 													"value": "Adgangskode"
 												},
 												{
+													"language": "EN",
+													"value": "Password"
+												},
+												{
 													"language": "FR",
 													"value": "Mot de passe"
 												},
@@ -14386,10 +14390,6 @@
 												{
 													"language": "SV",
 													"value": "Lösenord"
-												},
-												{
-													"language": "EN",
-													"value": "Password"
 												}
 											]
 										},
@@ -14425,6 +14425,10 @@
 													"value": "Skift brugeradgangskode"
 												},
 												{
+													"language": "EN",
+													"value": "Change users password"
+												},
+												{
 													"language": "FR",
 													"value": "Changer le mot de passe des utilisateurs"
 												},
@@ -14455,10 +14459,6 @@
 												{
 													"language": "SV",
 													"value": "Ändra användarlösenord"
-												},
-												{
-													"language": "EN",
-													"value": "Change users password"
 												}
 											]
 										},
@@ -14526,6 +14526,10 @@
 															"value": "nyt kodeord"
 														},
 														{
+															"language": "EN",
+															"value": "Current Password"
+														},
+														{
 															"language": "FR",
 															"value": "nouveau mot de passe"
 														},
@@ -14556,10 +14560,6 @@
 														{
 															"language": "SV",
 															"value": "nytt lösenord"
-														},
-														{
-															"language": "EN",
-															"value": "Current Password"
 														}
 													]
 												}
@@ -14607,6 +14607,10 @@
 															"value": "nyt kodeord"
 														},
 														{
+															"language": "EN",
+															"value": "New Password"
+														},
+														{
 															"language": "FR",
 															"value": "nouveau mot de passe"
 														},
@@ -14637,10 +14641,6 @@
 														{
 															"language": "SV",
 															"value": "nytt lösenord"
-														},
-														{
-															"language": "EN",
-															"value": "New Password"
 														}
 													]
 												}
@@ -14688,6 +14688,10 @@
 															"value": "Gentag adgangskode"
 														},
 														{
+															"language": "EN",
+															"value": "Repeat New Password"
+														},
+														{
 															"language": "FR",
 															"value": "Répéter le mot de passe"
 														},
@@ -14718,10 +14722,6 @@
 														{
 															"language": "SV",
 															"value": "Repetera lösenord"
-														},
-														{
-															"language": "EN",
-															"value": "Repeat New Password"
 														}
 													]
 												}
@@ -15319,6 +15319,10 @@
 											"value": "OK"
 										},
 										{
+											"language": "EN",
+											"value": "OK"
+										},
+										{
 											"language": "FI",
 											"value": "kunnossa"
 										},
@@ -15357,10 +15361,6 @@
 										{
 											"language": "SV",
 											"value": "ok"
-										},
-										{
-											"language": "EN",
-											"value": "OK"
 										}
 									]
 								},
@@ -15410,6 +15410,10 @@
 											"value": "Fout"
 										},
 										{
+											"language": "EN",
+											"value": "Error"
+										},
+										{
 											"language": "FI",
 											"value": "Virhe"
 										},
@@ -15448,10 +15452,6 @@
 										{
 											"language": "SV",
 											"value": "Fel"
-										},
-										{
-											"language": "EN",
-											"value": "Error"
 										}
 									]
 								},
@@ -15507,6 +15507,10 @@
 													"value": "Kan app niet openen. Probeer het later opnieuw."
 												},
 												{
+													"language": "EN",
+													"value": "Could not open app. Try again later."
+												},
+												{
 													"language": "FI",
 													"value": "Sovellusta ei voitu avata. Yritä myöhemmin uudelleen."
 												},
@@ -15545,10 +15549,6 @@
 												{
 													"language": "SV",
 													"value": "Det gick inte att öppna appen. Försök igen senare."
-												},
-												{
-													"language": "EN",
-													"value": "Could not open app. Try again later."
 												}
 											]
 										}
@@ -15593,6 +15593,10 @@
 											"value": "Opslaan"
 										},
 										{
+											"language": "EN",
+											"value": "OK"
+										},
+										{
 											"language": "FI",
 											"value": "Tallentaa"
 										},
@@ -15631,10 +15635,6 @@
 										{
 											"language": "SV",
 											"value": "Spara"
-										},
-										{
-											"language": "EN",
-											"value": "OK"
 										}
 									]
 								},
@@ -15935,6 +15935,10 @@
 															"value": "INSTELLINGEN"
 														},
 														{
+															"language": "EN",
+															"value": "SETTINGS"
+														},
+														{
 															"language": "FI",
 															"value": "ASETUKSET"
 														},
@@ -15973,10 +15977,6 @@
 														{
 															"language": "SV",
 															"value": "INSTÄLLNINGAR"
-														},
-														{
-															"language": "EN",
-															"value": "SETTINGS"
 														}
 													]
 												}
@@ -16098,6 +16098,10 @@
 																					"value": "Taal"
 																				},
 																				{
+																					"language": "EN",
+																					"value": "Language"
+																				},
+																				{
 																					"language": "FI",
 																					"value": "Kieli"
 																				},
@@ -16136,10 +16140,6 @@
 																				{
 																					"language": "SV",
 																					"value": "Språk"
-																				},
-																				{
-																					"language": "EN",
-																					"value": "Language"
 																				}
 																			]
 																		}
@@ -16202,6 +16202,10 @@
 																					"value": "Transitions"
 																				},
 																				{
+																					"language": "EN",
+																					"value": "Transitions"
+																				},
+																				{
 																					"language": "FI",
 																					"value": "siirtymät"
 																				},
@@ -16240,10 +16244,6 @@
 																				{
 																					"language": "SV",
 																					"value": "övergångar"
-																				},
-																				{
-																					"language": "EN",
-																					"value": "Transitions"
 																				}
 																			]
 																		}
@@ -16305,6 +16305,10 @@
 																							"value": "Standaard"
 																						},
 																						{
+																							"language": "EN",
+																							"value": "Default"
+																						},
+																						{
 																							"language": "FI",
 																							"value": "oletusarvo"
 																						},
@@ -16343,10 +16347,6 @@
 																						{
 																							"language": "SV",
 																							"value": "Standard"
-																						},
-																						{
-																							"language": "EN",
-																							"value": "Default"
 																						}
 																					]
 																				}
@@ -16560,6 +16560,10 @@
 																					"value": "Thema"
 																				},
 																				{
+																					"language": "EN",
+																					"value": "Layout"
+																				},
+																				{
 																					"language": "FI",
 																					"value": "Teema"
 																				},
@@ -16598,10 +16602,6 @@
 																				{
 																					"language": "SV",
 																					"value": "Tema"
-																				},
-																				{
-																					"language": "EN",
-																					"value": "Layout"
 																				}
 																			]
 																		}
@@ -16710,12 +16710,12 @@
 																					"value": "Ancho del panel lateral"
 																				},
 																				{
-																					"language": "PL",
-																					"value": "Szerokość panelu bocznego"
-																				},
-																				{
 																					"language": "EN",
 																					"value": "Sidepanel Width"
+																				},
+																				{
+																					"language": "PL",
+																					"value": "Szerokość panelu bocznego"
 																				}
 																			]
 																		}
@@ -17594,6 +17594,10 @@
 																					"value": "Achtergrondafbeelding"
 																				},
 																				{
+																					"language": "EN",
+																					"value": "Background Image URL"
+																				},
+																				{
 																					"language": "FI",
 																					"value": "Taustakuvan URL-osoite"
 																				},
@@ -17632,10 +17636,6 @@
 																				{
 																					"language": "SV",
 																					"value": "Bakgrundsbild URL"
-																				},
-																				{
-																					"language": "EN",
-																					"value": "Background Image URL"
 																				}
 																			]
 																		}
@@ -17698,6 +17698,10 @@
 																					"value": "Meest gebruikt"
 																				},
 																				{
+																					"language": "EN",
+																					"value": "Most used"
+																				},
+																				{
 																					"language": "FI",
 																					"value": "Eniten käytetty"
 																				},
@@ -17736,10 +17740,6 @@
 																				{
 																					"language": "SV",
 																					"value": "Mest använda"
-																				},
-																				{
-																					"language": "EN",
-																					"value": "Most used"
 																				}
 																			]
 																		}
@@ -17773,6 +17773,10 @@
 																				{
 																					"language": "NL",
 																					"value": "Duidelijk"
+																				},
+																				{
+																					"language": "EN",
+																					"value": "Clear"
 																				},
 																				{
 																					"language": "FI",
@@ -17813,10 +17817,6 @@
 																				{
 																					"language": "SV",
 																					"value": "Klar"
-																				},
-																				{
-																					"language": "EN",
-																					"value": "Clear"
 																				}
 																			]
 																		},
@@ -17859,6 +17859,10 @@
 																					"value": "Lokale gegevens"
 																				},
 																				{
+																					"language": "EN",
+																					"value": "Local Data"
+																				},
+																				{
 																					"language": "FI",
 																					"value": "Paikalliset tiedot"
 																				},
@@ -17897,10 +17901,6 @@
 																				{
 																					"language": "SV",
 																					"value": "Lokala data"
-																				},
-																				{
-																					"language": "EN",
-																					"value": "Local Data"
 																				}
 																			]
 																		},
@@ -17943,6 +17943,10 @@
 																					"value": "Duidelijk"
 																				},
 																				{
+																					"language": "EN",
+																					"value": "Clear"
+																				},
+																				{
 																					"language": "FI",
 																					"value": "Asia selvä"
 																				},
@@ -17981,10 +17985,6 @@
 																				{
 																					"language": "SV",
 																					"value": "Klar"
-																				},
-																				{
-																					"language": "EN",
-																					"value": "Clear"
 																				}
 																			]
 																		},
@@ -18086,6 +18086,10 @@
 																					"value": "Schermveranderingen"
 																				},
 																				{
+																					"language": "EN",
+																					"value": "Screen Changes"
+																				},
+																				{
 																					"language": "FI",
 																					"value": "Näytön muutokset"
 																				},
@@ -18124,10 +18128,6 @@
 																				{
 																					"language": "SV",
 																					"value": "Skärmändringar"
-																				},
-																				{
-																					"language": "EN",
-																					"value": "Screen Changes"
 																				}
 																			]
 																		}
@@ -18244,6 +18244,10 @@
 															"value": "SYSTEEM"
 														},
 														{
+															"language": "EN",
+															"value": "SYSTEM"
+														},
+														{
 															"language": "FI",
 															"value": "SYSTEM"
 														},
@@ -18282,10 +18286,6 @@
 														{
 															"language": "SV",
 															"value": "SYSTEMET"
-														},
-														{
-															"language": "EN",
-															"value": "SYSTEM"
 														}
 													]
 												}
@@ -18419,12 +18419,12 @@
 													"script": "",
 													"translation": [
 														{
-															"language": "PL",
-															"value": "APLIKACJE"
-														},
-														{
 															"language": "EN",
 															"value": "APPS"
+														},
+														{
+															"language": "PL",
+															"value": "APLIKACJE"
 														}
 													]
 												}
@@ -21122,12 +21122,12 @@
 									"script": "",
 									"translation": [
 										{
-											"language": "PL",
-											"value": "Nie znaleziono konfiguracji Adaptive Framework"
-										},
-										{
 											"language": "EN",
 											"value": "Adaptive Framework configuration not found"
+										},
+										{
+											"language": "PL",
+											"value": "Nie znaleziono konfiguracji Adaptive Framework"
 										}
 									]
 								}
@@ -21171,6 +21171,10 @@
 											"value": "Inloggen met een vingerafdruk"
 										},
 										{
+											"language": "EN",
+											"value": "Login with Fingerprint"
+										},
+										{
 											"language": "FI",
 											"value": "Kirjaudu sisään sormenjäljellä"
 										},
@@ -21209,10 +21213,6 @@
 										{
 											"language": "SV",
 											"value": "Logga in med fingeravtryck"
-										},
-										{
-											"language": "EN",
-											"value": "Login with Fingerprint"
 										}
 									]
 								}
@@ -21247,6 +21247,10 @@
 										{
 											"language": "NL",
 											"value": "Telefoon model"
+										},
+										{
+											"language": "EN",
+											"value": "Phone Model"
 										},
 										{
 											"language": "FI",
@@ -21287,10 +21291,6 @@
 										{
 											"language": "SV",
 											"value": "Telefonmodell"
-										},
-										{
-											"language": "EN",
-											"value": "Phone Model"
 										}
 									]
 								}
@@ -21325,6 +21325,10 @@
 										{
 											"language": "NL",
 											"value": "Zoekresultaat"
+										},
+										{
+											"language": "EN",
+											"value": "Search Result"
 										},
 										{
 											"language": "FI",
@@ -21365,10 +21369,6 @@
 										{
 											"language": "SV",
 											"value": "Sökresultat"
-										},
-										{
-											"language": "EN",
-											"value": "Search Result"
 										}
 									]
 								}
@@ -21403,6 +21403,10 @@
 										{
 											"language": "NL",
 											"value": "Telefoon type"
+										},
+										{
+											"language": "EN",
+											"value": "Phone Type"
 										},
 										{
 											"language": "FI",
@@ -21443,10 +21447,6 @@
 										{
 											"language": "SV",
 											"value": "Telefontyp"
-										},
-										{
-											"language": "EN",
-											"value": "Phone Type"
 										}
 									]
 								}
@@ -21481,6 +21481,10 @@
 										{
 											"language": "NL",
 											"value": "Telefoon versie"
+										},
+										{
+											"language": "EN",
+											"value": "Phone Version"
 										},
 										{
 											"language": "FI",
@@ -21521,10 +21525,6 @@
 										{
 											"language": "SV",
 											"value": "Telefonversion"
-										},
-										{
-											"language": "EN",
-											"value": "Phone Version"
 										}
 									]
 								}
@@ -21559,6 +21559,10 @@
 										{
 											"language": "NL",
 											"value": "Cordova-versie"
+										},
+										{
+											"language": "EN",
+											"value": "Cordova Version"
 										},
 										{
 											"language": "FI",
@@ -21599,10 +21603,6 @@
 										{
 											"language": "SV",
 											"value": "Cordova Version"
-										},
-										{
-											"language": "EN",
-											"value": "Cordova Version"
 										}
 									]
 								}
@@ -21637,6 +21637,10 @@
 										{
 											"language": "NL",
 											"value": "App versie"
+										},
+										{
+											"language": "EN",
+											"value": "App Version"
 										},
 										{
 											"language": "FI",
@@ -21677,10 +21681,6 @@
 										{
 											"language": "SV",
 											"value": "Appversion"
-										},
-										{
-											"language": "EN",
-											"value": "App Version"
 										}
 									]
 								}
@@ -21715,6 +21715,10 @@
 										{
 											"language": "NL",
 											"value": "Geen connectie"
+										},
+										{
+											"language": "EN",
+											"value": "No connection"
 										},
 										{
 											"language": "FI",
@@ -21755,10 +21759,6 @@
 										{
 											"language": "SV",
 											"value": "Ingen förbindelse"
-										},
-										{
-											"language": "EN",
-											"value": "No connection"
 										}
 									]
 								}
@@ -21793,6 +21793,10 @@
 										{
 											"language": "NL",
 											"value": "Gebruiker uitgelogd"
+										},
+										{
+											"language": "EN",
+											"value": "User logged out"
 										},
 										{
 											"language": "FI",
@@ -21833,10 +21837,6 @@
 										{
 											"language": "SV",
 											"value": "Användare loggad ut"
-										},
-										{
-											"language": "EN",
-											"value": "User logged out"
 										}
 									]
 								}
@@ -21871,6 +21871,10 @@
 										{
 											"language": "NL",
 											"value": "Voer usename in"
+										},
+										{
+											"language": "EN",
+											"value": "Enter usename"
 										},
 										{
 											"language": "FI",
@@ -21911,10 +21915,6 @@
 										{
 											"language": "SV",
 											"value": "Ange användarnamn"
-										},
-										{
-											"language": "EN",
-											"value": "Enter usename"
 										}
 									]
 								}
@@ -21949,6 +21949,10 @@
 										{
 											"language": "NL",
 											"value": "Voer wachtwoord in"
+										},
+										{
+											"language": "EN",
+											"value": "Enter password"
 										},
 										{
 											"language": "FI",
@@ -21989,10 +21993,6 @@
 										{
 											"language": "SV",
 											"value": "Skriv in lösenord"
-										},
-										{
-											"language": "EN",
-											"value": "Enter password"
 										}
 									]
 								}
@@ -22027,6 +22027,10 @@
 										{
 											"language": "NL",
 											"value": "Voer een nieuwe pincode in"
+										},
+										{
+											"language": "EN",
+											"value": "Enter new pin code"
 										},
 										{
 											"language": "FI",
@@ -22067,10 +22071,6 @@
 										{
 											"language": "SV",
 											"value": "Ange ny PIN-kod"
-										},
-										{
-											"language": "EN",
-											"value": "Enter new pin code"
 										}
 									]
 								}
@@ -22105,6 +22105,10 @@
 										{
 											"language": "NL",
 											"value": "Herhaal pincode"
+										},
+										{
+											"language": "EN",
+											"value": "Repeat pin code"
 										},
 										{
 											"language": "FI",
@@ -22145,10 +22149,6 @@
 										{
 											"language": "SV",
 											"value": "Upprepa PIN-koden"
-										},
-										{
-											"language": "EN",
-											"value": "Repeat pin code"
 										}
 									]
 								}
@@ -22183,6 +22183,10 @@
 										{
 											"language": "NL",
 											"value": "Pincode komt niet overeen"
+										},
+										{
+											"language": "EN",
+											"value": "Pin code do not match"
 										},
 										{
 											"language": "FI",
@@ -22223,10 +22227,6 @@
 										{
 											"language": "SV",
 											"value": "PIN-kod matchar inte"
-										},
-										{
-											"language": "EN",
-											"value": "Pin code do not match"
 										}
 									]
 								}
@@ -22261,6 +22261,10 @@
 										{
 											"language": "NL",
 											"value": "Wachtwoorden komen niet overeen"
+										},
+										{
+											"language": "EN",
+											"value": "Passwords do not match"
 										},
 										{
 											"language": "FI",
@@ -22301,10 +22305,6 @@
 										{
 											"language": "SV",
 											"value": "Lösenorden matchar inte"
-										},
-										{
-											"language": "EN",
-											"value": "Passwords do not match"
 										}
 									]
 								}
@@ -22339,6 +22339,10 @@
 										{
 											"language": "NL",
 											"value": "Pincode voor korte, minimale tekens"
+										},
+										{
+											"language": "EN",
+											"value": "Pin code too short, min digits"
 										},
 										{
 											"language": "FI",
@@ -22379,10 +22383,6 @@
 										{
 											"language": "SV",
 											"value": "Pin-kod till kort, mina tecken"
-										},
-										{
-											"language": "EN",
-											"value": "Pin code too short, min digits"
 										}
 									]
 								}
@@ -22417,6 +22417,10 @@
 										{
 											"language": "NL",
 											"value": "Geen geldige APPLID of andere fout"
+										},
+										{
+											"language": "EN",
+											"value": "No valid APPLID or other Error"
 										},
 										{
 											"language": "FI",
@@ -22457,10 +22461,6 @@
 										{
 											"language": "SV",
 											"value": "Inget giltigt APPLI eller annat fel"
-										},
-										{
-											"language": "EN",
-											"value": "No valid APPLID or other Error"
 										}
 									]
 								}
@@ -22495,6 +22495,10 @@
 										{
 											"language": "NL",
 											"value": "Foutieve activeringscode"
+										},
+										{
+											"language": "EN",
+											"value": "Wrong Activation Code"
 										},
 										{
 											"language": "FI",
@@ -22535,10 +22539,6 @@
 										{
 											"language": "SV",
 											"value": "Felaktiveringskod"
-										},
-										{
-											"language": "EN",
-											"value": "Wrong Activation Code"
 										}
 									]
 								}
@@ -22573,6 +22573,10 @@
 										{
 											"language": "NL",
 											"value": "Verkeerde gebruikersnaam / wachtwoord"
+										},
+										{
+											"language": "EN",
+											"value": "Wrong username/password"
 										},
 										{
 											"language": "FI",
@@ -22613,10 +22617,6 @@
 										{
 											"language": "SV",
 											"value": "Fel användarnamn / lösenord"
-										},
-										{
-											"language": "EN",
-											"value": "Wrong username/password"
 										}
 									]
 								}
@@ -22651,6 +22651,10 @@
 										{
 											"language": "NL",
 											"value": "Fout bij downloaden van nieuwe versie"
+										},
+										{
+											"language": "EN",
+											"value": "Error downloading new version"
 										},
 										{
 											"language": "FI",
@@ -22691,10 +22695,6 @@
 										{
 											"language": "SV",
 											"value": "Fel vid nedladdning av ny version"
-										},
-										{
-											"language": "EN",
-											"value": "Error downloading new version"
 										}
 									]
 								}
@@ -22729,6 +22729,10 @@
 										{
 											"language": "NL",
 											"value": "App bijgewerkt. Nieuwe aanmelding vereist"
+										},
+										{
+											"language": "EN",
+											"value": "App updated. New logon required"
 										},
 										{
 											"language": "FI",
@@ -22769,10 +22773,6 @@
 										{
 											"language": "SV",
 											"value": "App uppdaterad. Ny inloggning krävs"
-										},
-										{
-											"language": "EN",
-											"value": "App updated. New logon required"
 										}
 									]
 								}
@@ -22807,6 +22807,10 @@
 										{
 											"language": "NL",
 											"value": "Geen Launchpad-ID geselecteerd"
+										},
+										{
+											"language": "EN",
+											"value": "No Launchpad ID selected"
 										},
 										{
 											"language": "FI",
@@ -22847,10 +22851,6 @@
 										{
 											"language": "SV",
 											"value": "Inget Launchpad ID valt"
-										},
-										{
-											"language": "EN",
-											"value": "No Launchpad ID selected"
 										}
 									]
 								}
@@ -22885,6 +22885,10 @@
 										{
 											"language": "NL",
 											"value": "De sessie is afgelopen - probeer het opnieuw"
+										},
+										{
+											"language": "EN",
+											"value": "Session timed out - please try again"
 										},
 										{
 											"language": "FI",
@@ -22925,10 +22929,6 @@
 										{
 											"language": "SV",
 											"value": "Sessionen slutade - försök igen"
-										},
-										{
-											"language": "EN",
-											"value": "Session timed out - please try again"
 										}
 									]
 								}
@@ -22963,6 +22963,10 @@
 										{
 											"language": "NL",
 											"value": "Bestand is te groot. Max bestandsgrootte is 200k"
+										},
+										{
+											"language": "EN",
+											"value": "File is too large. Max file size is 200k"
 										},
 										{
 											"language": "FI",
@@ -23003,10 +23007,6 @@
 										{
 											"language": "SV",
 											"value": "Filen är för stor. Max filstorlek är 200k"
-										},
-										{
-											"language": "EN",
-											"value": "File is too large. Max file size is 200k"
 										}
 									]
 								}
@@ -23041,6 +23041,10 @@
 										{
 											"language": "NL",
 											"value": "App niet gevonden of geen beleid"
+										},
+										{
+											"language": "EN",
+											"value": "App not found or no policy"
 										},
 										{
 											"language": "FI",
@@ -23081,10 +23085,6 @@
 										{
 											"language": "SV",
 											"value": "Appen hittades inte eller ingen policy"
-										},
-										{
-											"language": "EN",
-											"value": "App not found or no policy"
 										}
 									]
 								}
@@ -23119,6 +23119,10 @@
 										{
 											"language": "NL",
 											"value": "Kennisgeving"
+										},
+										{
+											"language": "EN",
+											"value": "Notification"
 										},
 										{
 											"language": "FI",
@@ -23159,10 +23163,6 @@
 										{
 											"language": "SV",
 											"value": "Underrättelse"
-										},
-										{
-											"language": "EN",
-											"value": "Notification"
 										}
 									]
 								}
@@ -23197,6 +23197,10 @@
 										{
 											"language": "NL",
 											"value": "Activeringscode verzonden"
+										},
+										{
+											"language": "EN",
+											"value": "Activation Code Sent"
 										},
 										{
 											"language": "FI",
@@ -23237,10 +23241,6 @@
 										{
 											"language": "SV",
 											"value": "Aktiveringskod skickad"
-										},
-										{
-											"language": "EN",
-											"value": "Activation Code Sent"
 										}
 									]
 								}
@@ -23274,6 +23274,10 @@
 										{
 											"language": "NL",
 											"value": "Niet geladen"
+										},
+										{
+											"language": "EN",
+											"value": "Not loaded"
 										},
 										{
 											"language": "FI",
@@ -23314,10 +23318,6 @@
 										{
 											"language": "SV",
 											"value": "Inte laddad"
-										},
-										{
-											"language": "EN",
-											"value": "Not loaded"
 										}
 									]
 								}
@@ -23352,6 +23352,10 @@
 										{
 											"language": "NL",
 											"value": "Vingerafdrukverificatie inschakelen?"
+										},
+										{
+											"language": "EN",
+											"value": "Enable Fingerprint Authentication?"
 										},
 										{
 											"language": "FI",
@@ -23392,10 +23396,6 @@
 										{
 											"language": "SV",
 											"value": "Aktivera fingeravtrycksautentisering?"
-										},
-										{
-											"language": "EN",
-											"value": "Enable Fingerprint Authentication?"
 										}
 									]
 								}
@@ -23430,6 +23430,10 @@
 										{
 											"language": "NL",
 											"value": "Face-ID-verificatie inschakelen?"
+										},
+										{
+											"language": "EN",
+											"value": "Enable Face-ID Authentication?"
 										},
 										{
 											"language": "FI",
@@ -23470,10 +23474,6 @@
 										{
 											"language": "SV",
 											"value": "Aktivera ansikt-ID-autentisering?"
-										},
-										{
-											"language": "EN",
-											"value": "Enable Face-ID Authentication?"
 										}
 									]
 								}
@@ -23508,6 +23508,10 @@
 										{
 											"language": "NL",
 											"value": "Systeeminstellingen ontvangen."
+										},
+										{
+											"language": "EN",
+											"value": "System settings received."
 										},
 										{
 											"language": "FI",
@@ -23548,10 +23552,6 @@
 										{
 											"language": "SV",
 											"value": "Systeminställningar mottagna."
-										},
-										{
-											"language": "EN",
-											"value": "System settings received."
 										}
 									]
 								}
@@ -23585,6 +23585,10 @@
 										},
 										{
 											"language": "NL",
+											"value": "Open"
+										},
+										{
+											"language": "EN",
 											"value": "Open"
 										},
 										{
@@ -23626,10 +23630,6 @@
 										{
 											"language": "SV",
 											"value": "Öppna"
-										},
-										{
-											"language": "EN",
-											"value": "Open"
 										}
 									]
 								}
@@ -23664,6 +23664,10 @@
 										{
 											"language": "NL",
 											"value": "Toevoegen aan favorieten"
+										},
+										{
+											"language": "EN",
+											"value": "Add to favorite"
 										},
 										{
 											"language": "FI",
@@ -23704,10 +23708,6 @@
 										{
 											"language": "SV",
 											"value": "Lägg till som favorit"
-										},
-										{
-											"language": "EN",
-											"value": "Add to favorite"
 										}
 									]
 								}
@@ -23742,6 +23742,10 @@
 										{
 											"language": "NL",
 											"value": "Verwijderen van favoriet"
+										},
+										{
+											"language": "EN",
+											"value": "Delete from favorite"
 										},
 										{
 											"language": "FI",
@@ -23782,10 +23786,6 @@
 										{
 											"language": "SV",
 											"value": "Ta bort från favorit"
-										},
-										{
-											"language": "EN",
-											"value": "Delete from favorite"
 										}
 									]
 								}
@@ -23820,6 +23820,10 @@
 										{
 											"language": "NL",
 											"value": "Helpen"
+										},
+										{
+											"language": "EN",
+											"value": "Help"
 										},
 										{
 											"language": "FI",
@@ -23860,10 +23864,6 @@
 										{
 											"language": "SV",
 											"value": "Hjälp"
-										},
-										{
-											"language": "EN",
-											"value": "Help"
 										}
 									]
 								}
@@ -23920,6 +23920,10 @@
 											"value": "Wil je deze tegel van je favorieten verwijderen?"
 										},
 										{
+											"language": "EN",
+											"value": "Do you want to remove this tile from your favorites ?"
+										},
+										{
 											"language": "FI",
 											"value": "Haluatko poistaa tämän laatan suosikeistasi?"
 										},
@@ -23958,10 +23962,6 @@
 										{
 											"language": "SV",
 											"value": "Vill du ta bort denna kakel från dina favoriter?"
-										},
-										{
-											"language": "EN",
-											"value": "Do you want to remove this tile from your favorites ?"
 										}
 									]
 								}
@@ -23996,6 +23996,10 @@
 										{
 											"language": "NL",
 											"value": "Favoriet"
+										},
+										{
+											"language": "EN",
+											"value": "Favorite"
 										},
 										{
 											"language": "FI",
@@ -24036,10 +24040,6 @@
 										{
 											"language": "SV",
 											"value": "Favorit"
-										},
-										{
-											"language": "EN",
-											"value": "Favorite"
 										}
 									]
 								}
@@ -24074,6 +24074,10 @@
 										{
 											"language": "NL",
 											"value": "Bevestiging nodig"
+										},
+										{
+											"language": "EN",
+											"value": "Confirmation needed"
 										},
 										{
 											"language": "FI",
@@ -24114,10 +24118,6 @@
 										{
 											"language": "SV",
 											"value": "Bekräftelse behövs"
-										},
-										{
-											"language": "EN",
-											"value": "Confirmation needed"
 										}
 									]
 								}
@@ -24152,6 +24152,10 @@
 										{
 											"language": "NL",
 											"value": "Ja, verwijder"
+										},
+										{
+											"language": "EN",
+											"value": "Yes, remove"
 										},
 										{
 											"language": "FI",
@@ -24192,10 +24196,6 @@
 										{
 											"language": "SV",
 											"value": "Ja, ta bort"
-										},
-										{
-											"language": "EN",
-											"value": "Yes, remove"
 										}
 									]
 								}
@@ -24230,6 +24230,10 @@
 										{
 											"language": "NL",
 											"value": "Onverenigbaar"
+										},
+										{
+											"language": "EN",
+											"value": "Incompatible"
 										},
 										{
 											"language": "FI",
@@ -24270,10 +24274,84 @@
 										{
 											"language": "SV",
 											"value": "Oförenlig"
+										}
+									]
+								}
+							],
+							"data": []
+						},
+						{
+							"fieldNo": "fab29f6e-8c35-4b7c-bda6-dd2b42e2d14f",
+							"fieldName": "AppCache_tWrongPin",
+							"fieldParent": "a4096929-0f8e-49c6-ba36-b136359e96b2",
+							"fieldType": "sap.m.Text",
+							"script": "",
+							"customComponent": false,
+							"onlyDeclare": true,
+							"request": [],
+							"response": [],
+							"attributes": [
+								{
+									"attribute": "text",
+									"grouping": "Properties",
+									"value": "Wrong Pin Code!",
+									"script": "",
+									"translation": [
+										{
+											"language": "ZH",
+											"value": "密码错误！"
+										},
+										{
+											"language": "DA",
+											"value": " Forkert pinkode!"
+										},
+										{
+											"language": "NL",
+											"value": " Verkeerde pincode!"
 										},
 										{
 											"language": "EN",
-											"value": "Incompatible"
+											"value": "Wrong Pin Code!"
+										},
+										{
+											"language": "FI",
+											"value": "Väärä PIN-koodi!"
+										},
+										{
+											"language": "FR",
+											"value": "Mauvais code PIN !"
+										},
+										{
+											"language": "DE",
+											"value": "Falscher PIN-Code!"
+										},
+										{
+											"language": "IT",
+											"value": " Codice PIN errato!"
+										},
+										{
+											"language": "JA",
+											"value": " PIN コードが間違っています!"
+										},
+										{
+											"language": "NO",
+											"value": " Feil PIN-kode!"
+										},
+										{
+											"language": "PL",
+											"value": " Zły kod PIN!"
+										},
+										{
+											"language": "PT",
+											"value": " Código PIN errado!"
+										},
+										{
+											"language": "ES",
+											"value": "¡Código PIN incorrecto!"
+										},
+										{
+											"language": "SV",
+											"value": "Fel pinkod!"
 										}
 									]
 								}
@@ -24308,6 +24386,10 @@
 										{
 											"language": "NL",
 											"value": "Onverenigbaar"
+										},
+										{
+											"language": "EN",
+											"value": "No stored user info found. Please re-login"
 										},
 										{
 											"language": "FI",
@@ -24348,10 +24430,6 @@
 										{
 											"language": "SV",
 											"value": "Oförenlig"
-										},
-										{
-											"language": "EN",
-											"value": "No stored user info found. Please re-login"
 										}
 									]
 								}
@@ -24416,6 +24494,10 @@
 											"value": "Downloader ny version"
 										},
 										{
+											"language": "EN",
+											"value": "Downloading new version"
+										},
+										{
 											"language": "FR",
 											"value": "Téléchargement d'une nouvelle version"
 										},
@@ -24446,10 +24528,6 @@
 										{
 											"language": "SV",
 											"value": "Nedladdning av ny version"
-										},
-										{
-											"language": "EN",
-											"value": "Downloading new version"
 										}
 									]
 								}
@@ -24510,12 +24588,12 @@
 											"value": "Изтегляне на нова версия"
 										},
 										{
-											"language": "PL",
-											"value": "Nowa wersja dostępna. Wymagane ponowne załadowanie"
-										},
-										{
 											"language": "EN",
 											"value": "New version available. Reload required"
+										},
+										{
+											"language": "PL",
+											"value": "Nowa wersja dostępna. Wymagane ponowne załadowanie"
 										}
 									]
 								}
@@ -24576,12 +24654,12 @@
 											"value": "Изтегляне на нова версия"
 										},
 										{
-											"language": "PL",
-											"value": "Dostępna aktualizacja"
-										},
-										{
 											"language": "EN",
 											"value": "Update Available"
+										},
+										{
+											"language": "PL",
+											"value": "Dostępna aktualizacja"
 										}
 									]
 								}
@@ -24605,12 +24683,12 @@
 									"script": "",
 									"translation": [
 										{
-											"language": "PL",
-											"value": "Zaloguj sie"
-										},
-										{
 											"language": "EN",
 											"value": "Login"
+										},
+										{
+											"language": "PL",
+											"value": "Zaloguj sie"
 										}
 									]
 								}
@@ -24634,12 +24712,12 @@
 									"script": "",
 									"translation": [
 										{
-											"language": "PL",
-											"value": "Ustaw kod PIN"
-										},
-										{
 											"language": "EN",
 											"value": "Set PIN Code"
+										},
+										{
+											"language": "PL",
+											"value": "Ustaw kod PIN"
 										}
 									]
 								}
@@ -24663,12 +24741,12 @@
 									"script": "",
 									"translation": [
 										{
-											"language": "PL",
-											"value": "Kod PIN"
-										},
-										{
 											"language": "EN",
 											"value": "PIN Code"
+										},
+										{
+											"language": "PL",
+											"value": "Kod PIN"
 										}
 									]
 								}
@@ -24692,16 +24770,16 @@
 									"script": "",
 									"translation": [
 										{
+											"language": "EN",
+											"value": "Users"
+										},
+										{
 											"language": "NO",
 											"value": "Brukere"
 										},
 										{
 											"language": "PL",
 											"value": "Użytkownicy"
-										},
-										{
-											"language": "EN",
-											"value": "Users"
 										}
 									]
 								}
@@ -25175,7 +25253,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "23.8.31.1110",
+	"ver": "23.9.12.1128",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",

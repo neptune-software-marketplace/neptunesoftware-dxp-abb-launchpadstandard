@@ -56,7 +56,7 @@ let AppCacheLogonAzure = {
 
         if (!isCordova()) {
             if (location.protocol === 'file:') {
-                sap.m.MessageToast.show('Testing Azure AD from file is not allowed due to CSRF issues. Please test in mobile app');
+                sap.m.MessageToast.show('Testing Microsoft Entra ID from file is not allowed due to CSRF issues. Please test in mobile app');
                 return;
             }
 
@@ -395,7 +395,7 @@ let AppCacheLogonAzure = {
 
                 sap.ui.core.BusyIndicator.hide();
 
-                let errorText = 'Error getting token from Azure AD';
+                let errorText = 'Error getting token from Microsoft Entra ID';
 
                 if (result.responseJSON && result.responseJSON.error_description) {
                     errorText = result.responseJSON.error_description;
@@ -427,7 +427,7 @@ let AppCacheLogonAzure = {
                 AppCacheLogonAzure._loginP9(azureToken.idToken, process);
             }
         }).catch(function (error) {
-            let errorText = 'Error getting refreshToken from Azure AD';
+            let errorText = 'Error getting refreshToken from Microsoft Entra ID';
             let errorCode = '';
 
             if (error && error.message && error.message.indexOf('AADSTS700082') > -1) {
@@ -516,7 +516,7 @@ let AppCacheLogonAzure = {
 
                 sap.ui.core.BusyIndicator.hide();
 
-                let errorText = 'Error getting refreshToken from Azure AD';
+                let errorText = 'Error getting refreshToken from Microsoft Entra ID';
                 let errorCode = '';
 
                 if (result.responseJSON && result.responseJSON.error_description) {
