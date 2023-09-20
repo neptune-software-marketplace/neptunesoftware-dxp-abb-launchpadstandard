@@ -221,26 +221,18 @@ function emptyBase64Image() {
 }
 
 const _lazyLoadImagesList = [];
-let downloadingImage = false;
+let lazyLoadImagesInProgress = false;
 function lazyLoadImage(src, target, type) {
     _lazyLoadImagesList.push({ src, target, type });
-    downloadLazyLoadImages();
-}
-
-if (document.readyState === 'complete') {
-    downloadLazyLoadImages();
-} else {
-    window.addEventListener('load', () => {
-        downloadLazyLoadImages();
-    });
+    if (!lazyLoadImagesInProgress) downloadLazyLoadImages();
 }
 
 function downloadLazyLoadImages() {
-    if (document.readyState !== 'complete' || downloadingImage || _lazyLoadImagesList.length === 0) {
+    if (lazyLoadImagesInProgress || _lazyLoadImagesList.length === 0) {
         return;
     }
 
-    downloadingImage = true;
+    lazyLoadImagesInProgress = true;
 
     function setImageSrc(src, target, type) {
         if (type === 'element' && target instanceof HTMLImageElement) {
@@ -271,10 +263,10 @@ function downloadLazyLoadImages() {
         return res.blob();
     }).then(res => {
         setImageSrc(URL.createObjectURL(res), target, type);
-        downloadingImage = false;
+        lazyLoadImagesInProgress = false;
         downloadLazyLoadImages();
     }).catch(() => {
-        downloadingImage = false;
+        lazyLoadImagesInProgress = false;
         downloadLazyLoadImages();
     });
 }

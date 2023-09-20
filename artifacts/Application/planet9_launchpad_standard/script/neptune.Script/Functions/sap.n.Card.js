@@ -120,6 +120,15 @@ sap.n.Card = {
             width: '100%',
             fitContainer: true,
         }).addStyleClass('nepFCardContainer nepTile' + cardWidth);
+
+        cardContainer.addEventDelegate({
+            onkeyup: function (evt) {
+                // open the Tile on pressing Enter
+                if (evt.key === 'Enter') {
+                    sap.n.Launchpad.HandleTilePress(config.dataTile, config.dataCat);
+                }
+            },
+        });
         
         addCustomData(cardContainer, {
             type: 'tile',
@@ -170,7 +179,6 @@ sap.n.Card = {
                 "aria-label",
                 sap.n.Launchpad.translateTile("title", config.dataTile) + " " + sap.n.Launchpad.translateTile("subTitle", config.dataTile)
             );
-
         };
 
         // Background Color

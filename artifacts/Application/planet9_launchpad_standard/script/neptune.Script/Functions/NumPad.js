@@ -197,6 +197,8 @@ const NumPad = {
         }
 
         if (auth === '') {
+            // invalid pincode entry count
+            NumPad.numPasscode++;
             NumPad.Clear();
 
             if (parseInt(AppCache.numPasscode) === NumPad.numPasscode) {
@@ -221,7 +223,6 @@ const NumPad = {
             }, 500);
 
             NumPad.setPasscodeBusy(false);
-            NumPad.numPasscode++;
             return;
         }
 

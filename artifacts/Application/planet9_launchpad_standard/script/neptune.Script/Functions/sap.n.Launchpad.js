@@ -2373,16 +2373,15 @@ sap.n.Launchpad = {
                 let position = (!!dataTile.imagePlacement) ? dataTile.imagePlacement : 'center';
 
                 if (dataTile.imagePosition === 'cover') {
-                    lazyLoadImage(imageUrl, `.tile${dataTile.id}`, 'style');
-                    imageUrl = emptyBase64Image();
                     css += `
                         .tile${dataTile.id} {
-                            background-image: url('${imageUrl}');
+                            background-image: url('${emptyBase64Image()}');
                             background-repeat: ${repeat};
                             background-size: ${size};
                             background-position: ${position};
                         }
                     `;
+                    lazyLoadImage(imageUrl, `.tile${dataTile.id}`, 'style');
                 } else {
                     const sel = (dataTile.imagePosition === 'top') ? 'Top' : 'Inline';
                     css += `
