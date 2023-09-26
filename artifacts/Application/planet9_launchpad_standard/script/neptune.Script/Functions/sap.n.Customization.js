@@ -121,8 +121,17 @@ const CustomizationStorage = {
                 categoryData.tilegroups,
                 data.categoryChilds
             );
-            newTileGroups.forEach((tilegroup) => {
-                category.tilegroups.push(this.formatTileGroup(tilegroup));
+            if (newTileGroups.length === 0) return;
+
+            newTileGroups.forEach((newTileGroup) => {
+                const placeAt = categoryData.tilegroups.findIndex((tileGroup) => tileGroup.id === newTileGroup.id)
+                const formatted = this.formatTileGroup(newTileGroup);
+
+                if (placeAt > -1) {
+                    category.tilegroups.splice(placeAt, 0, formatted);
+                } else {
+                    category.tilegroups.push(formatted);
+                }
             });
         }
 
@@ -146,8 +155,15 @@ const CustomizationStorage = {
             data.category,
             data.category
         );
-        newCategories.forEach((category) => {
-            existing.categories.push(this.formatCategory(category, data));
+        newCategories.forEach((newCategory) => {
+            const placeAt = data.category.findIndex((cat) => cat.id === newCategory.id);
+            const formatted = this.formatCategory(newCategory, data);
+
+            if (placeAt > -1) {
+                existing.categories.splice(placeAt, 0, formatted);
+            } else {
+                existing.categories.push(formatted);
+            }
         });
     },
 
