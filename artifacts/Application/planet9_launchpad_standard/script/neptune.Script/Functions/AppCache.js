@@ -1841,7 +1841,6 @@ let AppCache = {
 
         // Desktop 
         if (!AppCache.isMobile) {
-
             AppCache.translate(AppCache.userInfo.language);
 
             cacheLoaded = 0;
@@ -1862,9 +1861,7 @@ let AppCache = {
                 }
                 waitForCache();
             })();
-
         } else {
-
             // Translate if Mobile and not PIN Code
             if (!AppCache.enablePasscode) {
                 AppCache.translate(AppCache.userInfo.language);
@@ -1880,7 +1877,11 @@ let AppCache = {
                 if (AppCache.biometricAuthentication) sap.n.Fingerprint.saveBasicAuth();
                 AppCache.Update();
             }
+        }
 
+        // if pincode is disabled but Autolock is enabled
+        if (!AppCache.enablePasscode) {
+            AutoLockTimer.start();
         }
     },
 
@@ -2271,8 +2272,6 @@ let AppCache = {
                 // Start WebApp
                 AppCacheShellUI.setAppWidthLimited(false);
                 sap.ui.core.BusyIndicator.hide();
-            } else {
-                if (!AppCache.isPublic && !modelAppCacheTiles.oData.length) busyDialogStartup.open();
             }
 
             // Payload
@@ -2326,152 +2325,164 @@ let AppCache = {
                 return resolve();
             }
 
-            // Get Tiles 
-            sap.n.Planet9.function({
-                id: dataSet,
-                method: 'GetTiles',
-                data: dataRequest,
-                success: function (data) {
-                    busyDialogStartup.close();
+            let tilesInCache = [];
+            getCacheAppCacheTiles(false)
+                .then(tiles => {
+                    tilesInCache = !Array.isArray(tiles) ? [] : tiles; // un-initialized modelAppCacheTiles is an object
+                })
+                .then(() => {
+                    sap.n.Planet9.function({
+                        id: dataSet,
+                        method: 'GetTiles',
+                        data: dataRequest,
+                        success: function (data) {
+                            if (data.status && isLaunchpadNotFound(data.status)) {
+                                showLaunchpadNotFoundError(data.status);
+                                return resolve();
+                            }
 
-                    if (data.status && isLaunchpadNotFound(data.status)) {
-                        showLaunchpadNotFoundError(data.status);
-                        return resolve();
-                    }
+                            if (
+                                !AppCache.isPublic // for non-public launchpads
+                                && typeof AppCache.userInfo === 'object' && Object.values(AppCache.userInfo).length > 0 // user must be logged in
+                                && tilesInCache.length === 0 && data.tiles.length > 0 // no local tile getting loaded from server for the first time
+                            ) {
+                                busyDialogStartup.open();
+                            }
 
-                    // Blackout
-                    if (data.blackout) {
-                        sap.m.MessageBox.show(data.blackout.message, {
-                            title: data.blackout.title || 'System Status',
-                            onClose: function (oAction) {
-                                if (AppCache.isMobile) {
-                                    if (AppCache.enablePasscode) {
-                                        AppCache.Lock();
-                                    } else {
-                                        AppCache.Logout();
+                            // Blackout
+                            if (data.blackout) {
+                                sap.m.MessageBox.show(data.blackout.message, {
+                                    title: data.blackout.title || 'System Status',
+                                    onClose: function (oAction) {
+                                        if (AppCache.isMobile) {
+                                            if (AppCache.enablePasscode) {
+                                                AppCache.Lock();
+                                            } else {
+                                                AppCache.Logout();
+                                            }
+                                        } else {
+                                            topShell.setBlocked(true);
+                                        }
                                     }
-                                } else {
-                                    topShell.setBlocked(true);
-                                }
-                            }
-                        });
-                        return resolve();
-                    }
-
-                    if (!data.categoryChilds) data.categoryChilds = [];
-
-                    modelAppCacheData.setData(data.apps);
-                    modelAppCacheTiles.setData(data.tiles);
-                    modelAppCacheCategory.setData(data.category);
-                    modelAppCacheCategoryChild.setData(data.categoryChilds);
-
-                    if (data.fav && data.fav.tiles) {
-                        modelAppCacheTilesFav.setData(data.fav.tiles);
-                    } else {
-                        modelAppCacheTilesFav.setData([]);
-                    }
-
-                    // Check if UI5 Version Changed 
-                    let ui5Version = localStorage.getItem('p9ui5version');
-                    if (ui5Version !== sap.ui.version) {
-                        data.apps.forEach(function (app) {
-                            app.invalid = true;
-                        });
-                        localStorage.setItem('p9ui5version', sap.ui.version);
-                    }
-
-                    // Get App Update from Other Systems
-                    let action = [];
-                    for (let key in appSystems) { action.push(AppCache.UpdateGetDataRemote(appSystems[key])); }
-                    AppCache.hideGlobalAjaxError = true;
-                    Promise.all(action).then(function (values) {
-                        AppCache.hideGlobalAjaxError = false;
-
-                        // Merge App Check Data from Remote Systems 
-                        values.forEach(function (value) {
-                            // SAP 
-                            if (value && value.result && value.result.apps) {
-                                value.result.apps.forEach(function (app) {
-                                    modelAppCacheData.oData.push({
-                                        appType: app.apptype,
-                                        application: app.application,
-                                        updatedAt: app.updatedat,
-                                        invalid: app.invalid,
-                                        language: app.language,
-                                        appPath: app.apppath
-                                    });
                                 });
-                            } else {
-                                if (value && value.length) ModelData.AddArray(AppCacheData, value);
+                                return resolve();
                             }
-                        });
 
-                        // Save Cache
-                        setCacheAppCacheData();
-                        setCacheAppCacheTiles();
-                        setCacheAppCacheCategory();
-                        setCacheAppCacheCategoryChild();
-                        setCacheAppCacheTilesFav();
+                            if (!data.categoryChilds) data.categoryChilds = [];
 
-                        appCacheLog('AppCache.UpdateGetData: after getTiles and saved to database');
+                            modelAppCacheData.setData(data.apps);
+                            modelAppCacheTiles.setData(data.tiles);
+                            modelAppCacheCategory.setData(data.category);
+                            modelAppCacheCategoryChild.setData(data.categoryChilds);
 
-                        sap.n.Ajax.SuccessGetMenu();
-                        sap.ui.core.BusyIndicator.hide();
+                            if (data.fav && data.fav.tiles) {
+                                modelAppCacheTilesFav.setData(data.fav.tiles);
+                            } else {
+                                modelAppCacheTilesFav.setData([]);
+                            }
 
-                        // Check Update of StartApp 
-                        data.apps.forEach(function (app) {
-                            if (sap.n.Launchpad.currentTile &&
-                                sap.n.Launchpad.currentTile.actionApplication &&
-                                app.application.toLowerCase() === sap.n.Launchpad.currentTile.actionApplication.toLowerCase() &&
-                                app.invalid) AppCache.Load(sap.n.Launchpad.currentTile.actionApplication);
-                        });
+                            // Check if UI5 Version Changed 
+                            let ui5Version = localStorage.getItem('p9ui5version');
+                            if (ui5Version !== sap.ui.version) {
+                                data.apps.forEach(function (app) {
+                                    app.invalid = true;
+                                });
+                                localStorage.setItem('p9ui5version', sap.ui.version);
+                            }
 
-                        // Fetch all Apps if on Mobile 
-                        if (AppCache.isMobile && !AppCache.enablePwa) {
-                            data.tiles.forEach(function (tile) {
-                                if (tile.actionApplication || tile.tileApplication) sap.n.Ajax.loadApps(tile);
+                            // Get App Update from Other Systems
+                            let action = [];
+                            for (let key in appSystems) { action.push(AppCache.UpdateGetDataRemote(appSystems[key])); }
+                            AppCache.hideGlobalAjaxError = true;
+                            Promise.all(action).then(function (values) {
+                                AppCache.hideGlobalAjaxError = false;
+
+                                // Merge App Check Data from Remote Systems 
+                                values.forEach(function (value) {
+                                    // SAP 
+                                    if (value && value.result && value.result.apps) {
+                                        value.result.apps.forEach(function (app) {
+                                            modelAppCacheData.oData.push({
+                                                appType: app.apptype,
+                                                application: app.application,
+                                                updatedAt: app.updatedat,
+                                                invalid: app.invalid,
+                                                language: app.language,
+                                                appPath: app.apppath
+                                            });
+                                        });
+                                    } else {
+                                        if (value && value.length) ModelData.AddArray(AppCacheData, value);
+                                    }
+                                });
+
+                                // Save Cache
+                                setCacheAppCacheData();
+                                setCacheAppCacheTiles();
+                                setCacheAppCacheCategory();
+                                setCacheAppCacheCategoryChild();
+                                setCacheAppCacheTilesFav();
+
+                                appCacheLog('AppCache.UpdateGetData: after getTiles and saved to database');
+
+                                sap.n.Ajax.SuccessGetMenu();
+                                sap.ui.core.BusyIndicator.hide();
+
+                                // Check Update of StartApp 
+                                data.apps.forEach(function (app) {
+                                    if (sap.n.Launchpad.currentTile &&
+                                        sap.n.Launchpad.currentTile.actionApplication &&
+                                        app.application.toLowerCase() === sap.n.Launchpad.currentTile.actionApplication.toLowerCase() &&
+                                        app.invalid) AppCache.Load(sap.n.Launchpad.currentTile.actionApplication);
+                                });
+
+                                // Fetch all Apps if on Mobile 
+                                if (AppCache.isMobile && !AppCache.enablePwa) {
+                                    data.tiles.forEach(function (tile) {
+                                        if (tile.actionApplication || tile.tileApplication) sap.n.Ajax.loadApps(tile);
+                                    });
+                                }
+
+                                if (AppCache.StartApp) {
+                                    AppCache.Load(AppCache.StartApp);
+                                    // Start WebApp
+                                } else if (AppCache.StartWebApp) {
+                                    AppCache.LoadWebApp(AppCache.StartWebApp);
+                                }
+
+                                resolve();
                             });
-                        }
 
-                        if (AppCache.StartApp) {
-                            AppCache.Load(AppCache.StartApp);
-                            // Start WebApp
-                        } else if (AppCache.StartWebApp) {
-                            AppCache.LoadWebApp(AppCache.StartWebApp);
-                        }
+                            sap.n.Customization.init(data).then(() => {
+                                if (!AppCache.StartApp && !AppCache.StartWebApp) {
+                                    sap.n.Launchpad.BuildMenu();
+                                }
 
-                        resolve();
+                                busyDialogStartup.close();
+                                sap.n.Customization.Popover.init();
+                            });
+                        },
+                        error: function (result, status) {
+                            sap.ui.core.BusyIndicator.hide();
+                            busyDialogStartup.close();
+
+                            // We must load existing versions of the start app if we failed to fetch new ones
+                            if (AppCache.StartApp) {
+                                AppCache.Load(AppCache.StartApp);
+                                // Start WebApp
+                            } else if (AppCache.StartWebApp) {
+                                AppCache.LoadWebApp(AppCache.StartWebApp);
+                            }
+
+                            if (result.responseJSON && result.responseJSON.status && isLaunchpadNotFound(result.responseJSON.status)) {
+                                showLaunchpadNotFoundError(result.responseJSON.status);
+                                return resolve();
+                            }
+
+                            resolve();
+                        }
                     });
-
-                    sap.n.Customization.init(data).then(() => {
-                        if (!AppCache.StartApp && !AppCache.StartWebApp) {
-                            sap.n.Launchpad.BuildMenu();
-                        }
-
-                        busyDialogStartup.close();
-                        sap.n.Customization.Popover.init();
-                    });
-                },
-                error: function (result, status) {
-                    sap.ui.core.BusyIndicator.hide();
-                    busyDialogStartup.close();
-
-                    // We must load existing versions of the start app if we failed to fetch new ones
-                    if (AppCache.StartApp) {
-                        AppCache.Load(AppCache.StartApp);
-                        // Start WebApp
-                    } else if (AppCache.StartWebApp) {
-                        AppCache.LoadWebApp(AppCache.StartWebApp);
-                    }
-
-                    if (result.responseJSON && result.responseJSON.status && isLaunchpadNotFound(result.responseJSON.status)) {
-                        showLaunchpadNotFoundError(result.responseJSON.status);
-                        return resolve();
-                    }
-
-                    resolve();
-                }
-            });
+                });
         });
     },
 
