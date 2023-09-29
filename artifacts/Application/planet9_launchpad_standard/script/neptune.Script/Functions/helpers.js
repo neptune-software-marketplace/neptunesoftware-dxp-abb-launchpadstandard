@@ -254,6 +254,7 @@ function downloadLazyLoadImages() {
     const { src, target, type } = _lazyLoadImagesList.shift();
     if (src.startsWith('data:')) {
         setImageSrc(src, target, type);
+        lazyLoadImagesInProgress = false;
         downloadLazyLoadImages();
         return;
     }

@@ -226,7 +226,6 @@ sap.n.Card = {
 
         // Background Image Inline
         if (config.dataTile.image && !config.dataTile.imagePosition) {
-
             let imageSource = config.dataTile.image
             if (AppCache.isMobile && config.dataTile.imageData) imageSource = config.dataTile.imageData;
 
