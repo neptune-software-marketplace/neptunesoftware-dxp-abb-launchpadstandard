@@ -348,3 +348,27 @@ function fetchAppUpdates() {
         downloadApp(tile);
     });
 }
+
+// in certain cases for backwards compatibility, some functions don't return promises as expected
+// e.g. in 22.10.6 UpdateGetData return undefined from p9-library but we expect a promise
+// for such cases we need to create a fakePromise to take the result and monitor a change in value or timeout
+// defaultReturnValue in-case of promise timeout
+// by default each timeout is awaited for 1 sec
+function fakePromise(returnValue, model, fnExpectedValue, defaultReturnValue, timeout = 1000) {
+    // returned value is already a promise, we can await for it in code
+    if (returnValue instanceof Promise) {
+        return returnValue;
+    }
+
+    // check every 10ms if value resolves
+    function checkIfPromiseIsResolved(resolve) {
+        if (fnExpectedValue(model)) return resolve(model.getData());
+        setTimeout(() => checkIfPromiseIsResolved(resolve), 10);
+    }
+
+    // check returnValue
+    return Promise.race([
+        new Promise((resolve) => setTimeout(() => resolve(defaultReturnValue), timeout)),
+        new Promise((resolve) => checkIfPromiseIsResolved(resolve))
+    ]);
+}
