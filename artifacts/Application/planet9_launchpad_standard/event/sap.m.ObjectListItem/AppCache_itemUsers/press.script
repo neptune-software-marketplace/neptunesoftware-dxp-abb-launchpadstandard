@@ -33,6 +33,7 @@ if (
                 
                 AppCacheShellUser.setEnabled(true);
                 AppCache.setUserInfo();
+                AutoLockTimer.start();
             }
         });
 } else {

@@ -101,6 +101,9 @@ let AppCacheLogonOIDC = {
     Signout: function () {
         this.options = this._getLogonData();
         const signOut = window.open(AppCache.Url + '/user/logon/openid-connect/' + AppCacheLogonOIDC.options.path + '/logout', '_blank', 'location=no,width=5,height=5,left=-1000,top=3000');
+        
+        // if pop-ups are blocked signout window.open will return null
+        if (!signOut) return;
 
         if (isCordova()) {
             signOut.hide();

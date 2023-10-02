@@ -151,6 +151,10 @@ let AppCacheLogonAzure = {
             if (signoutFrame) signoutFrame.setAttribute('src', 'https://login.microsoftonline.com/common/oauth2/logout');
         } else {
             const signOut = window.open('https://login.microsoftonline.com/common/oauth2/logout', '_blank', 'location=no,width=5,height=5,left=-1000,top=3000');
+            
+            // if pop-ups are blocked signout window.open will return null
+            if (!signOut) return;
+            
             signOut.blur && signOut.blur();
 
             if (isCordova()) {
