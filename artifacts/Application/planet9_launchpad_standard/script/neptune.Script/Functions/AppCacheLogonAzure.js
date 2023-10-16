@@ -399,8 +399,8 @@ let AppCacheLogonAzure = {
 
                 sap.ui.core.BusyIndicator.hide();
 
+                let errorCode = '';
                 let errorText = 'Error getting token from Microsoft Entra ID';
-
                 if (result.responseJSON && result.responseJSON.error_description) {
                     errorText = result.responseJSON.error_description;
                     errorCode = errorText.substr(0, 12);

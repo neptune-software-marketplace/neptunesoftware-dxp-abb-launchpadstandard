@@ -2215,7 +2215,6 @@ sap.n.Launchpad = {
 
         // Actions 
         sap.n.Launchpad.buildTileAction(dataTile, oBlockContentParent, oBlockCell, dataCat);
-
         return oBlockCell;
     },
 
@@ -2451,7 +2450,7 @@ sap.n.Launchpad = {
 
     },
 
-    buildTileDefault: function (dataTile, tileWidth, dataCat, isMosedUsed) {
+    buildTileDefault: function (dataTile, tileWidth, dataCat, isMostUsed) {
         // Top 
         let oBlockCell = new sap.ui.layout.BlockLayoutCell(nepId(), {
             title: sap.n.Launchpad.translateTile('title', dataTile),
@@ -2528,7 +2527,7 @@ sap.n.Launchpad = {
             oBlockContentTop.addItem(textDescription);
         }
 
-        if (!isMosedUsed) {
+        if (!isMostUsed) {
             // Image - background or image card
             if (dataTile.image) {
                 let imageUrl;
@@ -2799,7 +2798,6 @@ sap.n.Launchpad = {
             footer.addStyleClass('nepTileFooter');
             boxFooter.addItem(footer);
             oBlockContent.addItem(boxFooter);
-
         }
 
         parent.addItem(oBlockContent);
@@ -3091,7 +3089,6 @@ sap.n.Launchpad = {
 
         // Actions
         sap.n.Launchpad.buildTileAction(dataTile, oBlockContentParent, oBlockCell, dataCat);
-
         return oBlockCell;
     },
 

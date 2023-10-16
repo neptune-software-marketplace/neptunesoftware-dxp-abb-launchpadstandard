@@ -52,7 +52,10 @@ function getFieldBindingText(field) {
 
 function setTextAndOpenDialogText(title, html) {
     AppCacheText.setTitle(title);
-    document.getElementById('textDiv').innerHTML = html;
+    
+    const textDiv = document.getElementById('textDiv');
+    if (textDiv) textDiv.innerHTML = html;
+
     diaText.open();
 }
 
