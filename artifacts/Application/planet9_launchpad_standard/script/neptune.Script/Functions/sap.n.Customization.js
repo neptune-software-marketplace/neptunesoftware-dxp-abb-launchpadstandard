@@ -280,6 +280,7 @@ sap.n.Customization = {
                     if (customizations && !this.isEmpty(customizations)) {
                         // update from server
                         this.setCustomizationsInContext(customizations);
+                        CustomizationStorage.merge(this.getCustomizationsInContext(), data);
                     } else {
                         // initiate based on current launchpad settings
                         this.setCustomizationsInContext(this.formatForStorage(data));
