@@ -17,6 +17,9 @@ let AppCacheLogonLdap = {
         jsonRequest({
             url: AppCache.Url + '/user/logon/ldap/' + logonData.path + AppCache._getLoginQuery(),
             data: JSON.stringify(rec),
+            headers: {
+                'login-path': getLoginData(),
+            },
             success: function (data) {
                 setSelectedLoginType('ldap');
                 AppCache.getUserInfo();
@@ -44,6 +47,9 @@ let AppCacheLogonLdap = {
             jsonRequest({
                 url: AppCache.Url + '/user/logon/ldap/' + logonData.path + AppCache._getLoginQuery(),
                 data: JSON.stringify(rec),
+                headers: {
+                    'login-path': getLoginData(),
+                },
                 success: function (data) {
                     setSelectedLoginType('ldap');
                     resolve(data);

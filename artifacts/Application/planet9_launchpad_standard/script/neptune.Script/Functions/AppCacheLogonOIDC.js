@@ -180,6 +180,9 @@ let AppCacheLogonOIDC = {
                 type: 'GET',
                 url: url,
                 contentType: 'application/json',
+                headers: {
+                    'login-path': getLoginData(),
+                },
                 success: function (data) {
                     appCacheLog('OIDC: Successfully logged on to P9. Starting process: Get User Info');
                     appCacheLog(data);

@@ -15,6 +15,9 @@ let AppCacheLogonLocal = {
         jsonRequest({
             url: AppCache.Url + '/user/logon/local' + AppCache._getLoginQuery(),
             data: JSON.stringify(rec),
+            headers: {
+                'login-path': getLoginData(),
+            },
             success: function (data) {
                 if (data.status && data.status === 'UpdatePassword') {
                     const url = new URL(data.link, location.href);
@@ -96,6 +99,9 @@ let AppCacheLogonLocal = {
             jsonRequest({
                 url: AppCache.Url + '/user/logon/local' + AppCache._getLoginQuery(),
                 data: JSON.stringify(rec),
+                headers: {
+                    'login-path': getLoginData(),
+                },  
                 success: function (data) {
                     if (data.status && data.status === 'UpdatePassword') {
                         const url = new URL(data.link, location.href);

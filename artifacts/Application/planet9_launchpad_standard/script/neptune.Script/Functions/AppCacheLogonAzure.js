@@ -551,7 +551,7 @@ let AppCacheLogonAzure = {
         return request({
             type: 'POST',
             url: AppCache.Url + '/user/logon/' + AppCacheLogonAzure.options.type + '/' + AppCacheLogonAzure.options.path + AppCache._getLoginQuery(),
-            headers: { 'Authorization': 'Bearer ' + idToken },
+            headers: { 'Authorization': 'Bearer ' + idToken, 'login-path': getLoginData() },
             success: function (data) {
                 setSelectedLoginType(AppCacheLogonAzure.options.type);
 

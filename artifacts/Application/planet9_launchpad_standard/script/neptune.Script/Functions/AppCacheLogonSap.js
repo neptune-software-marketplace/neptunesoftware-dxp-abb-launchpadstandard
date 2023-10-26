@@ -20,6 +20,9 @@ let AppCacheLogonSap = {
         jsonRequest({
             url: AppCache.Url + '/user/logon/sap/' + logonData.path + AppCache._getLoginQuery(),
             data: JSON.stringify(rec),
+            headers: {
+                'login-path': getLoginData(),
+            },
             success: function (data) {
                 if (data.status === 'UpdatePassword') {
                     sap.ui.core.BusyIndicator.hide();
@@ -54,6 +57,9 @@ let AppCacheLogonSap = {
                     detail,
                     password: inNewPassword.getValue()
                 }),
+                headers: {
+                    'login-path': getLoginData(),
+                },
                 success: function (data) {                    
                     if (data.status === 'UpdatePassword') {                        
                         sap.ui.core.BusyIndicator.hide();
@@ -102,6 +108,9 @@ let AppCacheLogonSap = {
             jsonRequest({
                 url: AppCache.Url + '/user/logon/sap/' + logonData.path + AppCache._getLoginQuery(),
                 data: JSON.stringify(rec),
+                headers: {
+                    'login-path': getLoginData(),
+                },
                 success: function (data) {
                     setSelectedLoginType('sap');
                     resolve(data);

@@ -281,6 +281,26 @@ function setPWAInstallQueryStatus() {
     setCachediaPWAInstall();
 }
 
+function showCookieDialog() {
+    if (AppCache.config && AppCache.config.cookieDialogEnabled) {
+        const data = modeldiaCookie.getData();
+        if (typeof data === 'undefined' || Object.keys(data).length === 0 || data.visible) {
+            const title = AppCache.config.cookieDialogTitle;
+            const message = AppCache.config.cookieDialogMessage;
+
+            diaCookieHeaderTitle.setText(title);
+            diaCookieContent.setText(message);
+            diaCookie.open();
+        }
+    }
+}
+
+function setCookieConfirmationQueryStatus() {
+    diaCookie.close();
+    modeldiaCookie.setData({ visible: false });
+    setCachediaCookie();
+}
+
 function promptForPWAInstall() {
     _pwadeferredPrompt.prompt();
     _pwadeferredPrompt.userChoice
@@ -375,4 +395,8 @@ function fakePromise(returnValue, model, fnExpectedValue, defaultReturnValue, ti
         new Promise((resolve) => setTimeout(() => resolve(defaultReturnValue), timeout)),
         new Promise((resolve) => checkIfPromiseIsResolved(resolve))
     ]);
+}
+
+function getLoginData() {
+    return `${AppCache?.CurrentConfig || location?.pathname || '/'}`;
 }

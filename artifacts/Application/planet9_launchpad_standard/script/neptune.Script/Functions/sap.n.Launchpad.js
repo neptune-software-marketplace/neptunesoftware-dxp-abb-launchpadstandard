@@ -141,7 +141,7 @@ sap.n.Launchpad = {
                 if (sap.n.Launchpad.currentTileGroupPage !== `page${dataCat.id}`) {
                     sap.n.Launchpad.BuildTiles(dataCat, data.id);
                 } else {
-                    if (sap.n.Launchpad.currentTile) AppCache.Back();
+                    if (typeof sap.n.Launchpad.currentTile === 'object' && Object.keys(sap.n.Launchpad.currentTile).length > 0) AppCache.Back();
                     sap.n.Launchpad.scrollToTileGroup(data.id);
                 }
                 break;
@@ -921,7 +921,7 @@ sap.n.Launchpad = {
     },
 
     BuildTiles: function (dataCat, subCat) {
-        if (!modelAppCacheTiles.oData.length) return;
+        if (sap.n.Customization.getTiles(dataCat.id).length === 0) return;
 
         let pageCatID = `page${dataCat.id}`;
         let isFav = dataCat.inclFav;

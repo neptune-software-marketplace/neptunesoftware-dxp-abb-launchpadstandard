@@ -132,7 +132,7 @@ let AppCache = {
             openFullscreen: options.openFullscreen || false,
             rootDir: options.rootDir || '',
             sapICFNode: options.sapICFNode || '',
-            defaultLanguage: options.defaultLanguage || "",
+            defaultLanguage: options.defaultLanguage || "en",
         }
 
         // Check for AppCache.Load when Remote System
@@ -512,6 +512,7 @@ let AppCache = {
     },
 
     restrictedDisable: function () {
+        AppCache_boxLogon.setVisible(false);
         AppCacheUserActionSettings.setVisible(true);
         AppCache_boxPasscodeEntry.setVisible(false);
         AppCacheShellTitle.setVisible(false);
@@ -539,6 +540,8 @@ let AppCache = {
             AppCache.Encrypted = '';
 
             appCacheLog('AppCache.restrictedDisable: All data fetched from database');
+
+            sap.n.Launchpad.RebuildTiles();
 
             // Enhancement
             if (sap.n.Enhancement.RestrictedDisable) {
@@ -1433,6 +1436,8 @@ let AppCache = {
     },
 
     Lock: function () {
+        AppCache_boxLogon.setVisible(true);
+
         // Enhancement
         if (sap.n.Enhancement.BeforeLock) {
             try {
@@ -1492,6 +1497,7 @@ let AppCache = {
     },
 
     Logout: function () {
+        AppCache_boxLogon.setVisible(true);
         clearSelectedLoginType();
         
         // Enhancement
@@ -1735,6 +1741,7 @@ let AppCache = {
                 appCacheLog('Successfully received User Info from P9');
                 appCacheLog(data);
                 AppCache.afterUserInfo(false, data);
+                AppCache_boxLogon.setVisible(false);
             },
             function (result, error) {
                 appCacheError('Error getting User Info (getUserInfo)');
@@ -2322,6 +2329,7 @@ let AppCache = {
 
                     sap.n.Customization.Popover.init();
                 });
+                sap.ui.core.BusyIndicator.hide();
                 return resolve();
             }
 
@@ -3508,6 +3516,19 @@ let AppCache = {
             }
         }, 500);
 
+        // TODO check if cookies message should be shown
+        // setTimeout(() => {
+        //     if (modeldiaCookies && modeldiaCookies.oData) {
+        //         console.log('diaCookies.open()', diaCookies.open)
+        //         const { visible } = modeldiaCookies.getData()
+        //         console.log('visible', visible)
+        //         if (visible !== false) {
+        //             diaCookies.open();
+        //         }
+        //     } else {
+        //         // diaCookies && diaCookies.open
+        //     }
+        // }, 2000);
     },
 
     _getLoginQuery() {
