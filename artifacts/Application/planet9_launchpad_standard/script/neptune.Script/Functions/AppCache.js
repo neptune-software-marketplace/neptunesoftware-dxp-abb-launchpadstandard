@@ -541,6 +541,11 @@ let AppCache = {
 
             appCacheLog('AppCache.restrictedDisable: All data fetched from database');
 
+            // In offline mode, when BuildMenu is first called, cache is not loaded, causing an empty launchpad screen
+            if (AppCache.isOffline) {
+                sap.n.Launchpad.BuildMenu();
+            }
+            
             sap.n.Launchpad.RebuildTiles();
 
             // Enhancement
