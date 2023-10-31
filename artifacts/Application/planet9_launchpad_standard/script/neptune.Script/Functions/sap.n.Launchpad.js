@@ -921,7 +921,9 @@ sap.n.Launchpad = {
     },
 
     BuildTiles: function (dataCat, subCat) {
-        if (sap.n.Customization.getTiles(dataCat.id).length === 0) return;
+        const tiles = sap.n.Customization.getTiles(dataCat.id);
+        const tileGroups = sap.n.Customization.getTileGroups(dataCat.id);
+        if (tiles.length === 0 && tileGroups.length === 0) return;
 
         let pageCatID = `page${dataCat.id}`;
         let isFav = dataCat.inclFav;
@@ -943,7 +945,6 @@ sap.n.Launchpad = {
         let pageCat = sap.ui.getCore().byId(pageCatID);
 
         // Pages with Fav, always create
-        const tileGroups = sap.n.Customization.getTileGroups(dataCat.id);
         tileGroups.forEach(function (data) {
             let dataCatChild = sap.n.Customization.getCategory(data.id);
             if (!dataCatChild) dataCatChild = sap.n.Customization.getTileGroup(data.id);

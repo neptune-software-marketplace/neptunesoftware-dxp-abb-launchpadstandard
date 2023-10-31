@@ -607,6 +607,10 @@ sap.n.Customization = {
     },
 
     getAllCategories() {
+        if (this.isDisabled()) {
+            return modelAppCacheCategory.getData();
+        }
+
         const { categories } = this.getCustomizationsInContext();
         return categories
             .map((category) => {
@@ -644,6 +648,11 @@ sap.n.Customization = {
     },
 
     getTileGroups(id) {
+        if (this.isDisabled()) {
+            const category = ModelData.FindFirst(AppCacheCategory, "id", id);
+            if (category) return category.tilegroups;
+        }
+
         const result = this.findPath(id);
         if (result === undefined) {
             // exceptional case: tiles groups referenced from a tile group, which is linked as an action from a launchpad tile
@@ -674,6 +683,14 @@ sap.n.Customization = {
     },
 
     getTiles(id) {
+        if (this.isDisabled()) {
+            const category = ModelData.FindFirst(AppCacheCategory, "id", id);
+            if (category) return category.tiles;
+
+            const childCategory = ModelData.FindFirst(AppCacheCategoryChild, "id", id);
+            if (childCategory) return childCategory.tiles;
+        }
+
         const result = this.findPath(id);
         if (result === undefined || result.path.length === 0) {
             // if we are fetching tiles for tile group, but get nothing

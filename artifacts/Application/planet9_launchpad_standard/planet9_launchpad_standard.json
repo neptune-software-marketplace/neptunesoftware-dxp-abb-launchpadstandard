@@ -13845,17 +13845,17 @@
 																															"translation": []
 																														},
 																														{
-																															"attribute": "title",
-																															"grouping": "Formatter",
-																															"value": "Anonymous Function",
-																															"script": "file://event/sap.m.ObjectListItem/AppCache_itemUsers/title.script",
-																															"translation": []
-																														},
-																														{
 																															"attribute": "press",
 																															"grouping": "Events",
 																															"value": "Anonymous Function",
 																															"script": "file://event/sap.m.ObjectListItem/AppCache_itemUsers/press.script",
+																															"translation": []
+																														},
+																														{
+																															"attribute": "title",
+																															"grouping": "Formatter",
+																															"value": "Anonymous Function",
+																															"script": "file://event/sap.m.ObjectListItem/AppCache_itemUsers/title.script",
 																															"translation": []
 																														}
 																													],
@@ -49355,7 +49355,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "23.10.27.1156",
+	"ver": "23.10.31.1318",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",
