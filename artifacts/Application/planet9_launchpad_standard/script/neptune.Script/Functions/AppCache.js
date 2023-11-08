@@ -1667,6 +1667,8 @@ let AppCache = {
         AppCacheUserActionText.setText(AppCache.userInfo.name || AppCache.userInfo.username);
         inAppCacheFormSettingsLang.setSelectedKey(AppCache.userInfo.language);
 
+        sap.n.Launchpad.validateActiveLanguageOrRevert();
+
         // Enhancement
         if (sap.n.Enhancement.setUserInfo) {
             try {

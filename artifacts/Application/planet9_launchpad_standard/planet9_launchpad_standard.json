@@ -27427,8 +27427,8 @@
 																		{
 																			"attribute": "change",
 																			"grouping": "Events",
-																			"value": "Anonymous Function",
-																			"script": "file://event/sap.m.Select/inAppCacheFormSettingsLang/change.script",
+																			"value": "sap.n.Launchpad.updateUserLanguage(inAppCacheFormSettingsLang.getSelectedKey() ?? '');",
+																			"script": "sap.n.Launchpad.updateUserLanguage(inAppCacheFormSettingsLang.getSelectedKey() ?? '');",
 																			"translation": []
 																		}
 																	],
@@ -49355,7 +49355,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "23.10.31.1318",
+	"ver": "23.11.8.1222",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",

@@ -320,6 +320,43 @@ sap.n.Launchpad = {
         grid.addStyleClass(c);
     },
 
+    updateUserLanguage(language = '') {
+        AppCache.userInfo.language = language;
+        ModelData.Update(AppCacheUsers, 'username', AppCache.userInfo.username, AppCache.userInfo);
+        setCacheAppCacheUsers();
+
+        sap.n.Planet9.function({
+            id: dataSet,
+            method: 'UpdateUserDetails',
+            data: { language },
+            success: function (data) {
+                if (AppCache.isMobile) {
+                    AppCache.translate(language);
+                    sap.n.Launchpad.RebuildTiles();
+                    sap.n.Launchpad.BuildMenuTop();
+                    sap.n.Launchpad.BuildTreeMenu();
+                } else {
+                    location.reload();
+                }
+            }
+        });
+    },
+
+    // if language set by user is removed, reset to default language
+    validateActiveLanguageOrRevert() {
+        // supported for user selected language has been removed
+        const { languages } = AppCache.config;
+        const { language } = AppCache.userInfo;
+        if (
+            typeof language !== 'undefined' && (
+                Array.isArray(languages) && !languages.includes(language)
+            ) && language !== 'EN'
+        ) {
+            // revert to default language
+            this.updateUserLanguage();
+        }
+    },
+
     applyLanguages: function (languages) {
         inAppCacheFormSettingsLang.setVisible(true);
         inAppCacheFormSettingsLang.destroyItems();
