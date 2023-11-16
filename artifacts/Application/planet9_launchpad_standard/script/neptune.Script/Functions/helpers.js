@@ -247,29 +247,34 @@ function determineCacheNameFromUrl(url) {
     if (new RegExp('/public/launchpad/').test(url)) return 'p9pwa-public';
     if (new RegExp('/launchpad/').test(url)) return 'p9pwa-launchpad';
 
-
     const publicRe = [
         new RegExp('/public/application/'),
         new RegExp('/public/neptune/'),
         new RegExp('/public/fontawesome/'),
         new RegExp('/public/highsuite/'),
-        new RegExp('/public/css/'),
-        new RegExp('/public/')
+        new RegExp('/public/css/')
     ];
     if (publicRe.some(re => re.test(url))) {
         return 'p9pwa-public';
     }
 
     if (new RegExp('https://openui5.hana.ondemand.com/').test(url)) return 'p9pwa-ui5-cdn';
-    if (new RegExp('/openui5.hana/').test(url)) return 'p9pwa-ui5';
+    if (new RegExp('https://sapui5.hana.ondemand.com/').test(url)) return 'p9pwa-ui5-cdn';
+    
+    if (new RegExp('/public/openui5/').test(url)) return 'p9pwa-ui5';
 
     const mediaRe = [
         new RegExp('/public/images/'),
         new RegExp('/public/icons/'),
         new RegExp('/media/'),
+        new RegExp('\.(png|jpg|jpeg|svg|gif|webp)$')
     ];
     if (mediaRe.some(re => re.test(url))) {
         return 'p9pwa-images';
+    }
+
+    if (new RegExp('/public/').test(url)) {
+        return 'p9pwa-public';
     }
 
     // default
