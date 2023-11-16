@@ -164,6 +164,10 @@ let AppCache = {
             }
         }
 
+        if (AppCache.userInfo.language && AppCache.userInfo.language !== 'en') {
+            AppCache.LoadOptions.defaultLanguage = AppCache.userInfo.language;
+        }
+
         // Get App from DB/LS if exist in repository
         let app = ModelData.FindFirst(AppCacheData, ['application', 'language', 'appPath'], [value.toUpperCase(), AppCache.userInfo.language, AppCache.LoadOptions.appPath]);
         if (app) {
@@ -1095,45 +1099,41 @@ let AppCache = {
             return;
         }
 
+        let url = '';
+        const params = new URLSearchParams();
+
         // Get View from Server
         if (AppCache.LoadOptions.rootDir) {
-            if (AppCache.LoadOptions.rootDir === '/views/') {
-                url = AppCache.LoadOptions.rootDir + value;
-            } else {
-                url = AppCache.LoadOptions.rootDir + value + '.js';
-            }
+            const { rootDir } = AppCache.LoadOptions;
+            url = `${rootDir}${value}`
+            url += rootDir === '/views/' ? '' : '.js';
         } else {
-            if (AppCache.isPublic) {
-                url = '/public/app/' + value + '.js';
-            } else {
-                url = '/app/' + value + '.js';
-            }
-        };
+            url = AppCache.isPublic ? `/public/app/${value}.js` : `/app/${value}.js`;
+        }
 
         // Detect Mobile 
-        if (AppCache.isMobile) url += '?isMobile=true';
+        if (AppCache.isMobile) params.append('isMobile', 'true');
 
-        let headers = { 'X-Requested-With': 'XMLHttpRequest' }
+        const headers = { 'X-Requested-With': 'XMLHttpRequest' };
 
         // Remote System
         if (AppCache.LoadOptions.appPath) {
             // Remote System
             if (AppCache.LoadOptions.appType === 'SAP') {
-                headers.NeptuneServer = AppCache.LoadOptions.appPath;
+                url = '/proxy/remote/';
+                headers['NeptuneServer'] = AppCache.LoadOptions.appPath;
 
-                const proxyPrefix = '/proxy/remote/';
-                const appPathPrefix = `${AppCache.LoadOptions.appPath}/neptune/`;
-                const appPathPostfix = `/${AppCache.LoadOptions.appAuth}`;
+                const prefix = `${AppCache.LoadOptions.appPath}/neptune/`;
                 if (AppCache.LoadOptions.sapICFNode) {
-                    url = proxyPrefix + encodeURIComponent(appPathPrefix + AppCache.LoadOptions.sapICFNode + `/${value}.view.js`) + appPathPostfix;
+                    url += encodeURIComponent(prefix + AppCache.LoadOptions.sapICFNode + `/${value}.view.js`);
                 } else {
-                    url = proxyPrefix + encodeURIComponent(appPathPrefix + `${value}.view.js`) + appPathPostfix;
+                    url += encodeURIComponent(prefix + `${value}.view.js`);
                 }
+                url += `/${AppCache.LoadOptions.appAuth}`
 
                 AppCache.hideGlobalAjaxError = true;
             } else {
-                url += AppCache.isMobile ? '&' : '?';
-                url += 'p9Server=' + AppCache.LoadOptions.appPath;
+                params.append('p9Server', AppCache.LoadOptions.appPath);
 
                 const p = encodeURIComponent(AppCache.LoadOptions.appPath + url);
                 if (AppCache.LoadOptions.appAuth) url = `/proxy/remote/${p}/${AppCache.LoadOptions.appAuth}`;
@@ -1142,25 +1142,19 @@ let AppCache = {
 
             // Remote System ID for adding  proxy authentication
             if (AppCache.LoadOptions.appAuth) headers['X-Auth-In-P9'] = AppCache.LoadOptions.appAuth;
-
-            url = AppCache.Url + url;
-
-        } else {
-            url = AppCache.Url + url;
         }
 
-        if (AppCache.LoadOptions.defaultLanguage) {
-            url += AppCache.isMobile ? '&' : '?';
-            url += 'lang=' + AppCache.LoadOptions.defaultLanguage;
+        url = AppCache.Url + url;
+
+        let lang = AppCache.LoadOptions.defaultLanguage;
+        if (AppCache.userInfo.language && AppCache.userInfo.language !== 'en') {
+            lang = AppCache.userInfo.language;
         }
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const debug = urlParams.get('debug');
-        
-        if (debug) {
-            url += AppCache.isMobile ? '&' : '?';
-            url += 'debug=true';
-        }
+        if (lang) params.append('lang', lang);
+
+        const winParams = new URLSearchParams(window.location.search);
+        if (winParams.has('debug')) params.append('debug', true);
 
         // Enhancement
         if (sap.n.Enhancement.RemoteSystemAuth) {
@@ -1171,18 +1165,18 @@ let AppCache = {
             }
         }
 
+        if (params.size > 0) url += `?${params.toString()}`;
+
         request({
             datatype: 'HTML',
             type: 'GET',
-            url: url,
-            headers: headers,
+            url,
+            headers,
             success: function (data, status, request) {
-
                 AppCache.hideGlobalAjaxError = true;
 
                 // Save in DB/LocalStorage
-                let viewName = 'app:' + value + ':' + AppCache.userInfo.language + ':' + AppCache.LoadOptions.appPath;
-
+                const viewName = `app:${value}:${lang}:${AppCache.LoadOptions.appPath}`;
                 if (typeof p9Database !== 'undefined' && p9Database !== null) {
                     p9SaveView(viewName.toUpperCase(), data);
                 } else {
@@ -1835,11 +1829,11 @@ let AppCache = {
 
             AppCache.userInfo.logonData = AppCache.getLogonTypeInfo(AppCache_loginTypes.getSelectedKey());
 
-            if (AppCache.enablePwa && AppCache.userInfo.logonData.type === 'azure-bearer') {
+            if (isPWAEnabled() && AppCache.userInfo.logonData.type === 'azure-bearer') {
                 AppCacheLogonAzure.Signout();
             }
 
-            if (AppCache.enablePwa && AppCache.userInfo.logonData.type === 'openid-connect') {
+            if (isPWAEnabled() && AppCache.userInfo.logonData.type === 'openid-connect') {
                 AppCacheLogonOIDC.Signout();
             }
 
@@ -1990,12 +1984,12 @@ let AppCache = {
         modelAppCacheUsers.refresh();
 
         // PWA - Azure 
-        if (AppCache.enablePwa && AppCache.userInfo.logonData.type === 'azure-bearer') {
+        if (isPWAEnabled() && AppCache.userInfo.logonData.type === 'azure-bearer') {
             AppCacheLogonAzure.Signout();
         }
 
         // PWA - OIDC 
-        if (AppCache.enablePwa && AppCache.userInfo.logonData.type === 'openid-connect') {
+        if (isPWAEnabled() && AppCache.userInfo.logonData.type === 'openid-connect') {
             AppCacheLogonOIDC.Signout();
         }
 
@@ -2450,7 +2444,7 @@ let AppCache = {
                             });
 
                             // Fetch all Apps if on Mobile 
-                            if (AppCache.isMobile && !AppCache.enablePwa) {
+                            if (AppCache.isMobile && !isPWAEnabled()) {
                                 data.tiles.forEach(function (tile) {
                                     if (tile.actionApplication || tile.tileApplication) sap.n.Ajax.loadApps(tile);
                                 });
@@ -2815,7 +2809,7 @@ let AppCache = {
         AppCache.handleUserMenu();
 
         // PWA - Webauthn
-        if (AppCache.enablePwa && AppCache.enablePasscode && AppCache.config.enableWebAuth && (window.PublicKeyCredential !== undefined || typeof window.PublicKeyCredential === 'function')) {
+        if (isPWAEnabled() && AppCache.enablePasscode && AppCache.config.enableWebAuth && (window.PublicKeyCredential !== undefined || typeof window.PublicKeyCredential === 'function')) {
 
             AppCache.userInfo.biometric = true;
             if (modelAppCacheUsers.oData.length > 1) AppCache.userInfo.biometric = false;
@@ -3047,7 +3041,6 @@ let AppCache = {
     },
 
     getSettings: function () {
-
         appCacheLog('Getting settings from P9 server');
 
         let url = AppCache.Url + '/user/logon/types?launchpad=' + AppCache.launchpadID;
@@ -3071,11 +3064,9 @@ let AppCache = {
                 appCacheError('Error receiving settings from P9 server, using cached data');
             }
         });
-
     },
 
     setSettings: function (skipStartup) {
-
         if (!modelDataSettings.oData.settings) {
             if (!skipStartup) AppCache.Startup();
             return;
@@ -3091,6 +3082,14 @@ let AppCache = {
             } catch (e) {
                 appCacheError('Enhancement BeforeSetSettingsMobile ' + e);
             }
+        }
+
+        if ('serviceWorker' in navigator) {
+            // TODO see if it works without timeout and on a public launchpad
+            setTimeout(() => {
+                setCachablePwaResources();
+                ensurePWACache();
+            }, 2000);
         }
 
         // Get System Name/Description 
@@ -3329,7 +3328,7 @@ let AppCache = {
         // Mobile or Desktop 
         if (AppCache.isMobile) {
 
-            if (AppCache.enablePwa) {
+            if (isPWAEnabled()) {
                 AppCache.Url = location.origin;
             }
 
@@ -3522,20 +3521,6 @@ let AppCache = {
                 }
             }
         }, 500);
-
-        // TODO check if cookies message should be shown
-        // setTimeout(() => {
-        //     if (modeldiaCookies && modeldiaCookies.oData) {
-        //         console.log('diaCookies.open()', diaCookies.open)
-        //         const { visible } = modeldiaCookies.getData()
-        //         console.log('visible', visible)
-        //         if (visible !== false) {
-        //             diaCookies.open();
-        //         }
-        //     } else {
-        //         // diaCookies && diaCookies.open
-        //     }
-        // }, 2000);
     },
 
     _getLoginQuery() {

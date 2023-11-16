@@ -222,9 +222,7 @@ sap.ui.getCore().attachInit(function () {
 
         // Get Setting or Startup
         if (AppCache.isMobile) {
-            if (!AppCache.enablePwa) {
-                location.hash = '';
-            }
+            if (!isPWAEnabled()) location.hash = '';
 
             inAppCacheFormSettingsBACK.setVisible(false);
             AppCacheUserActionSettings.setVisible(false);

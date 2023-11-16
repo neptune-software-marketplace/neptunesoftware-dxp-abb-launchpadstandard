@@ -5,7 +5,7 @@ AppCache.userInfo = data;
 
 // PWA - Webauthn
 if (
-    AppCache.enablePwa && 
+    isPWAEnabled() && 
     AppCache.enablePasscode && 
     AppCache.userInfo.webauthid && 
     (window.PublicKeyCredential !== undefined || typeof window.PublicKeyCredential === 'function')

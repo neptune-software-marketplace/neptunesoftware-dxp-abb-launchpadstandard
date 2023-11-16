@@ -121,18 +121,19 @@ const CustomizationStorage = {
                 categoryData.tilegroups,
                 data.categoryChilds
             );
-            if (newTileGroups.length === 0) return;
 
-            newTileGroups.forEach((newTileGroup) => {
-                const placeAt = categoryData.tilegroups.findIndex((tileGroup) => tileGroup.id === newTileGroup.id)
-                const formatted = this.formatTileGroup(newTileGroup);
+            if (newTileGroups.length > 0) {
+                newTileGroups.forEach((newTileGroup) => {
+                    const placeAt = categoryData.tilegroups.findIndex((tileGroup) => tileGroup.id === newTileGroup.id)
+                    const formatted = this.formatTileGroup(newTileGroup);
 
-                if (placeAt > -1) {
-                    category.tilegroups.splice(placeAt, 0, formatted);
-                } else {
-                    category.tilegroups.push(formatted);
-                }
-            });
+                    if (placeAt > -1) {
+                        category.tilegroups.splice(placeAt, 0, formatted);
+                    } else {
+                        category.tilegroups.push(formatted);
+                    }
+                });
+            }
         }
 
         // merge tiles in tilegroup

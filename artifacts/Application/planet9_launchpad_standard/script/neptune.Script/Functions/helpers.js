@@ -8,6 +8,14 @@ function isWidthGTE(width = 1000) {
     return window.innerWidth >= width;
 }
 
+function endsWith(str, list) {
+    return list.some((value) => str.endsWith(value));
+}
+
+function includes(str, list) {
+    return list.some((value) => str.includes(value));
+}
+
 function nepPrefix() {
     return `__nep`;
 }
@@ -184,6 +192,10 @@ function showLaunchpadNotFoundError(status) {
     });
 }
 
+function isPWAEnabled() {
+    return AppCache.enablePwa;
+}
+
 const iconTypes = ['shortcut icon', 'icon', 'apple-touch-icon'];
 function setiOSPWAIcons() {
     if (!sap.ui.Device.os.ios) {
@@ -207,6 +219,103 @@ function setiOSPWAIcons() {
         iconTypes.forEach((rel) => {
             setIcon(rel, src)
         });
+    });
+}
+
+// launchpad path is always like e.g. /launchpad/path-name
+//      path is not like /launchpad/path-name[/something/here]
+//      otherwise server throws a 404
+function launchpadUrl() {
+    return `${location.origin}${location.pathname}`;
+}
+
+async function isUrlInCache({ url, cacheName }) {
+    const cache = await caches.open(cacheName);
+    return await cache.match(url)
+}
+
+async function addUrlToCache({ url, method, cacheName }) {
+    const response = await fetch(url, { method });
+    if (response.ok) {
+        const cache = await caches.open(cacheName);
+        cache.put(url, response);
+        appCacheLog(`added to cache ${cacheName}`, url);
+    }
+}
+
+function determineCacheNameFromUrl(url) {
+    if (new RegExp('/public/launchpad/').test(url)) return 'p9pwa-public';
+    if (new RegExp('/launchpad/').test(url)) return 'p9pwa-launchpad';
+
+
+    const publicRe = [
+        new RegExp('/public/application/'),
+        new RegExp('/public/neptune/'),
+        new RegExp('/public/fontawesome/'),
+        new RegExp('/public/highsuite/'),
+        new RegExp('/public/css/'),
+        new RegExp('/public/')
+    ];
+    if (publicRe.some(re => re.test(url))) {
+        return 'p9pwa-public';
+    }
+
+    if (new RegExp('https://openui5.hana.ondemand.com/').test(url)) return 'p9pwa-ui5-cdn';
+    if (new RegExp('/openui5.hana/').test(url)) return 'p9pwa-ui5';
+
+    const mediaRe = [
+        new RegExp('/public/images/'),
+        new RegExp('/public/icons/'),
+        new RegExp('/media/'),
+    ];
+    if (mediaRe.some(re => re.test(url))) {
+        return 'p9pwa-images';
+    }
+
+    // default
+    return 'p9pwa-public';
+}
+
+// On first install PWA does not cache the launchpad
+// since the install event occurs after the page has been loaded
+// e.g. random login images or other requests which might be part 
+const _pwaResources = {};
+function setCachablePwaResources() {
+    _pwaResources[launchpadUrl()] = { url: launchpadUrl(), method: 'GET', cacheName: determineCacheNameFromUrl(launchpadUrl()) };
+
+    if (window && window.performance && window.performance.getEntriesByType) {
+        const resources = window.performance.getEntriesByType("resource").map(r => r.name);
+        const allowedExts = [
+            'js', 'json',   // scripts, data
+            'properties',   // translations
+            'gif', 'jpeg', 'jpg', 'png', 'svg', 'webp', // images
+            'woff', 'woff2', // fonts
+            'css', // stylesheets
+        ];
+        resources
+            .filter(url => endsWith(url, allowedExts))
+            .forEach(url => (_pwaResources[url] = { url, method: 'GET', cacheName: determineCacheNameFromUrl(url) }));
+
+        const allowedApi = [
+            '/user/logon/types',
+        ];
+        resources
+            .filter(url => endsWith(url, allowedApi))
+            .forEach(url => (_pwaResources[url] = { url, method: 'GET', cacheName: determineCacheNameFromUrl(url) }));
+    }
+}
+
+function ensurePWACache() {
+    if (!isPWAEnabled()) return;
+
+    appCacheLog('ensure these pwa resources are available in cache', Object.keys(_pwaResources));
+
+    Object.values(_pwaResources).forEach(async ({ url, method, cacheName }) => {
+        if (await isUrlInCache({ url, cacheName })) {
+            appCacheLog(url, 'already exists in cache');
+        } else {
+            addUrlToCache({ url, method, cacheName });
+        }
     });
 }
 
