@@ -485,6 +485,10 @@
 																									"value": "Menu"
 																								},
 																								{
+																									"language": "NN",
+																									"value": "Meny"
+																								},
+																								{
 																									"language": "NO",
 																									"value": "Meny"
 																								},
@@ -519,6 +523,10 @@
 																								{
 																									"language": "S",
 																									"value": "Menú"
+																								},
+																								{
+																									"language": "SE",
+																									"value": "Bargu"
 																								},
 																								{
 																									"language": "SH",
@@ -1278,6 +1286,10 @@
 																							"value": "Nieuw scherm toevoegen"
 																						},
 																						{
+																							"language": "NN",
+																							"value": "Legg til ny skjerm"
+																						},
+																						{
 																							"language": "NO",
 																							"value": "Legg til ny skjerm"
 																						},
@@ -1296,6 +1308,10 @@
 																						{
 																							"language": "RU",
 																							"value": "Добавить новый экран"
+																						},
+																						{
+																							"language": "SE",
+																							"value": "Leatnu skáhpi"
 																						},
 																						{
 																							"language": "SH",
@@ -1476,6 +1492,10 @@
 																							"value": "Beheer schermen"
 																						},
 																						{
+																							"language": "NN",
+																							"value": "Administrer skjermer"
+																						},
+																						{
 																							"language": "NO",
 																							"value": "Administrer skjermer"
 																						},
@@ -1494,6 +1514,10 @@
 																						{
 																							"language": "RU",
 																							"value": "Управление экранами"
+																						},
+																						{
+																							"language": "SE",
+																							"value": "Rievdadit skáhpiid"
 																						},
 																						{
 																							"language": "SH",
@@ -1681,6 +1705,10 @@
 																							"value": "Klaar"
 																						},
 																						{
+																							"language": "NN",
+																							"value": "Ferdig"
+																						},
+																						{
 																							"language": "NO",
 																							"value": "Ferdig"
 																						},
@@ -1699,6 +1727,10 @@
 																						{
 																							"language": "RU",
 																							"value": "Сделанный"
+																						},
+																						{
+																							"language": "SE",
+																							"value": "Leat"
 																						},
 																						{
 																							"language": "SH",
@@ -2087,6 +2119,10 @@
 																							"value": "gebruikersmenu"
 																						},
 																						{
+																							"language": "NN",
+																							"value": "Brukermeny"
+																						},
+																						{
 																							"language": "NO",
 																							"value": "Brukermeny"
 																						},
@@ -2121,6 +2157,10 @@
 																						{
 																							"language": "S",
 																							"value": "Menú del Usuario"
+																						},
+																						{
+																							"language": "SE",
+																							"value": "Geavaheaddji bargu"
 																						},
 																						{
 																							"language": "SH",
@@ -2635,6 +2675,10 @@
 																											"value": "Filter op tags"
 																										},
 																										{
+																											"language": "NN",
+																											"value": "Filtrer etter kategorier"
+																										},
+																										{
 																											"language": "NO",
 																											"value": "Filtrer etter tags"
 																										},
@@ -2669,6 +2713,10 @@
 																										{
 																											"language": "S",
 																											"value": "Filtrar por etiquetas"
+																										},
+																										{
+																											"language": "SE",
+																											"value": "Filtearat tagaid mielde"
 																										},
 																										{
 																											"language": "SH",
@@ -2903,6 +2951,10 @@
 																											"value": "Uitbreiden"
 																										},
 																										{
+																											"language": "NN",
+																											"value": "Utvid"
+																										},
+																										{
 																											"language": "NO",
 																											"value": "Vis"
 																										},
@@ -2937,6 +2989,10 @@
 																										{
 																											"language": "S",
 																											"value": "Expandir"
+																										},
+																										{
+																											"language": "SE",
+																											"value": "Váldit"
 																										},
 																										{
 																											"language": "SH",
@@ -3171,6 +3227,10 @@
 																											"value": "Instorten"
 																										},
 																										{
+																											"language": "NN",
+																											"value": "Skjul"
+																										},
+																										{
 																											"language": "NO",
 																											"value": "Skjul"
 																										},
@@ -3205,6 +3265,10 @@
 																										{
 																											"language": "S",
 																											"value": "Colapso"
+																										},
+																										{
+																											"language": "SE",
+																											"value": "Riegádat"
 																										},
 																										{
 																											"language": "SH",
@@ -3547,6 +3611,10 @@
 																											"value": "Filter op tags"
 																										},
 																										{
+																											"language": "NN",
+																											"value": "Filtrer etter kategorier"
+																										},
+																										{
 																											"language": "NO",
 																											"value": "Filtrer etter tags"
 																										},
@@ -3581,6 +3649,10 @@
 																										{
 																											"language": "S",
 																											"value": "Filtrar por etiquetas"
+																										},
+																										{
+																											"language": "SE",
+																											"value": "Filtearat tagaid mielde"
 																										},
 																										{
 																											"language": "SH",
@@ -3837,6 +3909,10 @@
 																											"value": "Actieve apps"
 																										},
 																										{
+																											"language": "NN",
+																											"value": "Aktive apper"
+																										},
+																										{
 																											"language": "NO",
 																											"value": "Aktive apper"
 																										},
@@ -3871,6 +3947,10 @@
 																										{
 																											"language": "S",
 																											"value": "Aplicaciones activas"
+																										},
+																										{
+																											"language": "SE",
+																											"value": "Aktiiva applikašuvnnat"
 																										},
 																										{
 																											"language": "SH",
@@ -4815,6 +4895,10 @@
 																																			"value": "Gepubliceerd"
 																																		},
 																																		{
+																																			"language": "NN",
+																																			"value": "Publisert"
+																																		},
+																																		{
 																																			"language": "NO",
 																																			"value": "Publisert"
 																																		},
@@ -4833,6 +4917,10 @@
 																																		{
 																																			"language": "RU",
 																																			"value": "Опубликовано"
+																																		},
+																																		{
+																																			"language": "SE",
+																																			"value": "Julkistit"
 																																		},
 																																		{
 																																			"language": "SH",
@@ -5010,6 +5098,10 @@
 																																			"value": "Uitgever"
 																																		},
 																																		{
+																																			"language": "NN",
+																																			"value": "Utgiver"
+																																		},
+																																		{
 																																			"language": "NO",
 																																			"value": "Utgiver"
 																																		},
@@ -5028,6 +5120,10 @@
 																																		{
 																																			"language": "RU",
 																																			"value": "Издатель"
+																																		},
+																																		{
+																																			"language": "SE",
+																																			"value": "Julkistaja"
 																																		},
 																																		{
 																																			"language": "SH",
@@ -5205,6 +5301,10 @@
 																																			"value": "Beschrijving"
 																																		},
 																																		{
+																																			"language": "NN",
+																																			"value": "Beskrivelse"
+																																		},
+																																		{
 																																			"language": "NO",
 																																			"value": "Beskrivelse"
 																																		},
@@ -5223,6 +5323,10 @@
 																																		{
 																																			"language": "RU",
 																																			"value": "Описание"
+																																		},
+																																		{
+																																			"language": "SE",
+																																			"value": "Dávdda"
 																																		},
 																																		{
 																																			"language": "SH",
@@ -5420,6 +5524,10 @@
 																																			"value": "Auteur"
 																																		},
 																																		{
+																																			"language": "NN",
+																																			"value": "Forfatter"
+																																		},
+																																		{
 																																			"language": "NO",
 																																			"value": "Forfatter"
 																																		},
@@ -5438,6 +5546,10 @@
 																																		{
 																																			"language": "RU",
 																																			"value": "Автор"
+																																		},
+																																		{
+																																			"language": "SE",
+																																			"value": "Čálli"
 																																		},
 																																		{
 																																			"language": "SH",
@@ -5846,6 +5958,10 @@
 																																			"value": "Installeren"
 																																		},
 																																		{
+																																			"language": "NN",
+																																			"value": "Installer"
+																																		},
+																																		{
 																																			"language": "NO",
 																																			"value": "Installer"
 																																		},
@@ -5864,6 +5980,10 @@
 																																		{
 																																			"language": "RU",
 																																			"value": "Установить"
+																																		},
+																																		{
+																																			"language": "SE",
+																																			"value": "Asenna"
 																																		},
 																																		{
 																																			"language": "SH",
@@ -6134,6 +6254,10 @@
 																																	"value": "Klik om te vergroten"
 																																},
 																																{
+																																	"language": "NN",
+																																	"value": "Klikk for å forstørre"
+																																},
+																																{
 																																	"language": "NO",
 																																	"value": "Klikk for å forstørre"
 																																},
@@ -6152,6 +6276,10 @@
 																																{
 																																	"language": "RU",
 																																	"value": "нажмите, чтобы увеличить"
+																																},
+																																{
+																																	"language": "SE",
+																																	"value": "Dutnje čuovvut"
 																																},
 																																{
 																																	"language": "SH",
@@ -6601,6 +6729,10 @@
 																															"value": "Login-aanbieder"
 																														},
 																														{
+																															"language": "NN",
+																															"value": "Innloggingsleverandør"
+																														},
+																														{
 																															"language": "NO",
 																															"value": "Innloggingsleverandør"
 																														},
@@ -6619,6 +6751,10 @@
 																														{
 																															"language": "RU",
 																															"value": "Поставщик входа в систему"
+																														},
+																														{
+																															"language": "SE",
+																															"value": "Logganeavvu bidjá"
 																														},
 																														{
 																															"language": "SH",
@@ -6823,6 +6959,10 @@
 																															"value": "Gebruikersnaam"
 																														},
 																														{
+																															"language": "NN",
+																															"value": "Brukernavn"
+																														},
+																														{
 																															"language": "NO",
 																															"value": "Brukernavn"
 																														},
@@ -6841,6 +6981,10 @@
 																														{
 																															"language": "RU",
 																															"value": "Имя пользователя"
+																														},
+																														{
+																															"language": "SE",
+																															"value": "Geavaheaddji namahusat"
 																														},
 																														{
 																															"language": "SH",
@@ -7045,6 +7189,10 @@
 																															"value": "Wachtwoord"
 																														},
 																														{
+																															"language": "NN",
+																															"value": "Passord"
+																														},
+																														{
 																															"language": "NO",
 																															"value": "Passord"
 																														},
@@ -7063,6 +7211,10 @@
 																														{
 																															"language": "RU",
 																															"value": "Пароль"
+																														},
+																														{
+																															"language": "SE",
+																															"value": "Govat"
 																														},
 																														{
 																															"language": "SH",
@@ -7281,6 +7433,10 @@
 																															"value": "Taal"
 																														},
 																														{
+																															"language": "NN",
+																															"value": "Språk"
+																														},
+																														{
 																															"language": "NO",
 																															"value": "Språk"
 																														},
@@ -7299,6 +7455,10 @@
 																														{
 																															"language": "RU",
 																															"value": "Язык"
+																														},
+																														{
+																															"language": "SE",
+																															"value": "Giella"
 																														},
 																														{
 																															"language": "SH",
@@ -7516,6 +7676,10 @@
 																															"value": "Laat wachtwoord zien"
 																														},
 																														{
+																															"language": "NN",
+																															"value": "Vis passord"
+																														},
+																														{
 																															"language": "NO",
 																															"value": "Vis passord"
 																														},
@@ -7534,6 +7698,10 @@
 																														{
 																															"language": "RU",
 																															"value": "Показать пароль"
+																														},
+																														{
+																															"language": "SE",
+																															"value": "Dutnje govat"
 																														},
 																														{
 																															"language": "SH",
@@ -7731,6 +7899,10 @@
 																															"value": "Onthoud me"
 																														},
 																														{
+																															"language": "NN",
+																															"value": "Husk meg"
+																														},
+																														{
 																															"language": "NO",
 																															"value": "Husk meg"
 																														},
@@ -7749,6 +7921,10 @@
 																														{
 																															"language": "RU",
 																															"value": "Запомнить меня"
+																														},
+																														{
+																															"language": "SE",
+																															"value": "Mun oaidnán"
 																														},
 																														{
 																															"language": "SH",
@@ -7953,6 +8129,10 @@
 																															"value": "Aanmelden"
 																														},
 																														{
+																															"language": "NN",
+																															"value": "Logg inn"
+																														},
+																														{
 																															"language": "NO",
 																															"value": "Logg inn"
 																														},
@@ -7971,6 +8151,10 @@
 																														{
 																															"language": "RU",
 																															"value": "Войти"
+																														},
+																														{
+																															"language": "SE",
+																															"value": "Logga sisa"
 																														},
 																														{
 																															"language": "SH",
@@ -8162,6 +8346,10 @@
 																															"value": "Wachtwoord vergeten"
 																														},
 																														{
+																															"language": "NN",
+																															"value": "Glemt passord"
+																														},
+																														{
 																															"language": "NO",
 																															"value": "Glemt passord"
 																														},
@@ -8180,6 +8368,10 @@
 																														{
 																															"language": "RU",
 																															"value": "Забыли пароль"
+																														},
+																														{
+																															"language": "SE",
+																															"value": "Mun lean dilán govaid"
 																														},
 																														{
 																															"language": "SH",
@@ -8462,6 +8654,10 @@
 																																	"value": "Wachtwoord opnieuw instellen"
 																																},
 																																{
+																																	"language": "NN",
+																																	"value": "Tilbakestill passord"
+																																},
+																																{
 																																	"language": "NO",
 																																	"value": "Tilbakestill passord"
 																																},
@@ -8480,6 +8676,10 @@
 																																{
 																																	"language": "RU",
 																																	"value": "Сброс пароля"
+																																},
+																																{
+																																	"language": "SE",
+																																	"value": "Dilá govat"
 																																},
 																																{
 																																	"language": "SH",
@@ -8660,6 +8860,10 @@
 																																	"value": "U bent verplicht uw wachtwoord opnieuw in te stellen."
 																																},
 																																{
+																																	"language": "NN",
+																																	"value": "Du må tilbakestille passordet ditt."
+																																},
+																																{
 																																	"language": "NO",
 																																	"value": "Du må tilbakestille passordet ditt."
 																																},
@@ -8678,6 +8882,10 @@
 																																{
 																																	"language": "RU",
 																																	"value": "Вам необходимо сбросить пароль."
+																																},
+																																{
+																																	"language": "SE",
+																																	"value": "Leat buorrejuvvon dilá govat."
 																																},
 																																{
 																																	"language": "SH",
@@ -8858,6 +9066,10 @@
 																																	"value": "Je wachtwoord is verlopen."
 																																},
 																																{
+																																	"language": "NN",
+																																	"value": "Passordet ditt har utløpt."
+																																},
+																																{
 																																	"language": "NO",
 																																	"value": "Passordet ditt er utløpt."
 																																},
@@ -8876,6 +9088,10 @@
 																																{
 																																	"language": "RU",
 																																	"value": "Ваш пароль истек."
+																																},
+																																{
+																																	"language": "SE",
+																																	"value": "Govat lea jávkan"
 																																},
 																																{
 																																	"language": "SH",
@@ -9049,6 +9265,10 @@
 																																	"value": "Stel hieronder een nieuw wachtwoord in."
 																																},
 																																{
+																																	"language": "NN",
+																																	"value": "Vennligst sett et nytt passord nedenfor."
+																																},
+																																{
 																																	"language": "NO",
 																																	"value": "Vennligst angi et nytt passord nedenfor."
 																																},
@@ -9067,6 +9287,10 @@
 																																{
 																																	"language": "RU",
 																																	"value": "Пожалуйста, установите новый пароль ниже."
+																																},
+																																{
+																																	"language": "SE",
+																																	"value": "Dilá ođđa govat čuovvovaš."
 																																},
 																																{
 																																	"language": "SH",
@@ -9235,6 +9459,10 @@
 																															"value": "Nieuw paswoord"
 																														},
 																														{
+																															"language": "NN",
+																															"value": "Nytt passord"
+																														},
+																														{
 																															"language": "NO",
 																															"value": "Nytt passord"
 																														},
@@ -9253,6 +9481,10 @@
 																														{
 																															"language": "RU",
 																															"value": "Новый пароль"
+																														},
+																														{
+																															"language": "SE",
+																															"value": "Ođđa govat"
 																														},
 																														{
 																															"language": "SH",
@@ -9439,6 +9671,10 @@
 																															"value": "herhaal wachtwoord"
 																														},
 																														{
+																															"language": "NN",
+																															"value": "Gjenta passord"
+																														},
+																														{
 																															"language": "NO",
 																															"value": "Gjenta passord"
 																														},
@@ -9457,6 +9693,10 @@
 																														{
 																															"language": "RU",
 																															"value": "Повторите пароль"
+																														},
+																														{
+																															"language": "SE",
+																															"value": "Bargat govat"
 																														},
 																														{
 																															"language": "SH",
@@ -9657,6 +9897,10 @@
 																															"value": "Indienen"
 																														},
 																														{
+																															"language": "NN",
+																															"value": "Send inn"
+																														},
+																														{
 																															"language": "NO",
 																															"value": "Send inn"
 																														},
@@ -9675,6 +9919,10 @@
 																														{
 																															"language": "RU",
 																															"value": "Представлять на рассмотрение"
+																														},
+																														{
+																															"language": "SE",
+																															"value": "Dárbbašit"
 																														},
 																														{
 																															"language": "SH",
@@ -10261,6 +10509,10 @@
 																													"value": "Verander wachtwoord"
 																												},
 																												{
+																													"language": "NN",
+																													"value": "Endre passord"
+																												},
+																												{
 																													"language": "NO",
 																													"value": "Bytt passord"
 																												},
@@ -10279,6 +10531,10 @@
 																												{
 																													"language": "RU",
 																													"value": "Изменить пароль"
+																												},
+																												{
+																													"language": "SE",
+																													"value": "Juvddála govat"
 																												},
 																												{
 																													"language": "SH",
@@ -10449,6 +10705,10 @@
 																													"value": "Oud"
 																												},
 																												{
+																													"language": "NN",
+																													"value": "Gammelt"
+																												},
+																												{
 																													"language": "NO",
 																													"value": "Gammelt"
 																												},
@@ -10467,6 +10727,10 @@
 																												{
 																													"language": "RU",
 																													"value": "Старый"
+																												},
+																												{
+																													"language": "SE",
+																													"value": "Gávdnat"
 																												},
 																												{
 																													"language": "SH",
@@ -10671,6 +10935,10 @@
 																													"value": "Nieuw"
 																												},
 																												{
+																													"language": "NN",
+																													"value": "Nytt"
+																												},
+																												{
 																													"language": "NO",
 																													"value": "Nytt"
 																												},
@@ -10689,6 +10957,10 @@
 																												{
 																													"language": "RU",
 																													"value": "Новый"
+																												},
+																												{
+																													"language": "SE",
+																													"value": "Ođđa"
 																												},
 																												{
 																													"language": "SH",
@@ -10886,6 +11158,10 @@
 																													"value": "Herhalen"
 																												},
 																												{
+																													"language": "NN",
+																													"value": "Gjenta"
+																												},
+																												{
 																													"language": "NO",
 																													"value": "Gjenta"
 																												},
@@ -10904,6 +11180,10 @@
 																												{
 																													"language": "RU",
 																													"value": "Повторить"
+																												},
+																												{
+																													"language": "SE",
+																													"value": "Bargat"
 																												},
 																												{
 																													"language": "SH",
@@ -11115,6 +11395,10 @@
 																													"value": "Bevestigen"
 																												},
 																												{
+																													"language": "NN",
+																													"value": "Bekreft"
+																												},
+																												{
 																													"language": "NO",
 																													"value": "Bekreft"
 																												},
@@ -11133,6 +11417,10 @@
 																												{
 																													"language": "RU",
 																													"value": "Подтверждать"
+																												},
+																												{
+																													"language": "SE",
+																													"value": "Vástidit"
 																												},
 																												{
 																													"language": "SH",
@@ -11510,6 +11798,10 @@
 																															"value": "Pincode"
 																														},
 																														{
+																															"language": "NN",
+																															"value": "PIN-kode"
+																														},
+																														{
 																															"language": "NO",
 																															"value": "Pinkode"
 																														},
@@ -11528,6 +11820,10 @@
 																														{
 																															"language": "RU",
 																															"value": "Пин-код"
+																														},
+																														{
+																															"language": "SE",
+																															"value": "Pin-kode"
 																														},
 																														{
 																															"language": "SH",
@@ -11705,6 +12001,10 @@
 																															"value": "Pin instellen"
 																														},
 																														{
+																															"language": "NN",
+																															"value": "Sett PIN"
+																														},
+																														{
 																															"language": "NO",
 																															"value": "Sett pin"
 																														},
@@ -11723,6 +12023,10 @@
 																														{
 																															"language": "RU",
 																															"value": "Установить ПИН-код"
+																														},
+																														{
+																															"language": "SE",
+																															"value": "Ávkkástallat pin-kode"
 																														},
 																														{
 																															"language": "SH",
@@ -11907,6 +12211,10 @@
 																															"value": "Alleen numeriek"
 																														},
 																														{
+																															"language": "NN",
+																															"value": "Kun tall"
+																														},
+																														{
 																															"language": "NO",
 																															"value": "Kun numeriske tegn"
 																														},
@@ -11925,6 +12233,10 @@
 																														{
 																															"language": "RU",
 																															"value": "Только числовые значения"
+																														},
+																														{
+																															"language": "SE",
+																															"value": "Nummiriikkaid álggahus"
 																														},
 																														{
 																															"language": "SH",
@@ -12102,6 +12414,10 @@
 																															"value": "Herhaal vastzetten"
 																														},
 																														{
+																															"language": "NN",
+																															"value": "Gjenta PIN"
+																														},
+																														{
 																															"language": "NO",
 																															"value": "Gjenta pin"
 																														},
@@ -12120,6 +12436,10 @@
 																														{
 																															"language": "RU",
 																															"value": "Повторить пин"
+																														},
+																														{
+																															"language": "SE",
+																															"value": "Bargat pin-kode"
 																														},
 																														{
 																															"language": "SH",
@@ -12304,6 +12624,10 @@
 																															"value": "Alleen numeriek"
 																														},
 																														{
+																															"language": "NN",
+																															"value": "Kun tall"
+																														},
+																														{
 																															"language": "NO",
 																															"value": "Kun numeriske tegn"
 																														},
@@ -12322,6 +12646,10 @@
 																														{
 																															"language": "RU",
 																															"value": "Только числовые значения"
+																														},
+																														{
+																															"language": "SE",
+																															"value": "Nummiriikkaid álggahus"
 																														},
 																														{
 																															"language": "SH",
@@ -12513,6 +12841,10 @@
 																															"value": "Bevestigen"
 																														},
 																														{
+																															"language": "NN",
+																															"value": "Bekreft"
+																														},
+																														{
 																															"language": "NO",
 																															"value": "Bekreft"
 																														},
@@ -12531,6 +12863,10 @@
 																														{
 																															"language": "RU",
 																															"value": "Подтверждать"
+																														},
+																														{
+																															"language": "SE",
+																															"value": "Vástidit"
 																														},
 																														{
 																															"language": "SH",
@@ -13137,6 +13473,10 @@
 																															"value": "Gebruikers"
 																														},
 																														{
+																															"language": "NN",
+																															"value": "Brukere"
+																														},
+																														{
 																															"language": "NO",
 																															"value": "Brukere"
 																														},
@@ -13155,6 +13495,10 @@
 																														{
 																															"language": "RU",
 																															"value": "Пользователи"
+																														},
+																														{
+																															"language": "SE",
+																															"value": "Geavaheaddjit"
 																														},
 																														{
 																															"language": "SH",
@@ -13377,6 +13721,10 @@
 																																	"value": "Naam"
 																																},
 																																{
+																																	"language": "NN",
+																																	"value": "Navn"
+																																},
+																																{
 																																	"language": "NO",
 																																	"value": "Navn"
 																																},
@@ -13395,6 +13743,10 @@
 																																{
 																																	"language": "RU",
 																																	"value": "Имя"
+																																},
+																																{
+																																	"language": "SE",
+																																	"value": "Namahusat"
 																																},
 																																{
 																																	"language": "SH",
@@ -13565,6 +13917,10 @@
 																																	"value": "Datum"
 																																},
 																																{
+																																	"language": "NN",
+																																	"value": "Dato"
+																																},
+																																{
 																																	"language": "NO",
 																																	"value": "Dato"
 																																},
@@ -13583,6 +13939,10 @@
 																																{
 																																	"language": "RU",
 																																	"value": "Дата"
+																																},
+																																{
+																																	"language": "SE",
+																																	"value": "Dátum"
 																																},
 																																{
 																																	"language": "SH",
@@ -13977,6 +14337,10 @@
 																																			"value": "Laatste aanmelding"
 																																		},
 																																		{
+																																			"language": "NN",
+																																			"value": "Siste innlogging"
+																																		},
+																																		{
 																																			"language": "NO",
 																																			"value": "Siste innlogging"
 																																		},
@@ -13995,6 +14359,10 @@
 																																		{
 																																			"language": "RU",
 																																			"value": "Последний Войти"
+																																		},
+																																		{
+																																			"language": "SE",
+																																			"value": "Dáppe logget sisa"
 																																		},
 																																		{
 																																			"language": "SH",
@@ -14199,6 +14567,10 @@
 																													"value": "Inloggen nieuwe gebruiker"
 																												},
 																												{
+																													"language": "NN",
+																													"value": "Logg inn ny bruker"
+																												},
+																												{
 																													"language": "NO",
 																													"value": "Logg på ny bruker"
 																												},
@@ -14217,6 +14589,10 @@
 																												{
 																													"language": "RU",
 																													"value": "Войти Новый пользователь"
+																												},
+																												{
+																													"language": "SE",
+																													"value": "Logga sisa ođđa geavaheaddji"
 																												},
 																												{
 																													"language": "SH",
@@ -17721,6 +18097,10 @@
 																							"value": "Menu"
 																						},
 																						{
+																							"language": "NN",
+																							"value": "Meny"
+																						},
+																						{
 																							"language": "NO",
 																							"value": "Meny"
 																						},
@@ -17755,6 +18135,10 @@
 																						{
 																							"language": "S",
 																							"value": "Menú"
+																						},
+																						{
+																							"language": "SE",
+																							"value": "Bargu"
 																						},
 																						{
 																							"language": "SH",
@@ -18288,6 +18672,10 @@
 																					"value": "gebruikersmenu"
 																				},
 																				{
+																					"language": "NN",
+																					"value": "Brukermeny"
+																				},
+																				{
 																					"language": "NO",
 																					"value": "Brukermeny"
 																				},
@@ -18322,6 +18710,10 @@
 																				{
 																					"language": "S",
 																					"value": "Menú del Usuario"
+																				},
+																				{
+																					"language": "SE",
+																					"value": "Geavaheaddji bargu"
 																				},
 																				{
 																					"language": "SH",
@@ -18597,6 +18989,10 @@
 																			"value": "Instellingen"
 																		},
 																		{
+																			"language": "NN",
+																			"value": "Innstillinger"
+																		},
+																		{
 																			"language": "NO",
 																			"value": "Innstillinger"
 																		},
@@ -18615,6 +19011,10 @@
 																		{
 																			"language": "RU",
 																			"value": "Настройки"
+																		},
+																		{
+																			"language": "SE",
+																			"value": "Asetukset"
 																		},
 																		{
 																			"language": "SH",
@@ -18802,6 +19202,10 @@
 																			"value": "Applicatie installeren"
 																		},
 																		{
+																			"language": "NN",
+																			"value": "Installer applikasjon"
+																		},
+																		{
 																			"language": "NO",
 																			"value": "Installer applikasjon"
 																		},
@@ -18820,6 +19224,10 @@
 																		{
 																			"language": "RU",
 																			"value": "Установить приложение"
+																		},
+																		{
+																			"language": "SE",
+																			"value": "Asenna applikašuvdna"
 																		},
 																		{
 																			"language": "SH",
@@ -19011,6 +19419,10 @@
 																			"value": "Scherm bewerken"
 																		},
 																		{
+																			"language": "NN",
+																			"value": "Rediger skjerm"
+																		},
+																		{
 																			"language": "NO",
 																			"value": "Rediger skjerm"
 																		},
@@ -19029,6 +19441,10 @@
 																		{
 																			"language": "RU",
 																			"value": "Экран редактирования"
+																		},
+																		{
+																			"language": "SE",
+																			"value": "Rievdadit skáhpi"
 																		},
 																		{
 																			"language": "SH",
@@ -19220,6 +19636,10 @@
 																			"value": "Verander wachtwoord"
 																		},
 																		{
+																			"language": "NN",
+																			"value": "Endre passord"
+																		},
+																		{
 																			"language": "NO",
 																			"value": "Bytt passord"
 																		},
@@ -19238,6 +19658,10 @@
 																		{
 																			"language": "RU",
 																			"value": "Изменить пароль"
+																		},
+																		{
+																			"language": "SE",
+																			"value": "Juvddála govat"
 																		},
 																		{
 																			"language": "SH",
@@ -19429,6 +19853,10 @@
 																			"value": "Communicatiepaneel"
 																		},
 																		{
+																			"language": "NN",
+																			"value": "Sidepanel"
+																		},
+																		{
 																			"language": "NO",
 																			"value": "Sidepanel"
 																		},
@@ -19447,6 +19875,10 @@
 																		{
 																			"language": "RU",
 																			"value": "Коммуникационная панель"
+																		},
+																		{
+																			"language": "SE",
+																			"value": "Sáhpanávdi"
 																		},
 																		{
 																			"language": "SH",
@@ -19638,6 +20070,10 @@
 																			"value": "Slot"
 																		},
 																		{
+																			"language": "NN",
+																			"value": "Lås"
+																		},
+																		{
 																			"language": "NO",
 																			"value": "Lås"
 																		},
@@ -19656,6 +20092,10 @@
 																		{
 																			"language": "RU",
 																			"value": "Замок"
+																		},
+																		{
+																			"language": "SE",
+																			"value": "Låvvu"
 																		},
 																		{
 																			"language": "SH",
@@ -19847,6 +20287,10 @@
 																			"value": "Verander gebruiker"
 																		},
 																		{
+																			"language": "NN",
+																			"value": "Bytt bruker"
+																		},
+																		{
 																			"language": "NO",
 																			"value": "Bytt bruker"
 																		},
@@ -19865,6 +20309,10 @@
 																		{
 																			"language": "RU",
 																			"value": "Поменять пользователя"
+																		},
+																		{
+																			"language": "SE",
+																			"value": "Váldde geavaheaddji"
 																		},
 																		{
 																			"language": "SH",
@@ -20056,6 +20504,10 @@
 																			"value": "Inloggen nieuwe gebruiker"
 																		},
 																		{
+																			"language": "NN",
+																			"value": "Logg inn ny bruker"
+																		},
+																		{
 																			"language": "NO",
 																			"value": "Logg inn som ny bruker"
 																		},
@@ -20074,6 +20526,10 @@
 																		{
 																			"language": "RU",
 																			"value": "Войти новый пользователь"
+																		},
+																		{
+																			"language": "SE",
+																			"value": "Logga sisa ođđa geavaheaddji"
 																		},
 																		{
 																			"language": "SH",
@@ -20258,6 +20714,10 @@
 																			"value": "Uitloggen"
 																		},
 																		{
+																			"language": "NN",
+																			"value": "Logg ut"
+																		},
+																		{
 																			"language": "NO",
 																			"value": "Logg ut"
 																		},
@@ -20276,6 +20736,10 @@
 																		{
 																			"language": "RU",
 																			"value": "Выйти"
+																		},
+																		{
+																			"language": "SE",
+																			"value": "Logga ávkkástallat"
 																		},
 																		{
 																			"language": "SH",
@@ -20586,6 +21050,10 @@
 													"value": "Sluit alles"
 												},
 												{
+													"language": "NN",
+													"value": "Lukk alle"
+												},
+												{
 													"language": "NO",
 													"value": "Lukk alle"
 												},
@@ -20604,6 +21072,10 @@
 												{
 													"language": "RU",
 													"value": "Закрыть все"
+												},
+												{
+													"language": "SE",
+													"value": "Riegádat buot"
 												},
 												{
 													"language": "SH",
@@ -20799,6 +21271,10 @@
 											"value": "Even geduld aub"
 										},
 										{
+											"language": "NN",
+											"value": "Vennligst vent"
+										},
+										{
 											"language": "NO",
 											"value": "Vennligst vent"
 										},
@@ -20833,6 +21309,10 @@
 										{
 											"language": "S",
 											"value": "Abortar"
+										},
+										{
+											"language": "SE",
+											"value": "Leage buorrejuvvon"
 										},
 										{
 											"language": "SH",
@@ -21003,6 +21483,10 @@
 											"value": "Nieuwe versie downloaden..."
 										},
 										{
+											"language": "NN",
+											"value": "Laster ned ny versjon..."
+										},
+										{
 											"language": "NO",
 											"value": "Laster ned ny versjon..."
 										},
@@ -21037,6 +21521,10 @@
 										{
 											"language": "S",
 											"value": "Abortar"
+										},
+										{
+											"language": "SE",
+											"value": "Laste ođđa válljen..."
 										},
 										{
 											"language": "SH",
@@ -21270,6 +21758,10 @@
 											"value": "Even geduld aub"
 										},
 										{
+											"language": "NN",
+											"value": "Vennligst vent"
+										},
+										{
 											"language": "NO",
 											"value": "Vennligst vent"
 										},
@@ -21288,6 +21780,10 @@
 										{
 											"language": "RU",
 											"value": "пожалуйста, подождите"
+										},
+										{
+											"language": "SE",
+											"value": "Leage buorrejuvvon"
 										},
 										{
 											"language": "SH",
@@ -21438,6 +21934,10 @@
 											"value": "Tegels voor de eerste keer laden"
 										},
 										{
+											"language": "NN",
+											"value": "Laster inn fliser for første gang"
+										},
+										{
 											"language": "NO",
 											"value": "Laster fliser for første gang"
 										},
@@ -21456,6 +21956,10 @@
 										{
 											"language": "RU",
 											"value": "Загрузка плиток в первый раз"
+										},
+										{
+											"language": "SE",
+											"value": "Laste fláhpiid vuosttaš logi"
 										},
 										{
 											"language": "SH",
@@ -21653,6 +22157,10 @@
 											"value": "Compatibel Aan"
 										},
 										{
+											"language": "NN",
+											"value": "Kompatibel med"
+										},
+										{
 											"language": "NO",
 											"value": "Kompatibel med"
 										},
@@ -21671,6 +22179,10 @@
 										{
 											"language": "RU",
 											"value": "Совместимость включена"
+										},
+										{
+											"language": "SE",
+											"value": "Válljen"
 										},
 										{
 											"language": "SH",
@@ -22247,6 +22759,10 @@
 																					"value": "Scherm bewerken"
 																				},
 																				{
+																					"language": "NN",
+																					"value": "Rediger skjerm"
+																				},
+																				{
 																					"language": "NO",
 																					"value": "Rediger skjerm"
 																				},
@@ -22265,6 +22781,10 @@
 																				{
 																					"language": "RU",
 																					"value": "Экран редактирования"
+																				},
+																				{
+																					"language": "SE",
+																					"value": "Rievdadit skáhpi"
 																				},
 																				{
 																					"language": "SH",
@@ -22584,6 +23104,10 @@
 																					"value": "Formaat wijzigen"
 																				},
 																				{
+																					"language": "NN",
+																					"value": "Endre størrelse"
+																				},
+																				{
 																					"language": "NO",
 																					"value": "Endre størrelse"
 																				},
@@ -22602,6 +23126,10 @@
 																				{
 																					"language": "RU",
 																					"value": "Изменить размер"
+																				},
+																				{
+																					"language": "SE",
+																					"value": "Stuorit"
 																				},
 																				{
 																					"language": "SH",
@@ -22914,6 +23442,10 @@
 																					"value": "Ga naar een ander scherm"
 																				},
 																				{
+																					"language": "NN",
+																					"value": "Flytt til en annen skjerm"
+																				},
+																				{
 																					"language": "NO",
 																					"value": "Flytt til en annen skjerm"
 																				},
@@ -22932,6 +23464,10 @@
 																				{
 																					"language": "RU",
 																					"value": "Перейти на другой экран"
+																				},
+																				{
+																					"language": "SE",
+																					"value": "Jorgalit eará skáhpiin"
 																				},
 																				{
 																					"language": "SH",
@@ -23244,6 +23780,10 @@
 																					"value": "App verwijderen"
 																				},
 																				{
+																					"language": "NN",
+																					"value": "Fjern app"
+																				},
+																				{
 																					"language": "NO",
 																					"value": "Fjern app"
 																				},
@@ -23262,6 +23802,10 @@
 																				{
 																					"language": "RU",
 																					"value": "Удалить приложение"
+																				},
+																				{
+																					"language": "SE",
+																					"value": "Eahket applikašuvdna"
 																				},
 																				{
 																					"language": "SH",
@@ -23567,6 +24111,10 @@
 																					"value": "Beheer schermen"
 																				},
 																				{
+																					"language": "NN",
+																					"value": "Administrer skjermer"
+																				},
+																				{
 																					"language": "NO",
 																					"value": "Administrer skjermer"
 																				},
@@ -23585,6 +24133,10 @@
 																				{
 																					"language": "RU",
 																					"value": "Управление экранами"
+																				},
+																				{
+																					"language": "SE",
+																					"value": "Rievdadit skáhpiid"
 																				},
 																				{
 																					"language": "SH",
@@ -23890,6 +24442,10 @@
 																					"value": "Instellingen"
 																				},
 																				{
+																					"language": "NN",
+																					"value": "Innstillinger"
+																				},
+																				{
 																					"language": "NO",
 																					"value": "Innstillinger"
 																				},
@@ -23908,6 +24464,10 @@
 																				{
 																					"language": "RU",
 																					"value": "Настройки"
+																				},
+																				{
+																					"language": "SE",
+																					"value": "Asetukset"
 																				},
 																				{
 																					"language": "SH",
@@ -24149,6 +24709,10 @@
 											"value": "Bevestigen"
 										},
 										{
+											"language": "NN",
+											"value": "Bekreft"
+										},
+										{
 											"language": "NO",
 											"value": "Bekreft"
 										},
@@ -24167,6 +24731,10 @@
 										{
 											"language": "RU",
 											"value": "Подтверждать"
+										},
+										{
+											"language": "SE",
+											"value": "Vástidit"
 										},
 										{
 											"language": "SH",
@@ -24489,6 +25057,10 @@
 													"value": "Wachtwoord"
 												},
 												{
+													"language": "NN",
+													"value": "Passord"
+												},
+												{
 													"language": "NO",
 													"value": "Passord"
 												},
@@ -24507,6 +25079,10 @@
 												{
 													"language": "RU",
 													"value": "Пароль"
+												},
+												{
+													"language": "SE",
+													"value": "Govat"
 												},
 												{
 													"language": "SH",
@@ -24678,6 +25254,10 @@
 													"value": "Wijzig het gebruikerswachtwoord"
 												},
 												{
+													"language": "NN",
+													"value": "Endre brukerens passord"
+												},
+												{
 													"language": "NO",
 													"value": "Endre passord for bruker"
 												},
@@ -24696,6 +25276,10 @@
 												{
 													"language": "RU",
 													"value": "Изменить пароль пользователя"
+												},
+												{
+													"language": "SE",
+													"value": "Juvddála geavaheaddji govat"
 												},
 												{
 													"language": "SH",
@@ -24899,6 +25483,10 @@
 															"value": "huidig wachtwoord"
 														},
 														{
+															"language": "NN",
+															"value": "Nåværende passord"
+														},
+														{
 															"language": "NO",
 															"value": "Nåværende passord"
 														},
@@ -24917,6 +25505,10 @@
 														{
 															"language": "RU",
 															"value": "Текущий пароль"
+														},
+														{
+															"language": "SE",
+															"value": "Ovdal govat"
 														},
 														{
 															"language": "SH",
@@ -25100,6 +25692,10 @@
 															"value": "nieuw paswoord"
 														},
 														{
+															"language": "NN",
+															"value": "Nytt passord"
+														},
+														{
 															"language": "NO",
 															"value": "Nytt passord"
 														},
@@ -25118,6 +25714,10 @@
 														{
 															"language": "RU",
 															"value": "Новый пароль"
+														},
+														{
+															"language": "SE",
+															"value": "Ođđa govat"
 														},
 														{
 															"language": "SH",
@@ -25301,6 +25901,10 @@
 															"value": "Herhaal nieuw wachtwoord"
 														},
 														{
+															"language": "NN",
+															"value": "Gjenta nytt passord"
+														},
+														{
 															"language": "NO",
 															"value": "Gjenta nytt passord"
 														},
@@ -25319,6 +25923,10 @@
 														{
 															"language": "RU",
 															"value": "Повторите новый пароль"
+														},
+														{
+															"language": "SE",
+															"value": "Bargat ođđa govat"
 														},
 														{
 															"language": "SH",
@@ -26044,6 +26652,10 @@
 											"value": "OK"
 										},
 										{
+											"language": "NN",
+											"value": "OK"
+										},
+										{
 											"language": "NO",
 											"value": "OK"
 										},
@@ -26062,6 +26674,10 @@
 										{
 											"language": "RU",
 											"value": "ХОРОШО"
+										},
+										{
+											"language": "SE",
+											"value": "OK"
 										},
 										{
 											"language": "SH",
@@ -26239,6 +26855,10 @@
 											"value": "Fout"
 										},
 										{
+											"language": "NN",
+											"value": "Feil"
+										},
+										{
 											"language": "NO",
 											"value": "Feil"
 										},
@@ -26257,6 +26877,10 @@
 										{
 											"language": "RU",
 											"value": "Ошибка"
+										},
+										{
+											"language": "SE",
+											"value": "Váldde"
 										},
 										{
 											"language": "SH",
@@ -26440,6 +27064,10 @@
 													"value": "Kan app niet openen. Probeer het later nog eens."
 												},
 												{
+													"language": "NN",
+													"value": "Kunne ikke åpne appen. Prøv igjen senere."
+												},
+												{
 													"language": "NO",
 													"value": "Kunne ikke åpne appen. Prøv igjen senere."
 												},
@@ -26458,6 +27086,10 @@
 												{
 													"language": "RU",
 													"value": "Не удалось открыть приложение. Попробуйте позже."
+												},
+												{
+													"language": "SE",
+													"value": "Eai leat sáhttán eahket applikašuvdna. Sáhtát čállit vel dáid siste."
 												},
 												{
 													"language": "SH",
@@ -26630,6 +27262,10 @@
 											"value": "OK"
 										},
 										{
+											"language": "NN",
+											"value": "OK"
+										},
+										{
 											"language": "NO",
 											"value": "OK"
 										},
@@ -26648,6 +27284,10 @@
 										{
 											"language": "RU",
 											"value": "ХОРОШО"
+										},
+										{
+											"language": "SE",
+											"value": "OK"
 										},
 										{
 											"language": "SH",
@@ -27076,6 +27716,10 @@
 															"value": "INSTELLINGEN"
 														},
 														{
+															"language": "NN",
+															"value": "INNSTILLINGER"
+														},
+														{
 															"language": "NO",
 															"value": "INNSTILLINGER"
 														},
@@ -27094,6 +27738,10 @@
 														{
 															"language": "RU",
 															"value": "НАСТРОЙКИ"
+														},
+														{
+															"language": "SE",
+															"value": "ASETUKSET"
 														},
 														{
 															"language": "SH",
@@ -27343,6 +27991,10 @@
 																					"value": "Taal"
 																				},
 																				{
+																					"language": "NN",
+																					"value": "Språk"
+																				},
+																				{
 																					"language": "NO",
 																					"value": "Språk"
 																				},
@@ -27361,6 +28013,10 @@
 																				{
 																					"language": "RU",
 																					"value": "Язык"
+																				},
+																				{
+																					"language": "SE",
+																					"value": "Giella"
 																				},
 																				{
 																					"language": "SH",
@@ -27551,6 +28207,10 @@
 																					"value": "Overgangen"
 																				},
 																				{
+																					"language": "NN",
+																					"value": "Overganger"
+																				},
+																				{
 																					"language": "NO",
 																					"value": "Overganger"
 																				},
@@ -27569,6 +28229,10 @@
 																				{
 																					"language": "RU",
 																					"value": "Переходы"
+																				},
+																				{
+																					"language": "SE",
+																					"value": "Tranzisuvdnat"
 																				},
 																				{
 																					"language": "SH",
@@ -27758,6 +28422,10 @@
 																							"value": "Standaard"
 																						},
 																						{
+																							"language": "NN",
+																							"value": "Standard"
+																						},
+																						{
 																							"language": "NO",
 																							"value": "Standard"
 																						},
@@ -27776,6 +28444,10 @@
 																						{
 																							"language": "RU",
 																							"value": "По умолчанию"
+																						},
+																						{
+																							"language": "SE",
+																							"value": "Dále"
 																						},
 																						{
 																							"language": "SH",
@@ -27935,6 +28607,10 @@
 																							"value": "Deur"
 																						},
 																						{
+																							"language": "NN",
+																							"value": "Dør"
+																						},
+																						{
 																							"language": "NO",
 																							"value": "Dør"
 																						},
@@ -27953,6 +28629,10 @@
 																						{
 																							"language": "RU",
 																							"value": "Дверь"
+																						},
+																						{
+																							"language": "SE",
+																							"value": "Dohko"
 																						},
 																						{
 																							"language": "SH",
@@ -28119,6 +28799,10 @@
 																							"value": "Vervagen"
 																						},
 																						{
+																							"language": "NN",
+																							"value": "Fade"
+																						},
+																						{
 																							"language": "NO",
 																							"value": "Falme"
 																						},
@@ -28137,6 +28821,10 @@
 																						{
 																							"language": "RU",
 																							"value": "Тускнеть"
+																						},
+																						{
+																							"language": "SE",
+																							"value": "Fade"
 																						},
 																						{
 																							"language": "SH",
@@ -28303,6 +28991,10 @@
 																							"value": "Omdraaien"
 																						},
 																						{
+																							"language": "NN",
+																							"value": "Flip"
+																						},
+																						{
 																							"language": "NO",
 																							"value": "Vend"
 																						},
@@ -28321,6 +29013,10 @@
 																						{
 																							"language": "RU",
 																							"value": "Подбросить"
+																						},
+																						{
+																							"language": "SE",
+																							"value": "Flip"
 																						},
 																						{
 																							"language": "SH",
@@ -28487,6 +29183,10 @@
 																							"value": "Dia"
 																						},
 																						{
+																							"language": "NN",
+																							"value": "Skyv"
+																						},
+																						{
 																							"language": "NO",
 																							"value": "Lysbilde"
 																						},
@@ -28505,6 +29205,10 @@
 																						{
 																							"language": "RU",
 																							"value": "Горка"
+																						},
+																						{
+																							"language": "SE",
+																							"value": "Slide"
 																						},
 																						{
 																							"language": "SH",
@@ -28677,6 +29381,10 @@
 																					"value": "Indeling"
 																				},
 																				{
+																					"language": "NN",
+																					"value": "Oppsett"
+																				},
+																				{
 																					"language": "NO",
 																					"value": "Layout"
 																				},
@@ -28695,6 +29403,10 @@
 																				{
 																					"language": "RU",
 																					"value": "Макет"
+																				},
+																				{
+																					"language": "SE",
+																					"value": "Rievdadus"
 																				},
 																				{
 																					"language": "SH",
@@ -28927,6 +29639,10 @@
 																					"value": "Zijpaneel Breedte"
 																				},
 																				{
+																					"language": "NN",
+																					"value": "Sidepanelbredde"
+																				},
+																				{
 																					"language": "NO",
 																					"value": "Sidepanel bredde"
 																				},
@@ -28961,6 +29677,10 @@
 																				{
 																					"language": "S",
 																					"value": "Ancho del panel lateral"
+																				},
+																				{
+																					"language": "SE",
+																					"value": "Sáhpanávdi vidjodat"
 																				},
 																				{
 																					"language": "SH",
@@ -29189,6 +29909,10 @@
 																							"value": "XKlein"
 																						},
 																						{
+																							"language": "NN",
+																							"value": "Veldig liten"
+																						},
+																						{
 																							"language": "NO",
 																							"value": "XSmall"
 																						},
@@ -29223,6 +29947,10 @@
 																						{
 																							"language": "S",
 																							"value": "X pequeño"
+																						},
+																						{
+																							"language": "SE",
+																							"value": "XSmállá"
 																						},
 																						{
 																							"language": "SH",
@@ -29421,6 +30149,10 @@
 																							"value": "Klein"
 																						},
 																						{
+																							"language": "NN",
+																							"value": "Liten"
+																						},
+																						{
 																							"language": "NO",
 																							"value": "Liten"
 																						},
@@ -29455,6 +30187,10 @@
 																						{
 																							"language": "S",
 																							"value": "Pequeño (predeterminado)"
+																						},
+																						{
+																							"language": "SE",
+																							"value": "Smállá"
 																						},
 																						{
 																							"language": "SH",
@@ -29650,6 +30386,10 @@
 																						},
 																						{
 																							"language": "NL",
+																							"value": "Medium"
+																						},
+																						{
+																							"language": "NN",
 																							"value": "Medium"
 																						},
 																						{
@@ -29885,6 +30625,10 @@
 																							"value": "Groot (standaard)"
 																						},
 																						{
+																							"language": "NN",
+																							"value": "Stor (Standard)"
+																						},
+																						{
 																							"language": "NO",
 																							"value": "Stor (standard)"
 																						},
@@ -29919,6 +30663,10 @@
 																						{
 																							"language": "S",
 																							"value": "Grande"
+																						},
+																						{
+																							"language": "SE",
+																							"value": "Stuorra (Dáid ášši)"
 																						},
 																						{
 																							"language": "SH",
@@ -30110,6 +30858,10 @@
 																							"value": "XLgroot"
 																						},
 																						{
+																							"language": "NN",
+																							"value": "Veldig stor"
+																						},
+																						{
 																							"language": "NO",
 																							"value": "XLarge"
 																						},
@@ -30144,6 +30896,10 @@
 																						{
 																							"language": "S",
 																							"value": "X grande"
+																						},
+																						{
+																							"language": "SE",
+																							"value": "Stuorra (Dáid ášši)"
 																						},
 																						{
 																							"language": "SH",
@@ -30342,6 +31098,10 @@
 																							"value": "XXLgroot"
 																						},
 																						{
+																							"language": "NN",
+																							"value": "Ekstra stor"
+																						},
+																						{
 																							"language": "NO",
 																							"value": "XXLarge"
 																						},
@@ -30376,6 +31136,10 @@
 																						{
 																							"language": "S",
 																							"value": "XX grande"
+																						},
+																						{
+																							"language": "SE",
+																							"value": "Stuorra (Dáid ášši)"
 																						},
 																						{
 																							"language": "SH",
@@ -30574,6 +31338,10 @@
 																							"value": "XXXGroot"
 																						},
 																						{
+																							"language": "NN",
+																							"value": "Veldig ekstra stor"
+																						},
+																						{
 																							"language": "NO",
 																							"value": "XXXLarge"
 																						},
@@ -30608,6 +31376,10 @@
 																						{
 																							"language": "S",
 																							"value": "XXX grande"
+																						},
+																						{
+																							"language": "SE",
+																							"value": "Stuorra (Dáid ášši)"
 																						},
 																						{
 																							"language": "SH",
@@ -30806,6 +31578,10 @@
 																							"value": "Breed"
 																						},
 																						{
+																							"language": "NN",
+																							"value": "Bred"
+																						},
+																						{
 																							"language": "NO",
 																							"value": "Bred"
 																						},
@@ -30840,6 +31616,10 @@
 																						{
 																							"language": "S",
 																							"value": "XXX grande"
+																						},
+																						{
+																							"language": "SE",
+																							"value": "Leahtta"
 																						},
 																						{
 																							"language": "SH",
@@ -31038,6 +31818,10 @@
 																							"value": "XBreed"
 																						},
 																						{
+																							"language": "NN",
+																							"value": "Veldig bred"
+																						},
+																						{
 																							"language": "NO",
 																							"value": "XWide"
 																						},
@@ -31072,6 +31856,10 @@
 																						{
 																							"language": "S",
 																							"value": "XXX grande"
+																						},
+																						{
+																							"language": "SE",
+																							"value": "Leahtta"
 																						},
 																						{
 																							"language": "SH",
@@ -31270,6 +32058,10 @@
 																							"value": "XXBreed"
 																						},
 																						{
+																							"language": "NN",
+																							"value": "Ekstra bred"
+																						},
+																						{
 																							"language": "NO",
 																							"value": "XXWide"
 																						},
@@ -31304,6 +32096,10 @@
 																						{
 																							"language": "S",
 																							"value": "XXX grande"
+																						},
+																						{
+																							"language": "SE",
+																							"value": "Leahtta"
 																						},
 																						{
 																							"language": "SH",
@@ -31487,6 +32283,10 @@
 																					"value": "Achtergrondafbeelding-URL"
 																				},
 																				{
+																					"language": "NN",
+																					"value": "URL for bakgrunnsbilde"
+																				},
+																				{
 																					"language": "NO",
 																					"value": "Bakgrunnsbilde URL"
 																				},
@@ -31505,6 +32305,10 @@
 																				{
 																					"language": "RU",
 																					"value": "URL-адрес фонового изображения"
+																				},
+																				{
+																					"language": "SE",
+																					"value": "Taustabargi URL"
 																				},
 																				{
 																					"language": "SH",
@@ -31695,6 +32499,10 @@
 																					"value": "Meest gebruikt"
 																				},
 																				{
+																					"language": "NN",
+																					"value": "Mest brukt"
+																				},
+																				{
 																					"language": "NO",
 																					"value": "Mest brukt"
 																				},
@@ -31713,6 +32521,10 @@
 																				{
 																					"language": "RU",
 																					"value": "Наиболее используемое"
+																				},
+																				{
+																					"language": "SE",
+																					"value": "Buot dáid"
 																				},
 																				{
 																					"language": "SH",
@@ -31876,6 +32688,10 @@
 																					"value": "Duidelijk"
 																				},
 																				{
+																					"language": "NN",
+																					"value": "Tøm"
+																				},
+																				{
 																					"language": "NO",
 																					"value": "Slett"
 																				},
@@ -31894,6 +32710,10 @@
 																				{
 																					"language": "RU",
 																					"value": "Прозрачный"
+																				},
+																				{
+																					"language": "SE",
+																					"value": "Rievdadit"
 																				},
 																				{
 																					"language": "SH",
@@ -32064,6 +32884,10 @@
 																					"value": "Lokale gegevens"
 																				},
 																				{
+																					"language": "NN",
+																					"value": "Lokal data"
+																				},
+																				{
 																					"language": "NO",
 																					"value": "Lokale data"
 																				},
@@ -32082,6 +32906,10 @@
 																				{
 																					"language": "RU",
 																					"value": "Локальные данные"
+																				},
+																				{
+																					"language": "SE",
+																					"value": "Lokála dáta"
 																				},
 																				{
 																					"language": "SH",
@@ -32252,6 +33080,10 @@
 																					"value": "Duidelijk"
 																				},
 																				{
+																					"language": "NN",
+																					"value": "Tøm"
+																				},
+																				{
 																					"language": "NO",
 																					"value": "Slett"
 																				},
@@ -32270,6 +33102,10 @@
 																				{
 																					"language": "RU",
 																					"value": "Прозрачный"
+																				},
+																				{
+																					"language": "SE",
+																					"value": "Rievdadit"
 																				},
 																				{
 																					"language": "SH",
@@ -32436,6 +33272,10 @@
 																					"value": "Schermen vergrendelen"
 																				},
 																				{
+																					"language": "NN",
+																					"value": "Låseskjerm"
+																				},
+																				{
 																					"language": "NO",
 																					"value": "Lås skjermer"
 																				},
@@ -32454,6 +33294,10 @@
 																				{
 																					"language": "RU",
 																					"value": "Экраны блокировки"
+																				},
+																				{
+																					"language": "SE",
+																					"value": "Låhkåm skreanat"
 																				},
 																				{
 																					"language": "SH",
@@ -32613,6 +33457,10 @@
 																					"value": "Vergrendel schermen zoals in de huidige staat."
 																				},
 																				{
+																					"language": "NN",
+																					"value": "Låseskjerm slik den er nå."
+																				},
+																				{
 																					"language": "NO",
 																					"value": "Lås skjermer som de er"
 																				},
@@ -32631,6 +33479,10 @@
 																				{
 																					"language": "RU",
 																					"value": "Экраны блокировки в текущем состоянии."
+																				},
+																				{
+																					"language": "SE",
+																					"value": "Låhkåm skreanat dego dálkkasáš"
 																				},
 																				{
 																					"language": "SH",
@@ -32809,6 +33661,10 @@
 																					"value": "Schermwijzigingen inschakelen"
 																				},
 																				{
+																					"language": "NN",
+																					"value": "Aktiver skjermdesignendringer"
+																				},
+																				{
 																					"language": "NO",
 																					"value": "Aktiver skjermendringer"
 																				},
@@ -32827,6 +33683,10 @@
 																				{
 																					"language": "RU",
 																					"value": "Включить изменения экрана"
+																				},
+																				{
+																					"language": "SE",
+																					"value": "Čállit skreanaguovddážat"
 																				},
 																				{
 																					"language": "SH",
@@ -32986,6 +33846,10 @@
 																					"value": "Schakel uit om standaardschermen te zien."
 																				},
 																				{
+																					"language": "NN",
+																					"value": "Deaktiver for å se standard skjermer."
+																				},
+																				{
 																					"language": "NO",
 																					"value": "Deaktiver for å se standardskjermer."
 																				},
@@ -33004,6 +33868,10 @@
 																				{
 																					"language": "RU",
 																					"value": "Отключите, чтобы видеть стандартные экраны."
+																				},
+																				{
+																					"language": "SE",
+																					"value": "Válddejuvvojit ahte oaidnit standard skreanat."
 																				},
 																				{
 																					"language": "SH",
@@ -33190,6 +34058,10 @@
 																					"value": "Duidelijke aanpassingen"
 																				},
 																				{
+																					"language": "NN",
+																					"value": "Tøm tilpasninger"
+																				},
+																				{
 																					"language": "NO",
 																					"value": "Fjern tilpasninger"
 																				},
@@ -33208,6 +34080,10 @@
 																				{
 																					"language": "RU",
 																					"value": "Очистить настройки"
+																				},
+																				{
+																					"language": "SE",
+																					"value": "Rievdadit muitalusaid"
 																				},
 																				{
 																					"language": "SH",
@@ -33385,6 +34261,10 @@
 															"value": "SYSTEEM"
 														},
 														{
+															"language": "NN",
+															"value": "SYSTEM"
+														},
+														{
 															"language": "NO",
 															"value": "SYSTEM"
 														},
@@ -33403,6 +34283,10 @@
 														{
 															"language": "RU",
 															"value": "СИСТЕМА"
+														},
+														{
+															"language": "SE",
+															"value": "SYSTEMA"
 														},
 														{
 															"language": "SH",
@@ -33676,6 +34560,10 @@
 															"value": "APPS"
 														},
 														{
+															"language": "NN",
+															"value": "APPER"
+														},
+														{
 															"language": "NO",
 															"value": "APPER"
 														},
@@ -33694,6 +34582,10 @@
 														{
 															"language": "RU",
 															"value": "ПРОГРАММЫ"
+														},
+														{
+															"language": "SE",
+															"value": "APPS"
 														},
 														{
 															"language": "SH",
@@ -34130,6 +35022,10 @@
 																	"value": "Verplaats naar scherm"
 																},
 																{
+																	"language": "NN",
+																	"value": "Flytt til skjerm"
+																},
+																{
 																	"language": "NO",
 																	"value": "Flytt til skjerm"
 																},
@@ -34148,6 +35044,10 @@
 																{
 																	"language": "RU",
 																	"value": "Перейти на экран"
+																},
+																{
+																	"language": "SE",
+																	"value": "Jorgaleapmi skreanii"
 																},
 																{
 																	"language": "SH",
@@ -34428,6 +35328,10 @@
 															"value": "Verplaats naar scherm"
 														},
 														{
+															"language": "NN",
+															"value": "Flytt til skjerm"
+														},
+														{
 															"language": "NO",
 															"value": "Flytt til skjerm"
 														},
@@ -34446,6 +35350,10 @@
 														{
 															"language": "RU",
 															"value": "Перейти на экран"
+														},
+														{
+															"language": "SE",
+															"value": "Jorgaleapmi skreanii"
 														},
 														{
 															"language": "SH",
@@ -34673,6 +35581,10 @@
 																	"value": "Scherm"
 																},
 																{
+																	"language": "NN",
+																	"value": "Skjerm"
+																},
+																{
 																	"language": "NO",
 																	"value": "Skjerm"
 																},
@@ -34691,6 +35603,10 @@
 																{
 																	"language": "RU",
 																	"value": "Экран"
+																},
+																{
+																	"language": "SE",
+																	"value": "Skreana"
 																},
 																{
 																	"language": "SH",
@@ -34934,6 +35850,10 @@
 																	"value": "Menutitel"
 																},
 																{
+																	"language": "NN",
+																	"value": "Menytittel"
+																},
+																{
 																	"language": "NO",
 																	"value": "Menytittel"
 																},
@@ -34952,6 +35872,10 @@
 																{
 																	"language": "RU",
 																	"value": "Название меню"
+																},
+																{
+																	"language": "SE",
+																	"value": "Mánu namma"
 																},
 																{
 																	"language": "SH",
@@ -35153,6 +36077,10 @@
 																	"value": "Titel"
 																},
 																{
+																	"language": "NN",
+																	"value": "Tittel"
+																},
+																{
 																	"language": "NO",
 																	"value": "Tittel"
 																},
@@ -35171,6 +36099,10 @@
 																{
 																	"language": "RU",
 																	"value": "Заголовок"
+																},
+																{
+																	"language": "SE",
+																	"value": "Namma"
 																},
 																{
 																	"language": "SH",
@@ -35372,6 +36304,10 @@
 																	"value": "Ondertitel"
 																},
 																{
+																	"language": "NN",
+																	"value": "Undertittel"
+																},
+																{
 																	"language": "NO",
 																	"value": "Undertekst"
 																},
@@ -35390,6 +36326,10 @@
 																{
 																	"language": "RU",
 																	"value": "Субтитры"
+																},
+																{
+																	"language": "SE",
+																	"value": "Ala namma"
 																},
 																{
 																	"language": "SH",
@@ -35584,6 +36524,10 @@
 															"value": "Redden"
 														},
 														{
+															"language": "NN",
+															"value": "Lagre"
+														},
+														{
 															"language": "NO",
 															"value": "Lagre"
 														},
@@ -35602,6 +36546,10 @@
 														{
 															"language": "RU",
 															"value": "Сохранять"
+														},
+														{
+															"language": "SE",
+															"value": "Sáve"
 														},
 														{
 															"language": "SH",
@@ -35873,6 +36821,10 @@
 																	"value": "Beheer schermen"
 																},
 																{
+																	"language": "NN",
+																	"value": "Administrer skjermer"
+																},
+																{
 																	"language": "NO",
 																	"value": "Administrer skjermer"
 																},
@@ -35891,6 +36843,10 @@
 																{
 																	"language": "RU",
 																	"value": "Управление экранами"
+																},
+																{
+																	"language": "SE",
+																	"value": "Rievdadit skáhpiid"
 																},
 																{
 																	"language": "SH",
@@ -36109,6 +37065,10 @@
 													"value": "Gebruik Drag&Drop om schermen te sorteren"
 												},
 												{
+													"language": "NN",
+													"value": "Bruk dra og slipp for å sortere skjermer"
+												},
+												{
 													"language": "NO",
 													"value": "Dra og slipp for å sortere skjermer"
 												},
@@ -36127,6 +37087,10 @@
 												{
 													"language": "RU",
 													"value": "Используйте Drag&Drop для сортировки экранов"
+												},
+												{
+													"language": "SE",
+													"value": "Geahččalit Drag&Drop skreanaid sordnii"
 												},
 												{
 													"language": "SH",
@@ -36617,6 +37581,10 @@
 															"value": "Scherm toevoegen"
 														},
 														{
+															"language": "NN",
+															"value": "Legg til skjerm"
+														},
+														{
 															"language": "NO",
 															"value": "Legg til skjerm"
 														},
@@ -36635,6 +37603,10 @@
 														{
 															"language": "RU",
 															"value": "Добавить экран"
+														},
+														{
+															"language": "SE",
+															"value": "Addet skreana"
 														},
 														{
 															"language": "SH",
@@ -36802,6 +37774,10 @@
 															"value": "Klaar"
 														},
 														{
+															"language": "NN",
+															"value": "Ferdig"
+														},
+														{
 															"language": "NO",
 															"value": "Ferdig"
 														},
@@ -36820,6 +37796,10 @@
 														{
 															"language": "RU",
 															"value": "Сделанный"
+														},
+														{
+															"language": "SE",
+															"value": "Leat"
 														},
 														{
 															"language": "SH",
@@ -36991,6 +37971,10 @@
 											"value": "Dichtbij"
 										},
 										{
+											"language": "NN",
+											"value": "Lukk"
+										},
+										{
 											"language": "NO",
 											"value": "Lukk"
 										},
@@ -37009,6 +37993,10 @@
 										{
 											"language": "RU",
 											"value": "Закрывать"
+										},
+										{
+											"language": "SE",
+											"value": "Gulat"
 										},
 										{
 											"language": "SH",
@@ -37390,6 +38378,10 @@
 																	"value": "Applicatiezoeker"
 																},
 																{
+																	"language": "NN",
+																	"value": "Applikasjonsfinder"
+																},
+																{
 																	"language": "NO",
 																	"value": "Applikasjonssøker"
 																},
@@ -37408,6 +38400,10 @@
 																{
 																	"language": "RU",
 																	"value": "Поиск приложений"
+																},
+																{
+																	"language": "SE",
+																	"value": "Applikašuvdna čállin"
 																},
 																{
 																	"language": "SH",
@@ -37567,6 +38563,10 @@
 																	"value": "Zoek naar alle beschikbare applicaties"
 																},
 																{
+																	"language": "NN",
+																	"value": "Søk i alle tilgjengelige applikasjoner"
+																},
+																{
 																	"language": "NO",
 																	"value": "Søk i alle tilgjengelige applikasjoner"
 																},
@@ -37585,6 +38585,10 @@
 																{
 																	"language": "RU",
 																	"value": "Поиск всех доступных приложений"
+																},
+																{
+																	"language": "SE",
+																	"value": "Ruoŧŧa buot leat dáhtton applikašuvnnat"
 																},
 																{
 																	"language": "SH",
@@ -37976,6 +38980,10 @@
 																					"value": "Toevoegen"
 																				},
 																				{
+																					"language": "NN",
+																					"value": "Legg til"
+																				},
+																				{
 																					"language": "NO",
 																					"value": "Legg til"
 																				},
@@ -37994,6 +39002,10 @@
 																				{
 																					"language": "RU",
 																					"value": "Добавлять"
+																				},
+																				{
+																					"language": "SE",
+																					"value": "Addet"
 																				},
 																				{
 																					"language": "SH",
@@ -38259,6 +39271,10 @@
 																	"value": "Toevoegen aan startscherm"
 																},
 																{
+																	"language": "NN",
+																	"value": "Legg til på startskjerm"
+																},
+																{
 																	"language": "NO",
 																	"value": "Legg til på startskjerm"
 																},
@@ -38277,6 +39293,10 @@
 																{
 																	"language": "RU",
 																	"value": "Добавить на домашний экран"
+																},
+																{
+																	"language": "SE",
+																	"value": "Addet ášši skreanii"
 																},
 																{
 																	"language": "SH",
@@ -38619,6 +39639,10 @@
 															"value": "Annuleren"
 														},
 														{
+															"language": "NN",
+															"value": "Avbryt"
+														},
+														{
 															"language": "NO",
 															"value": "Avbryt"
 														},
@@ -38637,6 +39661,10 @@
 														{
 															"language": "RU",
 															"value": "Отмена"
+														},
+														{
+															"language": "SE",
+															"value": "Cealkit"
 														},
 														{
 															"language": "SH",
@@ -38803,6 +39831,10 @@
 															"value": "Applicatie installeren"
 														},
 														{
+															"language": "NN",
+															"value": "Installer applikasjon"
+														},
+														{
 															"language": "NO",
 															"value": "Installer applikasjon"
 														},
@@ -38821,6 +39853,10 @@
 														{
 															"language": "RU",
 															"value": "Установить приложение"
+														},
+														{
+															"language": "SE",
+															"value": "Asenna applikašuvdna"
 														},
 														{
 															"language": "SH",
@@ -38981,7 +40017,16 @@
 															"grouping": "Properties",
 															"value": "diaCookieHeaderTitle",
 															"script": "",
-															"translation": []
+															"translation": [
+																{
+																	"language": "NN",
+																	"value": "Informasjonskapseloverskrift"
+																},
+																{
+																	"language": "SE",
+																	"value": "Adaptive Framework konfigurášuvdna ii leat ožžon"
+																}
+															]
 														}
 													],
 													"data": []
@@ -39124,7 +40169,16 @@
 													"grouping": "Properties",
 													"value": "Close",
 													"script": "",
-													"translation": []
+													"translation": [
+														{
+															"language": "NN",
+															"value": "Lukk"
+														},
+														{
+															"language": "SE",
+															"value": "Gulat"
+														}
+													]
 												},
 												{
 													"attribute": "press",
@@ -39619,6 +40673,10 @@
 											"value": "Adaptive Framework-configuratie niet gevonden"
 										},
 										{
+											"language": "NN",
+											"value": "Adaptiv rammeverkskonfigurasjon ikke funnet"
+										},
+										{
 											"language": "NO",
 											"value": "Finner ikke konfigurasjon for Adaptive Framework"
 										},
@@ -39808,6 +40866,10 @@
 											"value": "Inloggen met vingerafdruk"
 										},
 										{
+											"language": "NN",
+											"value": "Logg inn med fingeravtrykk"
+										},
+										{
 											"language": "NO",
 											"value": "Logg inn med fingeravtrykk"
 										},
@@ -39826,6 +40888,10 @@
 										{
 											"language": "RU",
 											"value": "Войти с помощью отпечатка пальца"
+										},
+										{
+											"language": "SE",
+											"value": "Logget sisa fingerprinta"
 										},
 										{
 											"language": "SH",
@@ -39990,6 +41056,10 @@
 											"value": "Telefoon model"
 										},
 										{
+											"language": "NN",
+											"value": "Telefonmodell"
+										},
+										{
 											"language": "NO",
 											"value": "Telefonmodell"
 										},
@@ -40008,6 +41078,10 @@
 										{
 											"language": "RU",
 											"value": "Модель телефона"
+										},
+										{
+											"language": "SE",
+											"value": "Telefovdna modella"
 										},
 										{
 											"language": "SH",
@@ -40172,6 +41246,10 @@
 											"value": "Zoekresultaat"
 										},
 										{
+											"language": "NN",
+											"value": "Søkeresultat"
+										},
+										{
 											"language": "NO",
 											"value": "Søkeresultat"
 										},
@@ -40190,6 +41268,10 @@
 										{
 											"language": "RU",
 											"value": "Результат поиска"
+										},
+										{
+											"language": "SE",
+											"value": "Ruoŧŧa vástádus"
 										},
 										{
 											"language": "SH",
@@ -40354,6 +41436,10 @@
 											"value": "Telefoon type"
 										},
 										{
+											"language": "NN",
+											"value": "Telefontype"
+										},
+										{
 											"language": "NO",
 											"value": "Telefontype"
 										},
@@ -40372,6 +41458,10 @@
 										{
 											"language": "RU",
 											"value": "Тип телефона"
+										},
+										{
+											"language": "SE",
+											"value": "Telefovdna týpus"
 										},
 										{
 											"language": "SH",
@@ -40536,6 +41626,10 @@
 											"value": "Telefoonversie"
 										},
 										{
+											"language": "NN",
+											"value": "Telefonversjon"
+										},
+										{
 											"language": "NO",
 											"value": "Telefonversjon"
 										},
@@ -40554,6 +41648,10 @@
 										{
 											"language": "RU",
 											"value": "Версия для телефона"
+										},
+										{
+											"language": "SE",
+											"value": "Telefovdna várdi"
 										},
 										{
 											"language": "SH",
@@ -40718,6 +41816,10 @@
 											"value": "Cordova-versie"
 										},
 										{
+											"language": "NN",
+											"value": "Cordova-versjon"
+										},
+										{
 											"language": "NO",
 											"value": "Cordova versjon"
 										},
@@ -40736,6 +41838,10 @@
 										{
 											"language": "RU",
 											"value": "Версия Кордовы"
+										},
+										{
+											"language": "SE",
+											"value": "Cordova várdi"
 										},
 										{
 											"language": "SH",
@@ -40900,6 +42006,10 @@
 											"value": "App versie"
 										},
 										{
+											"language": "NN",
+											"value": "App-versjon"
+										},
+										{
 											"language": "NO",
 											"value": "Appversjon"
 										},
@@ -40918,6 +42028,10 @@
 										{
 											"language": "RU",
 											"value": "Версия приложения"
+										},
+										{
+											"language": "SE",
+											"value": "Applikašuvdna várdi"
 										},
 										{
 											"language": "SH",
@@ -41082,6 +42196,10 @@
 											"value": "Geen connectie"
 										},
 										{
+											"language": "NN",
+											"value": "Ingen tilkobling"
+										},
+										{
 											"language": "NO",
 											"value": "Ingen forbindelse"
 										},
@@ -41100,6 +42218,10 @@
 										{
 											"language": "RU",
 											"value": "Нет соединения"
+										},
+										{
+											"language": "SE",
+											"value": "Eai leat sápmelaš"
 										},
 										{
 											"language": "SH",
@@ -41264,6 +42386,10 @@
 											"value": "Gebruiker uitgelogd"
 										},
 										{
+											"language": "NN",
+											"value": "Bruker logget ut"
+										},
+										{
 											"language": "NO",
 											"value": "Bruker logget ut"
 										},
@@ -41282,6 +42408,10 @@
 										{
 											"language": "RU",
 											"value": "Пользователь вышел из системы"
+										},
+										{
+											"language": "SE",
+											"value": "Geavaheaddji lea logget sutnje"
 										},
 										{
 											"language": "SH",
@@ -41446,6 +42576,10 @@
 											"value": "Vul je gebruikersnaam in"
 										},
 										{
+											"language": "NN",
+											"value": "Skriv inn brukernavn"
+										},
+										{
 											"language": "NO",
 											"value": "Oppgi brukernavn"
 										},
@@ -41464,6 +42598,10 @@
 										{
 											"language": "RU",
 											"value": "Введите имя пользователя"
+										},
+										{
+											"language": "SE",
+											"value": "Skriv geavaheaddji namma"
 										},
 										{
 											"language": "SH",
@@ -41628,6 +42766,10 @@
 											"value": "Voer wachtwoord in"
 										},
 										{
+											"language": "NN",
+											"value": "Skriv inn passord"
+										},
+										{
 											"language": "NO",
 											"value": "Oppgi passord"
 										},
@@ -41646,6 +42788,10 @@
 										{
 											"language": "RU",
 											"value": "Введите пароль"
+										},
+										{
+											"language": "SE",
+											"value": "Skriv passord"
 										},
 										{
 											"language": "SH",
@@ -41810,6 +42956,10 @@
 											"value": "Voer een nieuwe pincode in"
 										},
 										{
+											"language": "NN",
+											"value": "Skriv inn ny PIN-kode"
+										},
+										{
 											"language": "NO",
 											"value": "Oppgi ny pinkode"
 										},
@@ -41828,6 +42978,10 @@
 										{
 											"language": "RU",
 											"value": "Введите новый пин-код"
+										},
+										{
+											"language": "SE",
+											"value": "Skriv ođđa pin-kode"
 										},
 										{
 											"language": "SH",
@@ -41992,6 +43146,10 @@
 											"value": "Herhaal pincode"
 										},
 										{
+											"language": "NN",
+											"value": "Gjenta PIN-kode"
+										},
+										{
 											"language": "NO",
 											"value": "Gjenta pinkode"
 										},
@@ -42010,6 +43168,10 @@
 										{
 											"language": "RU",
 											"value": "Повторите пин-код"
+										},
+										{
+											"language": "SE",
+											"value": "Davvisápin-kode"
 										},
 										{
 											"language": "SH",
@@ -42174,6 +43336,10 @@
 											"value": "Pincode komt niet overeen"
 										},
 										{
+											"language": "NN",
+											"value": "PIN-kodene stemmer ikke overens"
+										},
+										{
 											"language": "NO",
 											"value": "Pinkodene er ikke like"
 										},
@@ -42192,6 +43358,10 @@
 										{
 											"language": "RU",
 											"value": "Пин-код не совпадает"
+										},
+										{
+											"language": "SE",
+											"value": "Pin-kode eai sáhtán ávkkástallet"
 										},
 										{
 											"language": "SH",
@@ -42356,6 +43526,10 @@
 											"value": "Wachtwoorden komen niet overeen"
 										},
 										{
+											"language": "NN",
+											"value": "Passordene stemmer ikke overens"
+										},
+										{
 											"language": "NO",
 											"value": "Passordene er ikke like"
 										},
@@ -42374,6 +43548,10 @@
 										{
 											"language": "RU",
 											"value": "Пароли не совпадают"
+										},
+										{
+											"language": "SE",
+											"value": "Passord eai sáhtán ávkkástallet"
 										},
 										{
 											"language": "SH",
@@ -42720,6 +43898,10 @@
 											"value": "Geen geldige APPLID of andere fout"
 										},
 										{
+											"language": "NN",
+											"value": "Ingen gyldig APPLID eller annen feil"
+										},
+										{
 											"language": "NO",
 											"value": "Ingen gyldig APPID eller annen feil"
 										},
@@ -42738,6 +43920,10 @@
 										{
 											"language": "RU",
 											"value": "Нет действительного APPLID или другая ошибка."
+										},
+										{
+											"language": "SE",
+											"value": "Eai leat ovttas APPLID dahje eará várás"
 										},
 										{
 											"language": "SH",
@@ -42902,6 +44088,10 @@
 											"value": "Verkeerde activeringscode"
 										},
 										{
+											"language": "NN",
+											"value": "Feil aktiveringskode"
+										},
+										{
 											"language": "NO",
 											"value": "Feil aktiveringskode"
 										},
@@ -42920,6 +44110,10 @@
 										{
 											"language": "RU",
 											"value": "Неправильный код активации"
+										},
+										{
+											"language": "SE",
+											"value": "Válddejuvvojit aktivieringkoda"
 										},
 										{
 											"language": "SH",
@@ -43084,6 +44278,10 @@
 											"value": "Verkeerde gebruikersnaam / wachtwoord"
 										},
 										{
+											"language": "NN",
+											"value": "Feil brukernavn/passord"
+										},
+										{
 											"language": "NO",
 											"value": "Feil brukernavn / passord"
 										},
@@ -43102,6 +44300,10 @@
 										{
 											"language": "RU",
 											"value": "Неверное имя пользователя/пароль"
+										},
+										{
+											"language": "SE",
+											"value": "Válddejuvvojit geavaheaddji/namma"
 										},
 										{
 											"language": "SH",
@@ -43266,6 +44468,10 @@
 											"value": "Fout bij downloaden van nieuwe versie"
 										},
 										{
+											"language": "NN",
+											"value": "Feil ved nedlasting av ny versjon"
+										},
+										{
 											"language": "NO",
 											"value": "Feil ved nedlasting av ny versjon"
 										},
@@ -43284,6 +44490,10 @@
 										{
 											"language": "RU",
 											"value": "Ошибка загрузки новой версии"
+										},
+										{
+											"language": "SE",
+											"value": "Várás oahpahus ođđa várdii"
 										},
 										{
 											"language": "SH",
@@ -43448,6 +44658,10 @@
 											"value": "App bijgewerkt. Nieuwe aanmelding vereist"
 										},
 										{
+											"language": "NN",
+											"value": "Appen er oppdatert. Ny pålogging kreves"
+										},
+										{
 											"language": "NO",
 											"value": "App oppdatert. Ny pålogging kreves"
 										},
@@ -43466,6 +44680,10 @@
 										{
 											"language": "RU",
 											"value": "Приложение обновлено. Требуется новый вход в систему"
+										},
+										{
+											"language": "SE",
+											"value": "Applikašuvdna lea oahpahuvvon. Ođđa loggat lea dárbbašan"
 										},
 										{
 											"language": "SH",
@@ -43630,6 +44848,10 @@
 											"value": "Geen Launchpad-ID geselecteerd"
 										},
 										{
+											"language": "NN",
+											"value": "Ingen Launchpad-ID valgt"
+										},
+										{
 											"language": "NO",
 											"value": "Ingen Launchpad ID valgt"
 										},
@@ -43648,6 +44870,10 @@
 										{
 											"language": "RU",
 											"value": "Идентификатор панели запуска не выбран"
+										},
+										{
+											"language": "SE",
+											"value": "Eai leat váldán Launchpad ID"
 										},
 										{
 											"language": "SH",
@@ -43810,6 +45036,10 @@
 										{
 											"language": "NL",
 											"value": "Er is een time-out voor de sessie opgetreden. Probeer het opnieuw"
+										},
+										{
+											"language": "NN",
+											"value": "Økta har gått ut - prøv igjen"
 										},
 										{
 											"language": "NO",
@@ -43994,6 +45224,10 @@
 											"value": "Bestand is te groot. De maximale bestandsgrootte is 200k"
 										},
 										{
+											"language": "NN",
+											"value": "Fila er for stor. Maks filstørrelse er 200k"
+										},
+										{
 											"language": "NO",
 											"value": "Filen er for stor. Maks filstørrelse er 200k"
 										},
@@ -44174,6 +45408,10 @@
 										{
 											"language": "NL",
 											"value": "App niet gevonden of geen beleid"
+										},
+										{
+											"language": "NN",
+											"value": "Appen ble ikkje funnen eller har ingen retningslinjer"
 										},
 										{
 											"language": "NO",
@@ -44358,6 +45596,10 @@
 											"value": "Kennisgeving"
 										},
 										{
+											"language": "NN",
+											"value": "Varsel"
+										},
+										{
 											"language": "NO",
 											"value": "Varsel"
 										},
@@ -44540,6 +45782,10 @@
 											"value": "Activeringscode verzonden"
 										},
 										{
+											"language": "NN",
+											"value": "Aktiveringskode sendt"
+										},
+										{
 											"language": "NO",
 											"value": "Aktiveringskode sendt"
 										},
@@ -44719,6 +45965,10 @@
 										{
 											"language": "NL",
 											"value": "Niet geladen"
+										},
+										{
+											"language": "NN",
+											"value": "Ikke lasta"
 										},
 										{
 											"language": "NO",
@@ -44903,6 +46153,10 @@
 											"value": "Vingerafdrukverificatie inschakelen?"
 										},
 										{
+											"language": "NN",
+											"value": "Aktivere fingeravtrykk-autentisering?"
+										},
+										{
 											"language": "NO",
 											"value": "Aktiver fingeravtrykksautentisering?"
 										},
@@ -45083,6 +46337,10 @@
 										{
 											"language": "NL",
 											"value": "Face-ID-authenticatie inschakelen?"
+										},
+										{
+											"language": "NN",
+											"value": "Aktivere Face-ID-autentisering?"
 										},
 										{
 											"language": "NO",
@@ -45267,6 +46525,10 @@
 											"value": "Systeeminstellingen ontvangen."
 										},
 										{
+											"language": "NN",
+											"value": "Systeminnstillingar mottatt."
+										},
+										{
 											"language": "NO",
 											"value": "Systeminnstillinger mottatt."
 										},
@@ -45447,6 +46709,10 @@
 										{
 											"language": "NL",
 											"value": "Open"
+										},
+										{
+											"language": "NN",
+											"value": "Åpne"
 										},
 										{
 											"language": "NO",
@@ -45631,6 +46897,10 @@
 											"value": "Toevoegen aan favorieten"
 										},
 										{
+											"language": "NN",
+											"value": "Legg til i favoritt"
+										},
+										{
 											"language": "NO",
 											"value": "Legg til i favoritter"
 										},
@@ -45811,6 +47081,10 @@
 										{
 											"language": "NL",
 											"value": "Verwijderen uit favoriet"
+										},
+										{
+											"language": "NN",
+											"value": "Slett frå favoritt"
 										},
 										{
 											"language": "NO",
@@ -45995,6 +47269,10 @@
 											"value": "Hulp"
 										},
 										{
+											"language": "NN",
+											"value": "Hjelp"
+										},
+										{
 											"language": "NO",
 											"value": "Hjelp"
 										},
@@ -46172,6 +47450,10 @@
 											"value": "Formaat wijzigen"
 										},
 										{
+											"language": "NN",
+											"value": "Endre størrelse"
+										},
+										{
 											"language": "NO",
 											"value": "Endre størrelse"
 										},
@@ -46190,6 +47472,10 @@
 										{
 											"language": "RU",
 											"value": "Изменить размер"
+										},
+										{
+											"language": "SE",
+											"value": "Stuorit"
 										},
 										{
 											"language": "SH",
@@ -46352,6 +47638,10 @@
 										{
 											"language": "NL",
 											"value": "Wil je deze tegel uit je favorieten verwijderen?"
+										},
+										{
+											"language": "NN",
+											"value": "Vil du fjerne denne flisen frå favorittane dine?"
 										},
 										{
 											"language": "NO",
@@ -46536,6 +47826,10 @@
 											"value": "Favoriet"
 										},
 										{
+											"language": "NN",
+											"value": "Favoritt"
+										},
+										{
 											"language": "NO",
 											"value": "Favoritt"
 										},
@@ -46716,6 +48010,10 @@
 										{
 											"language": "NL",
 											"value": "Bevestiging nodig"
+										},
+										{
+											"language": "NN",
+											"value": "Bekreftelse nødvendig"
 										},
 										{
 											"language": "NO",
@@ -46900,6 +48198,10 @@
 											"value": "Ja, verwijderen"
 										},
 										{
+											"language": "NN",
+											"value": "Ja, fjern"
+										},
+										{
 											"language": "NO",
 											"value": "Ja, fjern"
 										},
@@ -47080,6 +48382,10 @@
 										{
 											"language": "NL",
 											"value": "Onverenigbaar"
+										},
+										{
+											"language": "NN",
+											"value": "Inkompatibel"
 										},
 										{
 											"language": "NO",
@@ -47264,6 +48570,10 @@
 											"value": "Verkeerde pincode!"
 										},
 										{
+											"language": "NN",
+											"value": "Feil PIN-kode!"
+										},
+										{
 											"language": "NO",
 											"value": "Feil pinkode!"
 										},
@@ -47444,6 +48754,10 @@
 										{
 											"language": "NL",
 											"value": "Geen opgeslagen gebruikersinformatie gevonden. Gelieve opnieuw in te loggen"
+										},
+										{
+											"language": "NN",
+											"value": "Ingen lagret brukerinformasjon funnet. Logg inn på nytt"
 										},
 										{
 											"language": "NO",
@@ -47642,6 +48956,10 @@
 										{
 											"language": "NL",
 											"value": "Nieuwe versie downloaden"
+										},
+										{
+											"language": "NN",
+											"value": "Laster ned ny versjon"
 										},
 										{
 											"language": "NO",
@@ -47862,6 +49180,10 @@
 											"value": "Nieuwe versie beschikbaar. Herladen vereist"
 										},
 										{
+											"language": "NN",
+											"value": "Ny versjon tilgjengelig. Omlasting påkrevd"
+										},
+										{
 											"language": "NO",
 											"value": "Ny versjon tilgjengelig. Last inn på nytt"
 										},
@@ -48080,6 +49402,10 @@
 											"value": "Update beschikbaar"
 										},
 										{
+											"language": "NN",
+											"value": "Oppdatering tilgjengelig"
+										},
+										{
 											"language": "NO",
 											"value": "Oppdatering tilgjengelig"
 										},
@@ -48281,6 +49607,10 @@
 											"value": "Log in"
 										},
 										{
+											"language": "NN",
+											"value": "Logg inn"
+										},
+										{
 											"language": "NO",
 											"value": "Logg inn"
 										},
@@ -48460,6 +49790,10 @@
 										{
 											"language": "NL",
 											"value": "Pincode instellen"
+										},
+										{
+											"language": "NN",
+											"value": "Sett PIN-kode"
 										},
 										{
 											"language": "NO",
@@ -48643,6 +49977,10 @@
 											"value": "Pincode"
 										},
 										{
+											"language": "NN",
+											"value": "PIN-kode"
+										},
+										{
 											"language": "NO",
 											"value": "Pinkode"
 										},
@@ -48824,6 +50162,10 @@
 											"value": "Gebruikers"
 										},
 										{
+											"language": "NN",
+											"value": "Brukere"
+										},
+										{
 											"language": "NO",
 											"value": "Brukere"
 										},
@@ -48842,6 +50184,10 @@
 										{
 											"language": "RU",
 											"value": "Пользователи"
+										},
+										{
+											"language": "SE",
+											"value": "Geavaheaddjit"
 										},
 										{
 											"language": "SH",
@@ -49355,7 +50701,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "23.11.16.175",
+	"ver": "23.11.17.125",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",
@@ -49377,7 +50723,7 @@
 	"ui5_theme": "sap_fiori_3",
 	"ui5_version": "customCDN",
 	"ui5_language": "",
-	"ui5_url": "https://openui5.hana.ondemand.com/1.71.47/resources/sap-ui-core.js",
+	"ui5_url": "https://openui5.hana.ondemand.com/1.71.59/resources/sap-ui-core.js",
 	"cus_theme": "",
 	"css": "file:///css.css",
 	"compiledCss": "file://script/undefined/undefined.script",
