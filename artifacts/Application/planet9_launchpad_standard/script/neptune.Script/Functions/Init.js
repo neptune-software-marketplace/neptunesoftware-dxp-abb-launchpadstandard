@@ -293,6 +293,8 @@ sap.ui.getCore().attachInit(function () {
         // Blackout tile message
         sap.n.Adaptive.editor(descBlackout, { editable: false, buttonList: [] });
     }, 100);
+
+    setTimeout(setiOSPWAIcons, 2000);
 });
 
 // Sorter Function

@@ -192,13 +192,18 @@ function showLaunchpadNotFoundError(status) {
     });
 }
 
+function isAppleDevice() {
+    // ios=iPhone, macintosh=iPad
+    return sap.ui.Device.os.ios || sap.ui.Device.os.macintosh;
+}
+
 function isPWAEnabled() {
     return AppCache.enablePwa;
 }
 
 const iconTypes = ['shortcut icon', 'icon', 'apple-touch-icon'];
 function setiOSPWAIcons() {
-    if (!sap.ui.Device.os.ios) {
+    if (!isAppleDevice()) {
         return;
     }
     
@@ -240,6 +245,21 @@ async function addUrlToCache({ url, method, cacheName }) {
         const cache = await caches.open(cacheName);
         cache.put(url, response);
         appCacheLog(`added to cache ${cacheName}`, url);
+    }
+}
+
+// If app is not offline, we can remove the launchpad main page from workbox cache
+//  otherwise even after logout we will see the launchpad screen
+function removeLaunchpadFromCache() {
+    const url = `${location.origin}${location.pathname}`;
+    if (!AppCache.isOffline) {
+        let cacheName = '';
+        if (new RegExp('/public/launchpad/').test(url)) cacheName = 'p9pwa-public';
+        else if (new RegExp('/launchpad/').test(url)) cacheName = 'p9pwa-launchpad';
+
+        if (cacheName.length > 0) {
+            caches.open(cacheName).then(c => c.delete(url));
+        }
     }
 }
 

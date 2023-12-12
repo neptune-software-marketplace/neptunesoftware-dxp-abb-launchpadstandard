@@ -93,7 +93,7 @@ let AppCacheLogonLocal = {
                 rec = JSON.parse(rec);
             } catch (e) {
                 console.log(e);
-                resolve('ERROR');
+                return resolve('ERROR');
             }
 
             jsonRequest({

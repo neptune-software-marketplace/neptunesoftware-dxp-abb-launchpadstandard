@@ -865,7 +865,7 @@ let AppCache = {
                     });
                 } catch (err) {
                     AppCache.handleTileError(err);
-                    sap.m.MessageToast.show('Init view error in : ' + value.toUpperCase());
+                    AppCache.showTileErrorMessage(`Init view error in: ${value.toUpperCase()}`)
                 }
 
                 if (AppCache.LoadOptions.appGUID) {
@@ -882,8 +882,7 @@ let AppCache = {
                     });
                 } catch (err) {
                     AppCache.handleTileError(err);
-                    sap.m.MessageToast.show('Init view error in : ' + value.toUpperCase());
-
+                    AppCache.showTileErrorMessage(`Init view error in: ${value.toUpperCase()}`);
                 }
             }
 
@@ -906,14 +905,11 @@ let AppCache = {
                 }
 
                 AppCache.buildView(applid);
-
             }).catch(function (err) {
                 AppCache.handleTileError(err);
-                sap.m.MessageToast.show(err);
+                AppCache.showTileErrorMessage(err);
             });
-
         }
-
     },
 
     buildView: function (value) {
@@ -1095,7 +1091,7 @@ let AppCache = {
     getView: function (value) {
         if (status === 'NOT_LOGGED_IN') {
             AppCache.handleTileError('getView: NOT_LOGGED_IN');
-            sap.m.MessageToast.show(AppCache_tSessionTimeout.getText());
+            AppCache.showTileErrorMessage(AppCache_tSessionTimeout.getText());
             return;
         }
 
@@ -1262,11 +1258,10 @@ let AppCache = {
                             if (b) b.destroy();
                         }
                     });
-                    sap.m.MessageToast.show(AppCache_tAppNotFound.getText());
+                    AppCache.showTileErrorMessage(AppCache_tAppNotFound.getText());
                 }
 
                 AppCache.handleTileError(error.statusText);
-
                 setTimeout(function () {
                     AppCache.hideGlobalAjaxError = false;
                 }, 100);
@@ -1280,7 +1275,32 @@ let AppCache = {
         sap.n.currentView = '';
         sap.n.Shell.closeTile({ id: AppCache.LoadOptions.appGUID });
         sap.n.Shell.closeSidepanel();
+        
+        if (AppCacheNav.getCurrentPage().getContent().length === 0) {
+            sap.n.Launchpad.reCreateCurrentPage();
+        }
+
         if (err) console.log(err);
+    },
+
+    showTileErrorMessage: function (err) {
+        const oDialog = new sap.m.Dialog({
+            type: sap.m.DialogType.Message,
+            title: 'Tile Error',
+            state: 'Error',
+            content: new sap.m.Text({ text: err.toString() }),
+            beginButton: new sap.m.Button({
+                text: 'OK',
+                press: function () {
+                    oDialog.close();
+                }
+            }),
+            afterClose: function() {
+                oDialog.destroy();
+            },
+        });
+
+        oDialog.open();
     },
 
     getWebApp: function (dataTile, dataCat) {
@@ -1379,7 +1399,7 @@ let AppCache = {
                             if (b) b.destroy();
                         }
                     });
-                    sap.m.MessageToast.show(AppCache_tAppNotFound.getText());
+                    AppCache.showTileErrorMessage(AppCache_tAppNotFound.getText());
                 }
 
                 AppCache.handleTileError(error.statusText);
@@ -1509,6 +1529,7 @@ let AppCache = {
         }
 
         AutoLockTimer.stop();
+        removeLaunchpadFromCache();
 
         if (AppCache.isMobile) {
             // Restricted Area
@@ -1637,7 +1658,11 @@ let AppCache = {
     getLogonTypeInfo: function (id) {
         let info = { type: 'local' };
         const { logonTypes } = modelDataSettings.oData;
-        Array.isArray(logonTypes) && logonTypes.forEach(function (data) {
+        if (!Array.isArray(logonTypes)) {
+            return info;
+        }
+
+        logonTypes.forEach(function (data) {
             if (data.id === id) info = data;
         });
 
@@ -1827,16 +1852,20 @@ let AppCache = {
             if (AppCache.userInfo && AppCache.userInfo.oidcToken) userData.oidcToken = AppCache.userInfo.oidcToken;
             if (AppCache.userInfo && AppCache.userInfo.oidcUser) userData.oidcUser = AppCache.userInfo.oidcUser;
 
-            AppCache.userInfo.logonData = AppCache.getLogonTypeInfo(AppCache_loginTypes.getSelectedKey());
+            const selectedKey = AppCache_loginTypes.getSelectedKey();
+            AppCache.userInfo.logonData = AppCache.getLogonTypeInfo(selectedKey);
 
-            if (isPWAEnabled() && AppCache.userInfo.logonData.type === 'azure-bearer') {
-                AppCacheLogonAzure.Signout();
+            // if modelDataSettings.oData.logonTypes fail to load
+            // by default logonData.type will be set to local, which might be incorrect
+            if (selectedKey === '') {
+                if (userData.azureToken || userData.azureUser) AppCache.userInfo.logonData.type = 'azure-bearer';
+                if (userData.oidcToken || userData.oidcUser) AppCache.userInfo.logonData.type = 'openid-connect';
             }
 
-            if (isPWAEnabled() && AppCache.userInfo.logonData.type === 'openid-connect') {
-                AppCacheLogonOIDC.Signout();
+            if (isPWAEnabled()) {
+                if (AppCache.userInfo.logonData.type === 'azure-bearer') AppCacheLogonAzure.Signout();
+                if (AppCache.userInfo.logonData.type === 'openid-connect') AppCacheLogonOIDC.Signout();
             }
-
         }
 
         // Set Layout
@@ -2196,9 +2225,9 @@ let AppCache = {
     },
 
     Update: function () {
-        appCacheLog('AppCache.Update: Starting');
         setiOSPWAIcons();
-
+        appCacheLog('AppCache.Update: Starting');
+        
         let afterPromise = function () {
             if (AppCache.isMobile) {
                 appCacheLog('AppCache.Update: Starting mobile');
@@ -2672,6 +2701,11 @@ let AppCache = {
     },
 
     Back: function () {
+        if (AppCacheNav.getCurrentPage().sId === 'AppCachePageStore') {
+            AppCache.Home();
+            return;
+        }
+
         location.hash = 'Back';
     },
 

@@ -2272,7 +2272,7 @@ sap.n.Launchpad = {
             if (AppCache.isMobile) {
                 imageUrl = dataTile.imageData;
             } else {
-                imageUrl = AppCache.Url + dataTile.image;
+                imageUrl = dataTile.image.startsWith('http') ? dataTile.image : `${AppCache.Url}${dataTile.image}`;
             }
 
             inlineStyle.setDOMContent(`
@@ -2327,9 +2327,10 @@ sap.n.Launchpad = {
             height = dataCat.imageHeight;
         }
 
+        const bgImg = url.startsWith('http') ? url : `${AppCache.Url}${url}`;
         if (url) {
             let id = `${nepPrefix()}CatHeader${dataCat.id}`;
-            lazyLoadImage(`${AppCache.Url}${url}`, `.${id} .sapMPanelContent`, 'style');
+            lazyLoadImage(bgImg, `.${id} .sapMPanelContent`, 'style');
         }
 
         return `
@@ -2402,7 +2403,7 @@ sap.n.Launchpad = {
         Array.isArray(modelAppCacheTiles.oData) && modelAppCacheTiles.oData.forEach(function (dataTile) {
             // Background Image
             if (dataTile.image) {
-                let imageUrl = AppCache.Url + dataTile.image;
+                let imageUrl = dataTile.image.startsWith('http') ? dataTile.image : `${AppCache.Url}${dataTile.image}`;
                 if (AppCache.isMobile) imageUrl = dataTile.imageData || imageUrl;
 
                 let repeat = (!!dataTile.imageRepeat) ? dataTile.imageRepeat : 'no-repeat';
@@ -2574,7 +2575,7 @@ sap.n.Launchpad = {
                 if (AppCache.isMobile) {
                     imageUrl = dataTile.imageData;
                 } else {
-                    imageUrl = AppCache.Url + dataTile.image;
+                    imageUrl = dataTile.image.startsWith('http') ? dataTile.image : `${AppCache.Url}${dataTile.image}`;
                 }
 
                 inlineStyle.setDOMContent(`
