@@ -86,15 +86,32 @@ function onDeviceReady() {
     // InAppBrowser 
     if (isCordova()) window.open = cordova.InAppBrowser.open;
 
-    if (isCordova() && sap.ui.Device.os.name !== "iOS") {
+    if (isCordova()) {
         let fnAjaxTransportProxy = function (options, originalOptions, jqXHR) {
+            const { dataType, dataTypes, contentType } = options;
+            if (
+                (dataType === "*" || (Array.isArray(dataTypes) && dataTypes.join("") === "*")) &&
+                contentType.includes('json')
+            ) {
+                options.dataTypes = ["text", "json"];
+            }
+
             return {
                 send: function (headers, completeCallback) {
                     if (isCordova() && cordova.plugin && cordova.plugin.http) {
                         cordovaRequest(options)
                             .then((result) => {
+                                let text = '';
+                                let json = {};
+
+                                try {
+                                    json = result;
+                                    text = JSON.stringify(json);
+                                } catch (e) {}
+                                
                                 completeCallback(200, "success", {
-                                    json: result,
+                                    json,
+                                    text,
                                 });
                             })
                             .catch((err, status) => {

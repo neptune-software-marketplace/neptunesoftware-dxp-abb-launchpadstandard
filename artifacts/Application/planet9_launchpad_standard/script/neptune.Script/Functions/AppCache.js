@@ -90,6 +90,8 @@ let AppCache = {
 
     //  AppCache Methods
     Load: function (value, options) {
+        appCacheLog(`AppCache.load: APPLID=${value}`);
+
         // Check Queue - Put in queue of working
         if (this.loadRunning) {
             let appData = {

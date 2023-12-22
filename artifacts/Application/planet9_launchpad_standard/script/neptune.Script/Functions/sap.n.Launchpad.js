@@ -887,18 +887,12 @@ sap.n.Launchpad = {
             header.addItem(oHeaderCell);
         }
 
-        // Number of tiles check, show header cells only if there are more than one tiles
-        const onlyOneCard = cards.getItems().length === 1;
-
         if (data.enableMessage) {
-            // Message 
             const message = sap.n.Launchpad.buildGroupMessage(data);
-            if (!onlyOneCard) {
-                const oHeaderCell = new sap.m.VBox(nepId(), {});
-                oHeaderCell.addStyleClass('nepTileMax');
-                oHeaderCell.addItem(message);
-                header.addItem(oHeaderCell);
-            }
+            const oHeaderCell = new sap.m.VBox(nepId(), {});
+            oHeaderCell.addStyleClass('nepTileMax sapUiSmallMarginBottom');
+            oHeaderCell.addItem(message);
+            header.addItem(oHeaderCell);
         }
 
         return header;
@@ -958,12 +952,12 @@ sap.n.Launchpad = {
     },
 
     BuildTiles: function (dataCat, subCat) {
-        const tiles = sap.n.Customization.getTiles(dataCat.id);
-        const tileGroups = sap.n.Customization.getTileGroups(dataCat.id);
-        if (tiles.length === 0 && tileGroups.length === 0) return;
-
-        let pageCatID = `page${dataCat.id}`;
         let isFav = dataCat.inclFav;
+        let pageCatID = `page${dataCat.id}`;
+
+        const tiles = sap.n.Customization.getTiles(dataCat.id, isFav);
+        const tileGroups = sap.n.Customization.getTileGroups(dataCat.id, isFav);
+        if (tiles.length === 0 && tileGroups.length === 0) return;
 
         sap.n.Launchpad.currentTileGroupPage = pageCatID;
         sap.n.currentView = '';
@@ -1018,12 +1012,10 @@ sap.n.Launchpad = {
         }
 
         if (pageCat.getContent().length === 0) {
-
             let versionParts = sap.ui.version.split(".");
 
             // BlockLayout vs Cards
             if (versionParts[0] >= 1 && versionParts[1] >= 64) {
-
                 sap.n.Launchpad.cardsAvailable = true;
 
                 //Grid containerOpenApp
@@ -2152,7 +2144,7 @@ sap.n.Launchpad = {
     },
 
     buildGroupMessage: function (dataCat) {
-        let message = new sap.m.MessageStrip(nepId(), {
+        return new sap.m.MessageStrip(nepId(), {
             type: dataCat.configMessage.type || 'None',
             text: dataCat.configMessage.text || '',
             showIcon: dataCat.configMessage.showIcon || false,
@@ -2160,9 +2152,6 @@ sap.n.Launchpad = {
             showCloseButton: dataCat.configMessage.showCloseButton || false,
             enableFormattedText: true,
         });
-
-        message.addStyleClass('nepTileCards');
-        return message;
     },
 
     // TILES

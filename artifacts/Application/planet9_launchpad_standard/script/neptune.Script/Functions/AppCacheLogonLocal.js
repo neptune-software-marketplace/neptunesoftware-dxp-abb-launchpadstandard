@@ -86,6 +86,7 @@ let AppCacheLogonLocal = {
     },
 
     Relog: function (auth, process) {
+        refreshingAuth = true;
         return new Promise(function (resolve, reject) {
             let rec = Base64.decode(auth);
 
@@ -103,6 +104,7 @@ let AppCacheLogonLocal = {
                     'login-path': getLoginData(),
                 },  
                 success: function (data) {
+                    refreshingAuth = false;
                     if (data.status && data.status === 'UpdatePassword') {
                         const url = new URL(data.link, location.href);
                         url.searchParams.append('reason', data.reason || 'other');
@@ -114,6 +116,7 @@ let AppCacheLogonLocal = {
                     }
                 },
                 error: function (result, status) {
+                    refreshingAuth = false;
                     if (result.status === 0) {
                         resolve('OK');
                         onOffline();

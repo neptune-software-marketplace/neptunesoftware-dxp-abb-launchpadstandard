@@ -94,6 +94,7 @@ let AppCacheLogonSap = {
     },
 
     Relog: function (auth) {
+        refreshingAuth = true;
         return new Promise(function (resolve, reject) {
             let logonData = AppCache.getLogonTypeInfo(AppCache_loginTypes.getSelectedKey());
             if (!logonData.path && AppCache.userInfo && AppCache.userInfo.logonData) {
@@ -112,10 +113,12 @@ let AppCacheLogonSap = {
                     'login-path': getLoginData(),
                 },
                 success: function (data) {
+                    refreshingAuth = false;
                     setSelectedLoginType('sap');
                     resolve(data);
                 },
                 error: function (result, status) {
+                    refreshingAuth = false;
                     if (result.status === 0) {
                         resolve('OK');
                         onOffline();

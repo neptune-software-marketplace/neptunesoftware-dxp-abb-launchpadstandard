@@ -12,6 +12,12 @@ let navBarTimeout;
 let screenSplit = 1300;
 let enableFavDnD = false;
 
+// e.g. during Azure refresh token, cookie-session get's updated. If any
+//  app or api call is made during this timeframe, it will log user out.
+//  refreshingAuth is a generic flag set to indicate when some auth change
+//  is in process.
+let refreshingAuth = false;
+
 // Get URL Parameters
 let params = {};
 if (location.search) {

@@ -66,21 +66,22 @@ function cordovaRequest(opts) {
             },
             (res) => {
                 let result;
-                    if (typeof res.data !== 'undefined') {
-                        try {
-                            result = JSON.parse(res.data);
-                        } catch (e) {
-                            // if JSON is not parsed correctly. e.g. in case of OK being returned from server after correct login
-                            // we will just set result to res.data
-                            result = res.data;
-                        }
+                if (typeof res.data !== 'undefined') {
+                    try {
+                        result = JSON.parse(res.data);
+                    } catch (e) {
+                        // if JSON is not parsed correctly. e.g. in case of OK being returned from server after correct login
+                        // we will just set result to res.data
+                        result = res.data;
                     }
+                }
 
                 success && success(result, 'success', {
                     headers: res.headers,
                     getResponseHeader: function (key) {
                         return this.headers[key.toLowerCase()];
-                    }});
+                    }
+                });
                 resolve(result);
             },
             (err) => {

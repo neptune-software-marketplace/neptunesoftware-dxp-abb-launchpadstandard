@@ -648,8 +648,8 @@ sap.n.Customization = {
         return ModelData.FindFirst(AppCacheCategoryChild, "id", tileGroupId);
     },
 
-    getTileGroups(id) {
-        if (this.isDisabled()) {
+    getTileGroups(id, isFav = false) {
+        if (this.isDisabled() || isFav) {
             const category = ModelData.FindFirst(AppCacheCategory, "id", id);
             if (category) return category.tilegroups;
         }
@@ -683,8 +683,8 @@ sap.n.Customization = {
         return ModelData.FindFirst(AppCacheTiles, "id", tileId);
     },
 
-    getTiles(id) {
-        if (this.isDisabled()) {
+    getTiles(id, isFav = false) {
+        if (this.isDisabled() || isFav) {
             const category = ModelData.FindFirst(AppCacheCategory, "id", id);
             if (category) return category.tiles;
 

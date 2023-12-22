@@ -392,6 +392,17 @@ sap.n.Card = {
         return cardContent;
     },
 
+    loadAppIntoTile(app, parentObject, startParams) {
+        if (!refreshingAuth) {
+            AppCache.Load(app, { parentObject, startParams });
+            return;
+        }
+
+        setTimeout(() => {
+            this.loadAppIntoTile(app, parentObject, startParams);
+        }, 50);
+    },
+
     buildCardBodyApplication: function (config) {
         let cardContent = new sap.m.Panel(nepId(), {
             backgroundDesign: 'Transparent'
@@ -402,13 +413,10 @@ sap.n.Card = {
         let startParams = {};
         try {
             startParams = JSON.parse(config.dataTile.startParams);
-        } catch (e) { }
+        } catch (e) {}
 
         if (config.dataTile.tileApplication) {
-            AppCache.Load(config.dataTile.tileApplication, {
-                parentObject: cardContent,
-                startParams: startParams,
-            });
+            this.loadAppIntoTile(config.dataTile.tileApplication, parentObject, startParams);
         }
 
         return cardContent;

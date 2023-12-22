@@ -127,6 +127,7 @@ let AppCacheLogonOIDC = {
         this.options = this._getLogonData();
         appCacheLog('OIDC: Starting method GetTokenWithRefreshToken');
 
+        refreshingAuth = true;
         return new Promise(function (resolve, reject) {
             request({
                 type: 'POST',
@@ -137,6 +138,7 @@ let AppCacheLogonOIDC = {
                     refresh_token: refreshToken,
                 },
                 success: function (data) {
+                    refreshingAuth = false;
                     setSelectedLoginType('openid-connect');
 
                     appCacheLog('OIDC: Got tokens from GetTokenWithRefreshToken');
@@ -147,7 +149,7 @@ let AppCacheLogonOIDC = {
                     resolve(data);
                 },
                 error: function (result) {
-
+                    refreshingAuth = false;
                     sap.ui.core.BusyIndicator.hide();
 
                     let errorText = 'OIDC: Error getting token from GetTokenWithRefreshToken';

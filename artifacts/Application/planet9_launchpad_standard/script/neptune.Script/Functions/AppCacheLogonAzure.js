@@ -420,7 +420,9 @@ let AppCacheLogonAzure = {
         const me = this;
         const account = this.msalObj.getAccountByUsername(AppCache.userInfo.username);
 
+        refreshingAuth = true;
         me.GetTokenPopup({ scopes: me.loginScopes, account }).then(function (azureToken) {
+            refreshingAuth = false;
             if (me.options.scope) {
                 me.GetTokenPopup({ scopes: me.options.scope.split(' '), account }).then(function (resourceToken) {
                     AppCacheLogonAzure._onTokenReadyMsal(azureToken, resourceToken);
@@ -431,6 +433,7 @@ let AppCacheLogonAzure = {
                 AppCacheLogonAzure._loginP9(azureToken.idToken, process);
             }
         }).catch(function (error) {
+            refreshingAuth = false;
             let errorText = 'Error getting refreshToken from Microsoft Entra ID';
             let errorCode = '';
 
@@ -498,12 +501,14 @@ let AppCacheLogonAzure = {
         };
 
         // Get Tokens from Azure
+        refreshingAuth = true;
         return request({
             type: 'POST',
             url: this.fullUri + '/user/logon/' + this.options.type + '/' + this.options.path + '/' + encodeURIComponent(url),
             contentType: 'application/x-www-form-urlencoded',
             data: data,
             success: function (data) {
+                refreshingAuth = false;
                 appCacheLog(`Azure Logon: Got refresh_token: ${data.refresh_token}`);
 
                 if (me.options.scope) {
@@ -517,7 +522,7 @@ let AppCacheLogonAzure = {
                 }
             },
             error: function (result, status) {
-
+                refreshingAuth = false;
                 sap.ui.core.BusyIndicator.hide();
 
                 let errorText = 'Error getting refreshToken from Microsoft Entra ID';

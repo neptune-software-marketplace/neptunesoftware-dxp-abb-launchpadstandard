@@ -33,6 +33,7 @@ let AppCacheLogonLdap = {
     },
 
     Relog: function (auth) {
+        refreshingAuth = true;
         return new Promise(function (resolve, reject) {
             let logonData = AppCache.getLogonTypeInfo(AppCache_loginTypes.getSelectedKey());
             if (!logonData.path && AppCache.userInfo && AppCache.userInfo.logonData) {
@@ -51,10 +52,12 @@ let AppCacheLogonLdap = {
                     'login-path': getLoginData(),
                 },
                 success: function (data) {
+                    refreshingAuth = false;
                     setSelectedLoginType('ldap');
                     resolve(data);
                 },
                 error: function (result, status) {
+                    refreshingAuth = false;
                     if (result.status === 0) {
                         resolve('OK');
                         onOffline();

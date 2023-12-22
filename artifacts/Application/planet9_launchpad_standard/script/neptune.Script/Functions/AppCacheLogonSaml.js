@@ -23,6 +23,7 @@ let AppCacheLogonSaml = {
     },
 
     Relog: function (data) {
+        refreshingAuth = true;
         try { data = JSON.parse(data); } catch (e) { }
         let loginWin = window.open(data.entryPoint, '_blank', 'location=yes');
 
@@ -32,6 +33,8 @@ let AppCacheLogonSaml = {
                 // check for login
                 fetchUserInfo(
                     function (data) {
+                        refreshingAuth = false;
+                        
                         // Clear
                         NumPad.numPasscode = 0;
                         NumPad.Clear();
@@ -45,6 +48,7 @@ let AppCacheLogonSaml = {
                     },
                     function (result, error) {
                         // Not logged on
+                        refreshingAuth = false;
                     }
                 );
             });
