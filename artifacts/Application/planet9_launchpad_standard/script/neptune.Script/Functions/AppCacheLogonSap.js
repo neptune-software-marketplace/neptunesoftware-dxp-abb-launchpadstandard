@@ -27,7 +27,7 @@ let AppCacheLogonSap = {
                 if (data.status === 'UpdatePassword') {
                     sap.ui.core.BusyIndicator.hide();
                     AppCache_formLogon.setVisible(false);      
-                    AppCache_formPasswordReset.setVisible(true);
+                    AppCache_formPasswordReset.setVisible(!isChpassDisabled());
                     txtFormNewPassRequired.setVisible(true);
                     AppCacheLogonSap.sapData = { detail: rec, path: logonData.path };
                 } else {
@@ -69,7 +69,7 @@ let AppCacheLogonSap = {
                         inNewPassword2.setValueState('Error');
                     } else {
                         AppCache.Auth = Base64.encode(JSON.stringify({username: detail.username, password: inNewPassword.getValue()}));
-                        AppCache_formLogon.setVisible(true);      
+                        AppCache_formLogon.setVisible(!isChpassDisabled());      
                         AppCache_formPasswordReset.setVisible(false);
                         setSelectedLoginType('sap');
                         AppCache.getUserInfo();

@@ -6,6 +6,10 @@ let AppCache = {
     CurrentUser: '',
     CurrentApp: '',
     CurrentConfig: '',
+    SystemConfig: {
+        role: '',
+        disableLaunchpadChpass: false,
+    },
     View: [],
     ViewChild: [],
     Dialogs: [],
@@ -489,7 +493,9 @@ let AppCache = {
         if (AppCache.userInfo.logonData && AppCache.userInfo.logonData.type) {
             switch (AppCache.userInfo.logonData.type) {
                 case 'local':
-                    AppCacheUserActionPassword.setVisible(true);
+                    if (!isChpassDisabled()) {
+                        AppCacheUserActionPassword.setVisible(true);
+                    }
                     AppCacheLogonLocal.Init();
                     break;
 
@@ -1507,7 +1513,7 @@ let AppCache = {
         AppCache.translate(navigator.language.slice(0, 2).toUpperCase());
 
         // Clear NumPad
-        NumPad.numPasscode = 0;
+        NumPad.attempts = 0;
         NumPad.numValue = '';
         NumPad.Verify = false;
 
@@ -1540,7 +1546,7 @@ let AppCache = {
             // Show Logon Screen
             AppCache.setEnableLogonScreen();
             AppCache.Initialized = false;
-            NumPad.numPasscode = 0;
+            NumPad.attempts = 0;
             NumPad.numValue = '';
             AppCache.Encrypted = '';
             AppCache_inUsername.setValue();
@@ -2842,6 +2848,21 @@ let AppCache = {
         AppCache_inPasscode2.setEnabled(true);
         AppCache_inPasscode1.setMaxLength(AppCache.passcodeLength);
         AppCache_inPasscode2.setMaxLength(AppCache.passcodeLength);
+
+        // use numeric keyboard for pincode and repeat pincode entry
+        function pincodeInputAfterRendering() {
+            let ref = this.getDomRef();
+            if (ref.nodeName.toUpperCase() !== 'INPUT') {
+                ref = ref.querySelector('input[type="password"]');
+            }
+
+            if (typeof ref !== 'undefined') {
+                ref.setAttribute("inputmode", "numeric");
+            }
+        }
+        AppCache_inPasscode1.onAfterRendering = pincodeInputAfterRendering;
+        AppCache_inPasscode2.onAfterRendering = pincodeInputAfterRendering;
+        
         AppCache.handleUserMenu();
 
         // PWA - Webauthn
@@ -3398,11 +3419,17 @@ let AppCache = {
 
                 appCacheLog('AppCache.Startup: Fetching users from database');
                 cacheLoaded = 0;
+
                 getCacheAppCacheUsers(true);
 
+                // incase of decryption error or for some other reason we fail to cacheLoaded++
+                //  we can continue forward using an attempt counter
+                
+                let waitingForCacheCounter = 0;
                 (function () {
                     function waitForCache() {
-                        if (cacheLoaded >= 1) {
+                        waitingForCacheCounter++;
+                        if (waitingForCacheCounter > 20 || cacheLoaded >= 1) {
                             appCacheLog('AppCache.Startup: Got users from database');
 
                             // If localStorage fails to decrypt
@@ -3415,15 +3442,12 @@ let AppCache = {
                             }
 
                             ModelData.Delete(AppCacheUsers, 'delete', true);
-
                             appCacheLog(modelAppCacheUsers.oData);
 
                             // Passcode or Logon
                             if (AppCache.enablePasscode) {
-
                                 // Set Visible Markers
                                 switch (AppCache.passcodeLength) {
-
                                     case 6:
                                         Passcode5.setVisible(true);
                                         Passcode6.setVisible(true);
@@ -3438,7 +3462,6 @@ let AppCache = {
 
                                     default:
                                         break;
-
                                 }
 
                                 if (!modelAppCacheUsers.oData.length) {
@@ -3446,9 +3469,7 @@ let AppCache = {
                                 } else {
                                     AppCache.setEnableUsersScreen();
                                 }
-
                             } else {
-
                                 // Check for AutoLogin
                                 AppCacheLogonLocal.AutoLoginGet().then(function (auth) {
 
@@ -3480,7 +3501,6 @@ let AppCache = {
                             setTimeout(function () {
                                 if (typeof navigator.splashscreen !== 'undefined') navigator.splashscreen.hide();
                             }, 300);
-
                         } else {
                             setTimeout(waitForCache, 50);
                         }
@@ -3515,27 +3535,10 @@ let AppCache = {
 
         // Custom Logo
         if (AppCache.CustomLogo && AppCache.CustomLogo !== 'null') {
-
-            if (isCordova() || location.protocol === 'file:') {
-                AppCacheShellLogoDesktop.setSrc('public/customlogo');
-                AppCacheShellLogoMobile.setSrc('public/customlogo');
-            } else {
-                AppCacheShellLogoDesktop.setSrc(AppCache.CustomLogo);
-                AppCacheShellLogoMobile.setSrc(AppCache.CustomLogo);
-            }
-
+            setCustomLogo();
         } else {
-
-            if (isCordova() || location.protocol === 'file:') {
-                AppCacheShellLogoDesktop.setSrc('public/images/nsball.png');
-                AppCacheShellLogoMobile.setSrc('public/images/nsball.png');
-            } else {
-                AppCacheShellLogoDesktop.setSrc('/public/images/nsball.png');
-                AppCacheShellLogoMobile.setSrc('/public/images/nsball.png');
-            }
-
+            setDefaultLogo();
         }
-
 
         // Check for OffLine 
         if (!navigator.onLine) onOffline();

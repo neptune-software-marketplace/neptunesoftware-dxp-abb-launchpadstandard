@@ -5,9 +5,18 @@ if (informSetPasswordOne.getValue() !== informSetPasswordTwo.getValue()) {
 } else if (!informSetPasswordOld.getValue()) {
     sap.m.MessageToast.show("Please provide the current password");
 } else {
+    if (isChpassDisabled()) {
+        sap.m.MessageBox.show(
+            "Changing password from the launchpad has been disabled", {
+                icon: sap.m.MessageBox.Icon.INFORMATION,
+                title: "Change Password",
+                actions: [sap.m.MessageBox.Action.OK],
+            }
+        );
+        return;
+    }
 
     diaSetPassword.setBusy(true);
-
     data = {
         id: AppCache.userInfo.id,
         old: informSetPasswordOld.getValue(),

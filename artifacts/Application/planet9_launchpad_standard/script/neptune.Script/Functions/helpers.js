@@ -346,7 +346,7 @@ function ensurePWACache() {
 
 function setSelectedLoginType(type) {
     localStorage.setItem('selectedLoginType', type);
-    AppCacheUserActionPassword.setVisible(type === 'local');
+    AppCacheUserActionPassword.setVisible(!isChpassDisabled() && type === 'local');
 }
 
 function clearSelectedLoginType() {
@@ -396,6 +396,13 @@ function downloadLazyLoadImages() {
         return;
     }
 
+    // set blob url's directly, otherwise domains have be explicitly
+    //  added to Azure Blob Storage to prevent CORS errors on fetch
+    if (src.includes('blob.core.windows.net')) {
+        setImageSrc(src, target, type);
+        return;
+    }
+
     fetch(src).then(res => {
         if (!res.ok) return;
         return res.blob();
@@ -421,6 +428,10 @@ function showCookieDialog() {
         if (typeof data === 'undefined' || Object.keys(data).length === 0 || data.visible) {
             const title = AppCache.config.cookieDialogTitle;
             const message = AppCache.config.cookieDialogMessage;
+
+            if (!title && !message) {
+                return;
+            }
 
             diaCookieHeaderTitle.setText(title);
             diaCookieContent.setText(message);
@@ -533,4 +544,58 @@ function fakePromise(returnValue, model, fnExpectedValue, defaultReturnValue, ti
 
 function getLoginData() {
     return `${AppCache?.CurrentConfig || location?.pathname || '/'}`;
+}
+
+function generateUrlForImgInArrayBuffer(fileName, buffer) {
+    const fileExt = fileName.substring(fileName.lastIndexOf('.') + 1);
+    const blob = new Blob([buffer], { type: `image/${fileExt}`})
+    return URL.createObjectURL(blob);
+}
+
+function setCustomLogo() {
+    if (isCordova() || location.protocol === 'file:') {
+        cordovaReadFile('www/public/customlogo', 'ArrayBuffer').then((result) => {
+            const src = generateUrlForImgInArrayBuffer(AppCache.CustomLogo, result);
+            AppCacheShellLogoDesktop.setSrc(src);
+            AppCacheShellLogoMobile.setSrc(src);
+        });
+        return;
+    }
+
+    AppCacheShellLogoDesktop.setSrc(AppCache.CustomLogo);
+    AppCacheShellLogoMobile.setSrc(AppCache.CustomLogo);
+}
+
+function setPWACustomLogo() {
+    if (isCordova() || location.protocol === 'file:') {
+        cordovaReadFile('www/public/customlogo', 'ArrayBuffer').then((result) => {
+            const src = generateUrlForImgInArrayBuffer(AppCache.CustomLogo, result);
+            pwaInstallAppLogo.setSrc(src);
+        });
+        return;
+    }
+    
+    pwaInstallAppLogo.setSrc(AppCache.CustomLogo);
+}
+
+function setDefaultLogo() {
+    const path = 'public/images/nsball.png';
+    if (isCordova() || location.protocol === 'file:') {
+        AppCacheShellLogoDesktop.setSrc(path);
+        AppCacheShellLogoMobile.setSrc(path);
+        return;
+    }
+
+    AppCacheShellLogoDesktop.setSrc(`/${path}`);
+    AppCacheShellLogoMobile.setSrc(`/${path}`);
+}
+
+function isChpassDisabled() {
+    return AppCache.SystemConfig.disableLaunchpadChpass;
+}
+
+function disableChpass() {
+    if (isChpassDisabled()) {
+        AppCacheUserActionPassword.setVisible(false);
+    }
 }

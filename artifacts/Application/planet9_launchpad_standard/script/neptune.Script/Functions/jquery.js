@@ -6,6 +6,36 @@ function serializeDataForQueryString(data) {
     return jQuery.param(data);
 }
 
+function isCordovaFilePluginAvailable() {
+    return typeof cordova.file !== 'undefined' && typeof cordova.file === 'object';
+}
+
+// read file from cordova app storage
+function cordovaReadFile(path, readAs = 'ArrayBuffer') {
+    return new Promise((resolve, reject) => {
+        if (!isCordovaFilePluginAvailable()) return reject('cordova file plugin is not available');
+
+        const filePath = `${cordova.file.applicationDirectory}${path}`;
+        window.resolveLocalFileSystemURL(filePath, (fileEntry) => {
+            fileEntry.file((file) => {
+                const reader = new FileReader();
+                reader.onloadend = function () {
+                    resolve(this.result);
+                };
+                
+                if (readAs === 'ArrayBuffer') reader.readAsArrayBuffer(file);
+                else if (readAs === 'Text') reader.readAsText(file);
+                else if (readAs === 'DataURL') reader.readAsDataURL(file)
+                else reject(`invalid readAs type specified in cordovaReadFile: ${filePath}`);
+            }, function (err) {
+                console.error(`cordovaReadFile - error reading file ${filePath}`, err);
+            });
+        }, (err) => {
+            console.error(`cordovaReadFile - error resolving file system url ${filePath}`, err);
+        });
+    });
+}
+
 /**
  * cordovaRequest is a proxy for jQuery.request
  * on mobile devices handling support for XHR, CORS and Cookies
@@ -17,7 +47,19 @@ function serializeDataForQueryString(data) {
  */
 function cordovaRequest(opts) {
     return new Promise((resolve, reject) => {
-        const url = opts.url[0] === '/' ? new URL(opts.url, AppCache.Url) : new URL(opts.url);
+        let url = '';
+        try {
+            if (opts.url.startsWith('/')) {
+                url = new URL(opts.url, AppCache.Url);
+            } else if (opts.url.startsWith('public/')) {
+                url = new URL(opts.url, location.origin);
+            } else {
+                url = new URL(opts.url);
+            }
+        } catch (err) {
+            console.error('cordovaRequest', err);
+        }
+        
         const method = opts.type.toLowerCase();
         let data = {};
         let headers = {};
@@ -34,6 +76,7 @@ function cordovaRequest(opts) {
             if (contentType.includes('json')) {
                 cordova.plugin.http.setDataSerializer('json');
             }
+
             if(contentType.includes('application/x-www-form-urlencoded')) {
                 cordova.plugin.http.setDataSerializer('urlencoded');
             }
@@ -110,8 +153,6 @@ function cordovaRequest(opts) {
         );
     });
 }
-
-
 
 function request(opts) {
     if (typeof opts.url === undefined) throw new Error('request: no url provided for the request');

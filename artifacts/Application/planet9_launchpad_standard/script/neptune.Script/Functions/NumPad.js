@@ -70,7 +70,7 @@ function onPasscode2Submit() {
 const NumPad = {
     numValue: '',
     Verify: false,
-    numPasscode: 0,
+    attempts: 0,
 
     ref: function () {
         return document.getElementById('AppCache_boxPasscodeEntry');
@@ -198,11 +198,13 @@ const NumPad = {
 
         if (auth === '') {
             // invalid pincode entry count
-            NumPad.numPasscode++;
+            NumPad.attempts++;
             NumPad.Clear();
 
-            if (parseInt(AppCache.numPasscode) === NumPad.numPasscode) {
-                NumPad.numPasscode = 0;
+            const allowedAttempts = parseInt(AppCache.numPasscode)
+
+            if (NumPad.attempts >= allowedAttempts) {
+                NumPad.attempts = 0;
                 NumPad.setPasscodeBusy(false);
                 AppCache.Logout();
                 AppCache.RemoveAllCache();
@@ -238,7 +240,7 @@ const NumPad = {
             appCacheLog('NumPad.Logon: Starting in offline mode');
 
             // Clear
-            NumPad.numPasscode = 0;
+            NumPad.attempts = 0;
             NumPad.Clear();
             NumPad.Verify = true;
 
@@ -290,7 +292,7 @@ const NumPad = {
                     // Check if OK 
                     if (values[0] === 'OK') {
                         // Clear
-                        NumPad.numPasscode = 0;
+                        NumPad.attempts = 0;
                         NumPad.Clear();
                         NumPad.Verify = true;
 
@@ -301,7 +303,7 @@ const NumPad = {
                         // ensures non-usage of launchpad locks the screen
                         AutoLockTimer.start();
                     } else {
-                        NumPad.numPasscode = 0;
+                        NumPad.attempts = 0;
                         NumPad.Clear();
                         NumPad.Verify = false;
 

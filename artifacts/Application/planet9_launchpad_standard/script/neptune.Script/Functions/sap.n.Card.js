@@ -416,7 +416,7 @@ sap.n.Card = {
         } catch (e) {}
 
         if (config.dataTile.tileApplication) {
-            this.loadAppIntoTile(config.dataTile.tileApplication, parentObject, startParams);
+            this.loadAppIntoTile(config.dataTile.tileApplication, cardContent, startParams);
         }
 
         return cardContent;

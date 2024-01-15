@@ -36,7 +36,7 @@ let AppCacheLogonSaml = {
                         refreshingAuth = false;
                         
                         // Clear
-                        NumPad.numPasscode = 0;
+                        NumPad.attempts = 0;
                         NumPad.Clear();
                         NumPad.Verify = true;
 

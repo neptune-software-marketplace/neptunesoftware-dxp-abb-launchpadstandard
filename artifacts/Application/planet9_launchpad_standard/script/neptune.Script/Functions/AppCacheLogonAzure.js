@@ -566,7 +566,7 @@ let AppCacheLogonAzure = {
                         appCacheLog(`Azure Logon: Successfully logged on to P9. Starting process: ${process}`);
 
                         // Start App
-                        NumPad.numPasscode = 0;
+                        NumPad.attempts = 0;
                         NumPad.Clear();
                         NumPad.Verify = true;
                         AppCache.Encrypted = '';

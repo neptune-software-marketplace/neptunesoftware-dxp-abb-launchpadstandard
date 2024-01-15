@@ -271,7 +271,9 @@ sap.ui.getCore().attachInit(function () {
             }
 
             let logonType = localStorage.getItem('selectedLoginType');
-            if (logonType === 'local') AppCacheUserActionPassword.setVisible(true);
+            if (logonType === 'local' && !isChpassDisabled()) {
+                AppCacheUserActionPassword.setVisible(true);
+            }
 
             // Startup
             AppCache.Startup();
@@ -300,6 +302,7 @@ sap.ui.getCore().attachInit(function () {
         sap.n.Adaptive.editor(descBlackout, { editable: false, buttonList: [] });
     }, 100);
 
+    setTimeout(disableChpass, 2000);
     setTimeout(setiOSPWAIcons, 2000);
 });
 
