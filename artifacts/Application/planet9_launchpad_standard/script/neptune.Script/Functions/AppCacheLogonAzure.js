@@ -117,16 +117,15 @@ let AppCacheLogonAzure = {
     },
 
     GetTokenPopup: function (request) {
-        const me = this;
-        return me.msalObj.acquireTokenSilent(request).catch(function (error) {
-            if (error instanceof msal.InteractionRequiredAuthError) {
-                return me.msalObj.acquireTokenPopup(request).then(tokenResponse => {
+        return this.msalObj.acquireTokenSilent(request).catch((err) => {
+            if (err instanceof msal.InteractionRequiredAuthError) {
+                return this.msalObj.acquireTokenPopup(request).then(tokenResponse => {
                     return tokenResponse;
                 }).catch(error => {
                     appCacheError('Azure GetTokenPopup: ' + error);
                 });
             } else {
-                appCacheError('Azure GetTokenPopup: ' + error);
+                appCacheError('Azure GetTokenPopup: ' + err);
             }
         });
     },
@@ -165,7 +164,7 @@ let AppCacheLogonAzure = {
     Relog: function (refreshToken, process) {
         if (this.useMsal() && !this.msalObj) {
             this.InitMsal().then(() => {
-                me._refreshToken(refreshToken, process);
+                this._refreshToken(refreshToken, process);
             });
         } else {
             this._refreshToken(refreshToken, process);
@@ -196,20 +195,15 @@ let AppCacheLogonAzure = {
         }
     },
 
-    Init: function () {
-
-    },
+    Init: function () {},
 
     useMsal: function () {
         if (this.options.azureMSALv2 && !isCordova()) return true;
     },
 
     _loginMsal: function () {
-
-        let me = this;
-
-        me.InitMsal().then(function () {
-            me.msalObj.loginPopup({ scopes: me.loginScopes, prompt: 'select_account' }).then(function (response) {
+        this.InitMsal().then(() => {
+            this.msalObj.loginPopup({ scopes: this.loginScopes, prompt: 'select_account' }).then((response) => {
                 AppCache.Auth = ModelData.genID();
                 AppCacheLogonAzure._loginP9(response.idToken);
             }).catch(function (error) {
@@ -394,20 +388,16 @@ let AppCacheLogonAzure = {
                 AppCache.Logout();
 
             }
-
         });
-
     },
 
     _refreshTokenMsal: function (process) {
-        const me = this;
-        const account = this.msalObj.getAccountByUsername(AppCache.userInfo.username);
-
         refreshingAuth = true;
-        me.GetTokenPopup({ scopes: me.loginScopes, account }).then(function (azureToken) {
+        const account = this.msalObj.getAccountByUsername(AppCache.userInfo.username);
+        this.GetTokenPopup({ scopes: this.loginScopes, account }).then((azureToken) => {
             refreshingAuth = false;
-            if (me.options.scope) {
-                me.GetTokenPopup({ scopes: me.options.scope.split(' '), account }).then(function (resourceToken) {
+            if (this.options.scope) {
+                this.GetTokenPopup({ scopes: this.options.scope.split(' '), account }).then(function (resourceToken) {
                     AppCacheLogonAzure._onTokenReadyMsal(azureToken, resourceToken);
                     AppCacheLogonAzure._loginP9(azureToken.idToken, process);
                 });
@@ -433,18 +423,17 @@ let AppCacheLogonAzure = {
     },
 
     _getResourceToken: function (refreshToken, scope) {
-        const me = this;
-        let data = {
+        const data = {
             client_id: AppCacheLogonAzure.options.clientID,
             scope: scope,
             refresh_token: refreshToken,
             grant_type: 'refresh_token',
-        }
-
-        return new Promise(function (resolve, reject) {
+        };
+        return new Promise((resolve, reject) => {
+            const { type, path } = this.options;
             return request({
                 type: 'POST',
-                url: me.fullUri + '/user/logon/' + me.options.type + '/' + me.options.path + '/' + encodeURIComponent(me._authUrl('token')),
+                url: `${this.fullUri}/user/logon/${type}/${path}/${encodeURIComponent(this._authUrl('token'))}`,
                 contentType: 'application/x-www-form-urlencoded',
                 data: data,
                 success: function (data) {
@@ -465,8 +454,6 @@ let AppCacheLogonAzure = {
     },
 
     _refreshToken: function (refreshToken, process) {
-        const me = this;
-
         if (!process) process = 'pin';
 
         if (this.msalObj) {
@@ -474,34 +461,32 @@ let AppCacheLogonAzure = {
             return;
         }
 
-        let url = this._authUrl('token');
-
-        let data = {
-            client_id: me.options.clientID,
+        // refresh token from Azure/EntraID
+        refreshingAuth = true;
+        const data = {
+            client_id: this.options.clientID,
             scope: this.loginScopes.join(' '),
             refresh_token: refreshToken,
             grant_type: 'refresh_token',
         };
-
-        // Get Tokens from Azure
-        refreshingAuth = true;
+        const { type, path } = this.options;
         return request({
+            data,
             type: 'POST',
-            url: this.fullUri + '/user/logon/' + this.options.type + '/' + this.options.path + '/' + encodeURIComponent(url),
+            url: `${this.fullUri}/user/logon/${type}/${path}/${encodeURIComponent(this._authUrl('token'))}`,
             contentType: 'application/x-www-form-urlencoded',
-            data: data,
             success: function (data) {
                 refreshingAuth = false;
                 appCacheLog(`Azure Logon: Got refresh_token: ${data.refresh_token}`);
 
-                if (me.options.scope) {
-                    me._getResourceToken(refreshToken, me.options.scope).then(function (resourceToken) {
-                        me._onTokenReady(data, resourceToken);
-                        me._loginP9(data.id_token, process);
+                if (this.options.scope) {
+                    this._getResourceToken(refreshToken, this.options.scope).then(function (resourceToken) {
+                        this._onTokenReady(data, resourceToken);
+                        this._loginP9(data.id_token, process);
                     });
                 } else {
-                    me._onTokenReady(data);
-                    me._loginP9(data.id_token, process);
+                    this._onTokenReady(data);
+                    this._loginP9(data.id_token, process);
                 }
             },
             error: function (result, status) {
@@ -619,18 +604,17 @@ let AppCacheLogonAzure = {
     },
 
     _openPopup: function (url, popUpWidth, popUpHeight) {
-
         popUpWidth = popUpWidth || 483;
         popUpHeight = popUpHeight || 600;
 
-        let winLeft = window.screenLeft ? window.screenLeft : window.screenX;
-        let winTop = window.screenTop ? window.screenTop : window.screenY;
+        const winLeft = window.screenLeft ? window.screenLeft : window.screenX;
+        const winTop = window.screenTop ? window.screenTop : window.screenY;
 
-        let width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-        let height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+        const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        const height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
-        let left = ((width / 2) - (popUpWidth / 2)) + winLeft;
-        let top = ((height / 2) - (popUpHeight / 2)) + winTop;
+        const left = ((width / 2) - (popUpWidth / 2)) + winLeft;
+        const top = ((height / 2) - (popUpHeight / 2)) + winTop;
 
         return window.open(url, '_blank', 'location=no,width=' + popUpWidth + ',height=' + popUpHeight + ',left=' + left + ',top=' + top);
     }
