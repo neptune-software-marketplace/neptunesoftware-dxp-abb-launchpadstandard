@@ -599,3 +599,33 @@ function disableChpass() {
         AppCacheUserActionPassword.setVisible(false);
     }
 }
+
+function getOpenUI5BootstrapPath() {
+    const src = document.getElementById('sap-ui-bootstrap').getAttribute('src');
+    if (src.includes('openui5.hana.ondemand.com')) {
+        return {
+            src,
+            isCDN: true,
+        }
+    }
+    
+    return {
+        src,
+        isCDN: false,
+    };
+}
+
+function getResourceBundlePath(ui5Lib) {
+    const ui5Version = AppCache.coreLanguageHandler.getUI5version();
+    const ui5LibConv = ui5Lib.replace(/[.]/g, '/');
+    const { isCDN, src } = getOpenUI5BootstrapPath();
+
+    if (isCordova() || location.protocol === 'file:') {
+        return `public/openui5/${ui5Version}/${ui5LibConv}/messagebundle.properties`
+    } else if (isCDN) {
+        const resourcePath = src.substring(0, src.lastIndexOf('/'));
+        return `${resourcePath}/${ui5LibConv}/messagebundle.properties`
+    }
+    
+    return `/public/openui5/${ui5Version}/${ui5LibConv}/messagebundle.properties`;
+}

@@ -3248,5 +3248,7 @@ sap.n.Launchpad = {
 
     isDesktop: function () { return sap.n.Launchpad.deviceType() === sap.n.Launchpad.device.DESKTOP; },
     isTablet: function () { return sap.n.Launchpad.deviceType() === sap.n.Launchpad.device.TABLET; },
-    isPhone: function () { return sap.n.Launchpad.deviceType() === sap.n.Launchpad.device.PHONE; },
+    isPhone: function () {
+        return sap.n.Launchpad.deviceType() === sap.n.Launchpad.device.PHONE || AppCache.isMobile;
+    },
 }

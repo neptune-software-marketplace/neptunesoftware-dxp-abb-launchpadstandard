@@ -7,29 +7,18 @@ let AppCacheLogonAzure = {
     loginScopes: ['user.read', 'profile', 'openid', 'offline_access'],
 
     InitMsal: function () {
-        let me = this;
-        return new Promise(function (resolve) {
-
-            if (me.msalObj) return resolve();
+        return new Promise((resolve) => {
+            if (this.msalObj) return resolve();
 
             let msalUrl = '/public/ms/msal.js';
             if (isCordova()) msalUrl = 'public/ms/msal.js';
 
-            AppCache.loadLibrary(msalUrl).then(function () {
-
-                let redirectUri = AppCacheLogonAzure.redirectUri;
-
-                if (AppCache.Url) {
-                    redirectUri = AppCache.Url + redirectUri;
-                } else {
-                    redirectUri = location.origin + redirectUri;
-                }
-
-                me.msalObj = new msal.PublicClientApplication({
+            AppCache.loadLibrary(msalUrl).then(() => {
+                this.msalObj = new msal.PublicClientApplication({
                     auth: {
-                        clientId: me.options.clientID,
-                        authority: 'https://login.microsoftonline.com/' + me.options.tenantId,
-                        redirectUri: redirectUri,
+                        clientId: this.options.clientID,
+                        authority: 'https://login.microsoftonline.com/' + this.options.tenantId,
+                        redirectUri: AppCache.Url ? `${AppCache.Url}${this.redirectUri}` : `${location.origin}${this.redirectUri}`,
                     },
                     cache: {
                         cacheLocation: 'sessionStorage',
@@ -174,19 +163,13 @@ let AppCacheLogonAzure = {
     },
 
     Relog: function (refreshToken, process) {
-
-        let me = this;
-
-        me.options = me._getLogonData();
-
-        if (me.useMsal() && !me.msalObj) {
-            me.InitMsal().then(function () {
+        if (this.useMsal() && !this.msalObj) {
+            this.InitMsal().then(() => {
                 me._refreshToken(refreshToken, process);
             });
         } else {
-            me._refreshToken(refreshToken, process);
+            this._refreshToken(refreshToken, process);
         }
-
     },
 
     Logoff: function () {
@@ -258,12 +241,12 @@ let AppCacheLogonAzure = {
     },
 
     _getLogonData: function () {
-
         let logonData;
-
         if (!this.fullUri) this.fullUri = AppCache.Url || location.origin;
 
-        if (AppCache.userInfo && AppCache.userInfo.logonData && AppCache.userInfo.logonData.id) {
+        const { userInfo } = AppCache;
+        // id is not available when logged in via azure
+        if (userInfo && userInfo.logonData && userInfo.logonData.id) {
             logonData = AppCache.userInfo.logonData;
         } else {
             logonData = AppCache.getLogonTypeInfo(AppCache_loginTypes.getSelectedKey());

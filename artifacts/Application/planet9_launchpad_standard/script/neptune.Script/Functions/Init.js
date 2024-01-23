@@ -179,26 +179,18 @@ sap.ui.getCore().attachInit(function () {
 
         // Config 
         if (AppCache.config) {
-            const c = AppCache.config;
-            
-            // Launchpad Simulate previous setup
-            if (!c.verticalMenu && !c.enableTopMenu && sap.n.Layout.activeAppsDisplay()) {
+            const { config } = AppCache;
+            if (sap.n.Layout.showActiveApps() && !config.verticalMenu && !config.enableTopMenu) {
                 AppCache.config.verticalMenu = false;
                 AppCache.config.enableTopMenu = true;
-
-                if (sap.n.Launchpad.isPhone()) {
-                    AppCache.config.activeAppsSideMobile = true;
-                } else {
-                    AppCache.config.activeAppsSide = true;
-                }
             }
 
             // Settings
-            if (c.languages) sap.n.Launchpad.applyLanguages(AppCache.config.languages);
-            if (c.hideTopHeader && !AppCache.isMobile) topMenu.setHeight('0px');
-            if (c.hideLoginSelection) AppCache_loginTypes.setVisible(false);
+            if (config.languages) sap.n.Launchpad.applyLanguages(AppCache.config.languages);
+            if (config.hideTopHeader && !AppCache.isMobile) topMenu.setHeight('0px');
+            if (config.hideLoginSelection) AppCache_loginTypes.setVisible(false);
             if (
-                c.verticalMenu &&
+                config.verticalMenu &&
                 sap.ui.Device.resize.width >= sap.n.Launchpad.verticalMenuLimit &&
                 !AppCache.isMobile
             ) {
@@ -206,9 +198,9 @@ sap.ui.getCore().attachInit(function () {
             }
 
             // Enhancement
-            if (c.enhancement) {
+            if (config.enhancement) {
                 try {
-                    eval(c.enhancement);
+                    eval(config.enhancement);
                 } catch (e) {
                     console.log(e);
                 }

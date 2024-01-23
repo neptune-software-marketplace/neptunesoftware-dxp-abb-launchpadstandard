@@ -292,7 +292,9 @@ let AppCacheLogonOIDC = {
         let logonData;
         if (!this.fullUri) this.fullUri = AppCache.Url || location.origin;
 
-        if (AppCache.userInfo && AppCache.userInfo.logonData && AppCache.userInfo.logonData.id) {
+        const { userInfo } = AppCache;
+        // id is not available on AppCache.userInfo.logonData 
+        if (userInfo && userInfo.logonData && userInfo.logonData.id) {
             logonData = AppCache.userInfo.logonData;
         } else {
             logonData = AppCache.getLogonTypeInfo(AppCache_loginTypes.getSelectedKey());

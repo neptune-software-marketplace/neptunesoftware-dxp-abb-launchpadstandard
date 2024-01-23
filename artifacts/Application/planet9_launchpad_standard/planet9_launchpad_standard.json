@@ -972,13 +972,6 @@
 																			"response": [],
 																			"attributes": [
 																				{
-																					"attribute": "styleClassVisibility",
-																					"grouping": "Properties",
-																					"value": "sapUiVisibleOnlyOnDesktop",
-																					"script": "",
-																					"translation": []
-																				},
-																				{
 																					"attribute": "styleClass",
 																					"grouping": "Properties",
 																					"value": "nepTopGroups",
@@ -1125,13 +1118,6 @@
 																					"attribute": "visible",
 																					"grouping": "Properties",
 																					"value": true,
-																					"script": "",
-																					"translation": []
-																				},
-																				{
-																					"attribute": "styleClassVisibility",
-																					"grouping": "Properties",
-																					"value": "sapUiHideOnPhone",
 																					"script": "",
 																					"translation": []
 																				},
@@ -50701,7 +50687,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "24.1.11.1344",
+	"ver": "24.1.22.1430",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",

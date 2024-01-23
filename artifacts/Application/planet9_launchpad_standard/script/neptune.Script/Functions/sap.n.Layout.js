@@ -71,44 +71,49 @@ sap.n.Layout = {
     },
 
     showAppTitle: function () {
-        if (typeof AppCache.config.showAppTitle === 'undefined') {
-            return true;
+        if (sap.n.Launchpad.isPhone()) {
+            if (typeof AppCache.config.showAppTitleMobile === 'undefined') {
+                return false;
+            }
+            return AppCache.config.showAppTitleMobile;
         }
 
-        return sap.n.Launchpad.isPhone()
-            ? !!AppCache.config.showAppTitleMobile
-            : AppCache.config.showAppTitle;
+        if (typeof AppCache.config.showAppTitle === 'undefined') {
+            return false;
+        }
+        return AppCache.config.showAppTitle;
     },
 
     activeAppsSide: function () {
-        if (typeof AppCache.config.activeAppsSide === 'undefined') {
-            return true;
+        if (sap.n.Launchpad.isPhone()) {
+            if (typeof AppCache.config.activeAppsSideMobile === 'undefined') {
+                return false;
+            }
+            return AppCache.config.activeAppsSideMobile;
         }
-
-        return sap.n.Launchpad.isPhone()
-            ? !!AppCache.config.activeAppsSideMobile
-            : AppCache.config.activeAppsSide;
+        
+        if (typeof AppCache.config.activeAppsSide === 'undefined') {
+            return false;
+        }
+        return AppCache.config.activeAppsSide;
     },
 
     activeAppsTop: function () {
-        if (typeof AppCache.config.activeAppsTop === 'undefined') {
-            return true;
+        if (sap.n.Launchpad.isPhone()) {
+            if (typeof AppCache.config.activeAppsTopMobile === 'undefined') {
+                return false;
+            }
+            return AppCache.config.activeAppsTopMobile;
         }
-
-        return sap.n.Launchpad.isPhone()
-            ? !!AppCache.config.activeAppsTopMobile
-            : AppCache.config.activeAppsTop;
+        
+        if (typeof AppCache.config.activeAppsTop === 'undefined') {
+            return false;
+        }
+        return AppCache.config.activeAppsTop;
     },
     
-    activeAppsDisplay: function () {
-        return sap.n.Launchpad.isPhone()
-            ? !AppCache.config.activeAppsSideMobile &&
-                  !AppCache.config.showAppTitleMobile &&
-                  !AppCache.config.activeAppsTopMobile
-            : (activeAppsDisplay =
-                  !AppCache.config.activeAppsSide &&
-                  !AppCache.config.showAppTitle &&
-                  !AppCache.config.activeAppsTop);
+    showActiveApps: function () {
+        return !this.showAppTitle() && !this.activeAppsSide() && !this.activeAppsTop();
     },
 
     isVerticalMenuPinned: function() {

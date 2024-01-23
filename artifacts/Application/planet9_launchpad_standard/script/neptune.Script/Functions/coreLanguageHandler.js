@@ -22,23 +22,13 @@ AppCache.coreLanguageHandler = {
     getResourceBundle: function (ui5Lib, bundleLanguage) {
         return new Promise(function (resolve, reject) {
             sap.ui.require(['sap/base/i18n/ResourceBundle'], function (ResourceBundle) {
-                let ui5Version = this.getUI5version();
-                let ui5LibConv = ui5Lib.replace(/[.]/g, '/');
-                let urlPath = '/';
-
-                if (isCordova() || location.protocol === 'file:') urlPath = '';
-
-                urlPath += `public/openui5/${ui5Version}/${ui5LibConv}/messagebundle.properties`
-
                 ResourceBundle.create({
-                    url: urlPath,
+                    url: getResourceBundlePath(ui5Lib),
                     async: true,
                     locale: bundleLanguage
-
                 }).then(function (resourceBundle) {
                     resolve(resourceBundle);
                 });
-
             }.bind(this));
         }.bind(this));
     },
