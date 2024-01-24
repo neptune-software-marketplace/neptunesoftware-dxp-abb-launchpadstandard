@@ -477,7 +477,7 @@ let AppCacheLogonAzure = {
             type: 'POST',
             url: `${this.fullUri}/user/logon/${type}/${path}/${encodeURIComponent(this._authUrl('token'))}`,
             contentType: 'application/x-www-form-urlencoded',
-            success: function (data) {
+            success: (data) => {
                 refreshingAuth = false;
                 appCacheLog(`Azure Logon: Got refresh_token: ${data.refresh_token}`);
 
