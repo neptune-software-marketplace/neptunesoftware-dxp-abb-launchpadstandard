@@ -40,7 +40,6 @@ let AppCacheLogonAzure = {
         }
 
         this.state = Date.now();
-
         let logonWin = this._openPopup(this._loginUrl(loginHint));
 
         if (!isCordova()) {
@@ -53,7 +52,7 @@ let AppCacheLogonAzure = {
 
             // Browser
             this._waitForPopupDesktop(logonWin, (url) => {
-                let authResponse = AppCacheLogonAzure._getHashParams(url);
+                let authResponse = this._getHashParams(url);
 
                 // Get response
                 if (authResponse) {
@@ -67,13 +66,13 @@ let AppCacheLogonAzure = {
                     appCacheLog(authResponse);
 
                     // Prevent cross-site request forgery attacks
-                    if (parseInt(authResponse.state) !== AppCacheLogonAzure.state) {
+                    if (parseInt(authResponse.state) !== this.state) {
                         sap.m.MessageToast.show('Cross-site request forgery detected');
                         return;
                     }
 
                     // Request Access/Refresh Tokens 
-                    AppCacheLogonAzure._getToken(authResponse);
+                    this._getToken(authResponse);
                 } else {
                     console.log('No token response, or window closed manually');
                 }
@@ -82,7 +81,7 @@ let AppCacheLogonAzure = {
             // Mobile InAppBrowser
             logonWin.addEventListener('loadstop', () => {
                 logonWin.executeScript({ code: 'location.search' }, (url) => {
-                    let authResponse = AppCacheLogonAzure._getHashParams(url[0]);
+                    let authResponse = this._getHashParams(url[0]);
 
                     // Get response
                     if (authResponse) {
@@ -102,13 +101,13 @@ let AppCacheLogonAzure = {
                             logonWin.close();
 
                             // Prevent cross-site request forgery attacks
-                            if (parseInt(authResponse.state) !== AppCacheLogonAzure.state) {
+                            if (parseInt(authResponse.state) !== this.state) {
                                 sap.m.MessageToast.show('Cross-site request forgery detected');
                                 return;
                             }
 
                             // Request Access/Refresh Tokens 
-                            AppCacheLogonAzure._getToken(authResponse);
+                            this._getToken(authResponse);
                         }
                     }
                 });
@@ -134,7 +133,7 @@ let AppCacheLogonAzure = {
         localStorage.removeItem('p9azuretoken');
         localStorage.removeItem('p9azuretokenv2');
 
-        if (AppCacheLogonAzure.options.azureSilentSignout) {
+        if (this.options.azureSilentSignout) {
             let signoutFrame = document.getElementById('azureSignout');
             if (signoutFrame) signoutFrame.setAttribute('src', 'https://login.microsoftonline.com/common/oauth2/logout');
         } else {
@@ -161,9 +160,10 @@ let AppCacheLogonAzure = {
         }
     },
 
-    Relog: function (refreshToken, process) {
-        this.options = this._getLogonData();
 
+
+    Relog: function (refreshToken, process) {
+        this._setOptionsIfEmpty();
         if (this.useMsal() && !this.msalObj) {
             this.InitMsal().then(() => {
                 this._refreshToken(refreshToken, process);
@@ -174,19 +174,17 @@ let AppCacheLogonAzure = {
     },
 
     Logoff: function () {
-
         // Logout Planet 9
         if (navigator.onLine && AppCache.isOffline === false) {
-
-            AppCacheLogonAzure.Signout();
+            this.Signout();
 
             jsonRequest({
                 url: this.fullUri + '/user/logout',
-                success: function (data) {
+                success: (data) => {
                     AppCache.clearCookies();
                     appCacheLog('Azure Logon: Successfully logged out');
                 },
-                error: function (result, status) {
+                error: (result, status) => {
                     sap.ui.core.BusyIndicator.hide();
                     AppCache.clearCookies();
                     appCacheLog('Azure Logon: Successfully logged out, in offline mode');
@@ -207,8 +205,8 @@ let AppCacheLogonAzure = {
         this.InitMsal().then(() => {
             this.msalObj.loginPopup({ scopes: this.loginScopes, prompt: 'select_account' }).then((response) => {
                 AppCache.Auth = ModelData.genID();
-                AppCacheLogonAzure._loginP9(response.idToken);
-            }).catch(function (error) {
+                this._loginP9(response.idToken);
+            }).catch((error) => {
                 if (error && error.toString().indexOf('Failed to fetch') > -1) {
                     sap.m.MessageToast.show('Failed to fetch token. Redirect URI in azure must be set to Single Page Application');
                 } else {
@@ -219,7 +217,6 @@ let AppCacheLogonAzure = {
     },
 
     _getHashParams: function (token) {
-
         if (!token) return null;
         if (token.indexOf('?') > -1) token = token.split('?')[1];
 
@@ -231,50 +228,62 @@ let AppCacheLogonAzure = {
             d = function (s) {
                 return decodeURIComponent(s.replace(a, ' '));
             };
-        while (e = r.exec(params))
+        while (e = r.exec(params)) {
             hashParams[d(e[1])] = d(e[2]);
+        }
         return hashParams;
     },
 
-    _getLogonData: function () {
-        let logonData;
-        if (!this.fullUri) this.fullUri = AppCache.Url || location.origin;
+    _setOptionsIfEmpty: function() {
+        this._setFullUriIfEmpty();
+        if (Object.keys(this.options).length === 0) {
+            try {
+                this.options = JSON.parse(localStorage.getItem('p9logonData'));
+            } catch (err) {}
+        }
+    },
 
-        const { userInfo } = AppCache;
-        // id is not available when logged in via azure
-        if (userInfo && userInfo.logonData && userInfo.logonData.id) {
-            logonData = AppCache.userInfo.logonData;
-        } else {
-            logonData = AppCache.getLogonTypeInfo(AppCache_loginTypes.getSelectedKey());
+    _setFullUriIfEmpty: function () {
+        if (!this.fullUri) {
+            this.fullUri = AppCache.Url || location.origin;
+        }
+    },
+
+    _getLogonData: function () {
+        this._setFullUriIfEmpty();
+
+        if (AppCache.userInfo && AppCache.userInfo.logonData) {
+            return AppCache.userInfo.logonData;
         }
 
-        return logonData;
+        return AppCache.getLogonTypeInfo(AppCache_loginTypes.getSelectedKey());
     },
 
     _authUrl: function (endPoint) {
-        return 'https://login.microsoftonline.com/' + AppCacheLogonAzure.options.tenantId + '/oauth2/v2.0/' + endPoint + '?';
+        return 'https://login.microsoftonline.com/' + this.options.tenantId + '/oauth2/v2.0/' + endPoint + '?';
     },
 
     _loginUrl: function (loginHint) {
         let data = {
-            client_id: AppCacheLogonAzure.options.clientID,
-            redirect_uri: this.fullUri + AppCacheLogonAzure.redirectUri,
-            scope: AppCacheLogonAzure.loginScopes.join(' '),
+            client_id: this.options.clientID,
+            redirect_uri: this.fullUri + this.redirectUri,
+            scope: this.loginScopes.join(' '),
             // nonce: ModelData.genID(),
             state: this.state,
             prompt: 'select_account',
             response_type: 'code'
         };
 
-        if (loginHint) data.login_hint = loginHint;
+        if (loginHint) {
+            data.login_hint = loginHint;
+        }
 
         return this._authUrl('authorize') + serializeDataForQueryString(data);
     },
 
     _logoutUrl: function () {
-
         let data = {
-            post_logout_redirect_uri: this.fullUri + AppCacheLogonAzure.redirectUri
+            post_logout_redirect_uri: this.fullUri + this.redirectUri
         };
 
         return this._authUrl('logout') + serializeDataForQueryString(data);
@@ -293,15 +302,15 @@ let AppCacheLogonAzure = {
         };
         //New token format
         AppCache.userInfo.v2azureToken = data;
-        AppCache.userInfo.azureUser = AppCacheLogonAzure._parseJwt(AppCache.userInfo.azureToken.idToken);
+        AppCache.userInfo.azureUser = this._parseJwt(AppCache.userInfo.azureToken.idToken);
 
         if (resourceToken) {
             AppCache.userInfo.v2azureResourceToken = resourceToken;
         }
 
         const nextRelog = (data.expiresOn - new Date()) - 120000;
-        setTimeout(function () {
-            AppCacheLogonAzure.Relog(null, 'refresh');
+        setTimeout(() => {
+            this.Relog(null, 'refresh');
         }, nextRelog);
     },
 
@@ -320,46 +329,42 @@ let AppCacheLogonAzure = {
         let expire_in_ms = (data.expires_in * 1000) - 120000;
 
         AppCache.userInfo.azureToken = data;
-        AppCache.userInfo.azureUser = AppCacheLogonAzure._parseJwt(AppCache.userInfo.azureToken.id_token);
-
+        AppCache.userInfo.azureUser = this._parseJwt(AppCache.userInfo.azureToken.id_token);
 
         if (resourceToken) {
             AppCache.userInfo.azureResourceToken = resourceToken;
         }
 
-        if (AppCacheLogonAzure.autoRelog) {
-            clearInterval(AppCacheLogonAzure.autoRelog);
-            AppCacheLogonAzure.autoRelog = null;
+        if (this.autoRelog) {
+            clearInterval(this.autoRelog);
+            this.autoRelog = null;
         }
 
-        AppCacheLogonAzure.autoRelog = setInterval(function () {
+        this.autoRelog = setInterval(() => {
             if (AppCache.isRestricted && !AppCache.inBackground) return;
-            AppCacheLogonAzure.Relog(data.refresh_token, 'refresh');
+            this.Relog(data.refresh_token, 'refresh');
         }, expire_in_ms);
 
         appCacheLog('Azure Logon: User Data');
         appCacheLog(AppCache.userInfo);
-
         return;
     },
 
     _getToken: function (response) {
-        let url = this._authUrl('token');
-        let data = {
-            client_id: AppCacheLogonAzure.options.clientID,
-            redirect_uri: this.fullUri + AppCacheLogonAzure.redirectUri,
-            scope: AppCacheLogonAzure.loginScopes.join(' '),
+        const data = {
+            client_id: this.options.clientID,
+            redirect_uri: this.fullUri + this.redirectUri,
+            scope: this.loginScopes.join(' '),
             code: response.code,
             grant_type: 'authorization_code',
         };
-
+        const { type, path } = this.options;
         return request({
             type: 'POST',
-            url: this.fullUri + '/user/logon/' + this.options.type + '/' + this.options.path + '/' + encodeURIComponent(url),
+            url: `${this.fullUri}/user/logon/${type}/${path}/${encodeURIComponent(this._authUrl('token'))}`,
             contentType: 'application/x-www-form-urlencoded',
             data: data,
-            success: function (data) {
-
+            success: (data) => {
                 if (data && !data.refresh_token) {
                     sap.m.MessageToast.show('Error getting refresh_token from Azure. Add scope offline_access in authentication configuration');
                     appCacheError('Azure Logon: Error getting refresh_token. Add scope offline_access in authentication configuration');
@@ -371,11 +376,10 @@ let AppCacheLogonAzure = {
 
                 AppCache.Auth = data.refresh_token;
 
-                AppCacheLogonAzure._onTokenReady(data);
-                AppCacheLogonAzure._loginP9(data.id_token);
+                this._onTokenReady(data);
+                this._loginP9(data.id_token);
             },
-            error: function (result, status) {
-
+            error: (result, status) => {
                 sap.ui.core.BusyIndicator.hide();
 
                 let errorCode = '';
@@ -388,7 +392,6 @@ let AppCacheLogonAzure = {
                 sap.m.MessageToast.show(errorText);
                 appCacheLog(`${errorCode}: ${errorText}`);
                 AppCache.Logout();
-
             }
         });
     },
@@ -399,15 +402,15 @@ let AppCacheLogonAzure = {
         this.GetTokenPopup({ scopes: this.loginScopes, account }).then((azureToken) => {
             refreshingAuth = false;
             if (this.options.scope) {
-                this.GetTokenPopup({ scopes: this.options.scope.split(' '), account }).then(function (resourceToken) {
-                    AppCacheLogonAzure._onTokenReadyMsal(azureToken, resourceToken);
-                    AppCacheLogonAzure._loginP9(azureToken.idToken, process);
+                this.GetTokenPopup({ scopes: this.options.scope.split(' '), account }).then((resourceToken) => {
+                    this._onTokenReadyMsal(azureToken, resourceToken);
+                    this._loginP9(azureToken.idToken, process);
                 });
             } else {
-                AppCacheLogonAzure._onTokenReadyMsal(azureToken);
-                AppCacheLogonAzure._loginP9(azureToken.idToken, process);
+                this._onTokenReadyMsal(azureToken);
+                this._loginP9(azureToken.idToken, process);
             }
-        }).catch(function (error) {
+        }).catch((error) => {
             refreshingAuth = false;
             let errorText = 'Error getting refreshToken from Microsoft Entra ID';
             let errorCode = '';
@@ -426,7 +429,7 @@ let AppCacheLogonAzure = {
 
     _getResourceToken: function (refreshToken, scope) {
         const data = {
-            client_id: AppCacheLogonAzure.options.clientID,
+            client_id: this.options.clientID,
             scope: scope,
             refresh_token: refreshToken,
             grant_type: 'refresh_token',
@@ -438,10 +441,10 @@ let AppCacheLogonAzure = {
                 url: `${this.fullUri}/user/logon/${type}/${path}/${encodeURIComponent(this._authUrl('token'))}`,
                 contentType: 'application/x-www-form-urlencoded',
                 data: data,
-                success: function (data) {
+                success: (data) => {
                     resolve(data);
                 },
-                error: function (result, status) {
+                error: (result, status) => {
                     sap.ui.core.BusyIndicator.hide();
 
                     if (result.responseJSON && result.responseJSON.error_description) {
@@ -482,7 +485,7 @@ let AppCacheLogonAzure = {
                 appCacheLog(`Azure Logon: Got refresh_token: ${data.refresh_token}`);
 
                 if (this.options.scope) {
-                    this._getResourceToken(refreshToken, this.options.scope).then(function (resourceToken) {
+                    this._getResourceToken(refreshToken, this.options.scope).then((resourceToken) => {
                         this._onTokenReady(data, resourceToken);
                         this._loginP9(data.id_token, process);
                     });
@@ -491,25 +494,21 @@ let AppCacheLogonAzure = {
                     this._loginP9(data.id_token, process);
                 }
             },
-            error: function (result, status) {
+            error: (result, status) => {
                 refreshingAuth = false;
                 sap.ui.core.BusyIndicator.hide();
 
-                let errorText = 'Error getting refreshToken from Microsoft Entra ID';
                 let errorCode = '';
-
+                let errorText = 'Error getting refreshToken from Microsoft Entra ID';
                 if (result.responseJSON && result.responseJSON.error_description) {
-
+                    errorCode = errorText.substring(0, 12);
                     errorText = result.responseJSON.error_description;
-                    errorCode = errorText.substr(0, 12);
 
                     switch (errorCode) {
-
                         case 'AADSTS700082':
                             NumPad.Clear();
                             AppCache.Logout();
                             break;
-
                     }
                 }
 
@@ -522,16 +521,15 @@ let AppCacheLogonAzure = {
     },
 
     _loginP9: function (idToken, process) {
-
+        const { type, path } = this.options;
         return request({
             type: 'POST',
-            url: AppCache.Url + '/user/logon/' + AppCacheLogonAzure.options.type + '/' + AppCacheLogonAzure.options.path + AppCache._getLoginQuery(),
+            url: `${AppCache.Url}/user/logon/${type}/${path}${AppCache._getLoginQuery()}`,
             headers: { 'Authorization': 'Bearer ' + idToken, 'login-path': getLoginData() },
-            success: function (data) {
-                setSelectedLoginType(AppCacheLogonAzure.options.type);
+            success: (data) => {
+                setSelectedLoginType(this.options.type);
 
                 switch (process) {
-
                     case 'pin':
                         appCacheLog(`Azure Logon: Successfully logged on to P9. Starting process: ${process}`);
 
@@ -552,11 +550,9 @@ let AppCacheLogonAzure = {
                         appCacheLog('Azure Logon: Successfully logged on to P9. Starting process: Get User Info');
                         AppCache.getUserInfo();
                         break;
-
                 }
-
             },
-            error: function (result, status) {
+            error: (result, status) => {
                 sap.ui.core.BusyIndicator.hide();
                 let errorText = 'Error logging on P9, or P9 not online';
                 if (result.responseJSON && result.responseJSON.status) errorText = result.responseJSON.status;
@@ -568,7 +564,7 @@ let AppCacheLogonAzure = {
 
     _waitForPopupDesktop: function (popupWin, onClose) {
         let url = '';
-        let winCheckTimer = setInterval(function () {
+        let winCheckTimer = setInterval(() => {
             try {
                 url = popupWin.location.href ?? '';
             } catch (err) {
@@ -620,5 +616,4 @@ let AppCacheLogonAzure = {
 
         return window.open(url, '_blank', 'location=no,width=' + popUpWidth + ',height=' + popUpHeight + ',left=' + left + ',top=' + top);
     }
-
 };
