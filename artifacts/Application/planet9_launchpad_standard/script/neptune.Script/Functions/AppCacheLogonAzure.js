@@ -162,6 +162,8 @@ let AppCacheLogonAzure = {
     },
 
     Relog: function (refreshToken, process) {
+        this.options = this._getLogonData();
+
         if (this.useMsal() && !this.msalObj) {
             this.InitMsal().then(() => {
                 this._refreshToken(refreshToken, process);
