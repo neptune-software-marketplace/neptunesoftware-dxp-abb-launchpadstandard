@@ -629,3 +629,16 @@ function getResourceBundlePath(ui5Lib) {
     
     return `/public/openui5/${ui5Version}/${ui5LibConv}/messagebundle.properties`;
 }
+
+function getLogonData() {
+    if (AppCache.userInfo && AppCache.userInfo.logonData) {
+        return AppCache.userInfo.logonData;
+    }
+
+    try {
+        const data = localStorage.getItem('p9logonData')
+        return JSON.parse(data);
+    } catch (err) {}
+    
+    return null;
+}
