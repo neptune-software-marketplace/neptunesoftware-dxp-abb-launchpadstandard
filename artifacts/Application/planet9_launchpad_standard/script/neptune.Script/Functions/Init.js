@@ -156,21 +156,21 @@ sap.ui.getCore().attachInit(function () {
 
         // Phone UI Handling
         if (sap.n.Launchpad.isPhone()) {
-            [AppCache_boxLogonCenter, AppCache_boxLogonPasscode, AppCache_boxLogonUsers].forEach(function (i) {
-                i.setHeight('100%');
-                i.addStyleClass('nepFlexPhone');
+            [AppCache_boxLogonCenter, AppCache_boxLogonPasscode, AppCache_boxLogonUsers].forEach((box) => {
+                box.setHeight('100%');
+                box.addStyleClass('nepFlexPhone');
             });
 
             AppCache_boxLogonPasscodeEntry.setHeight('100%');
 
-            [panLogon, panLogonPasscode, panLogonUsers, boxNumpadPanel].forEach(function (i) {
-                i.setWidth('100%');
-                i.setHeight('100%');
-                i.removeStyleClass('nepPanLogonBorder');
+            [panLogon, panLogonPasscode, panLogonUsers, boxNumpadPanel].forEach((elm) => {
+                elm.setWidth('100%');
+                elm.setHeight('100%');
+                elm.removeStyleClass('nepPanLogonBorder');
             });
 
-            [panLinks, panLinksUsers, panLinksPass, panLinksPin].forEach(function (i) {
-                i.addStyleClass('nepLinks');
+            [panLinks, panLinksUsers, panLinksPass, panLinksPin].forEach((elm) => {
+                elm.addStyleClass('nepLinks');
             });
         }
 
