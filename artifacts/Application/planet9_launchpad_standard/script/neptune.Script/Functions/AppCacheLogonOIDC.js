@@ -11,8 +11,10 @@ let AppCacheLogonOIDC = {
                 return;
             }
 
+            refreshingAuth = true;
             AppCacheLogonOIDC._showLogonPopupAndWaitForCallbackUrl(AppCache.Url + '/user/logon/openid-connect/' + AppCacheLogonOIDC.options.path)
                 .then(function (callbackUrl) {
+                    refreshingAuth = false;
                     if (callbackUrl) {
                         setSelectedLoginType('openid-connect');
                         const authResponse = AppCacheLogonOIDC._getHashParamsFromUrl(callbackUrl);
@@ -22,7 +24,10 @@ let AppCacheLogonOIDC = {
 
                         return AppCacheLogonOIDC.P9LoginWithCode(authResponse);
                     }
-                });
+                })
+                .catch(() => {
+                    refreshingAuth = false;
+                })
         } else {
             let logonWin = AppCacheLogonOIDC._showLogonPopup(AppCache.Url + '/user/logon/openid-connect/' + AppCacheLogonOIDC.options.path);
 
@@ -127,8 +132,8 @@ let AppCacheLogonOIDC = {
         this.options = this._getLogonData();
         appCacheLog('OIDC: Starting method GetTokenWithRefreshToken');
 
-        refreshingAuth = true;
         return new Promise(function (resolve, reject) {
+            refreshingAuth = true;
             request({
                 type: 'POST',
                 url: AppCache.Url + '/user/logon/openid-connect/' + AppCacheLogonOIDC.options.path + '/token',
@@ -178,6 +183,7 @@ let AppCacheLogonOIDC = {
         appCacheLog('OIDC: Starting method P9LoginWithCode');
 
         return new Promise(function (resolve, reject) {
+            refreshingAuth = true;
             request({
                 type: 'GET',
                 url: url,
@@ -186,6 +192,7 @@ let AppCacheLogonOIDC = {
                     'login-path': getLoginData(),
                 },
                 success: function (data) {
+                    refreshingAuth = false;
                     appCacheLog('OIDC: Successfully logged on to P9. Starting process: Get User Info');
                     appCacheLog(data);
 
@@ -200,6 +207,7 @@ let AppCacheLogonOIDC = {
                     AppCache.getUserInfo();
                 },
                 error: function (result) {
+                    refreshingAuth = false;
                     sap.ui.core.BusyIndicator.hide();
 
                     if (result.responseJSON && result.responseJSON.status) {
@@ -229,6 +237,7 @@ let AppCacheLogonOIDC = {
             appCacheLog(token.id_token)
         }
 
+        refreshingAuth = true;
         return new Promise(function (resolve, reject) {
             jsonRequest({
                 url: AppCache.Url + '/user/logon/openid-connect/' + AppCacheLogonOIDC.options.path + '/session' + AppCache._getLoginQuery(),
@@ -236,6 +245,7 @@ let AppCacheLogonOIDC = {
                     'Authorization': 'Bearer ' + token.id_token,
                 },
                 success: function (data) {
+                    refreshingAuth = false;
                     setSelectedLoginType('openid-connect');
                     switch (process) {
                         case 'pin':
@@ -260,6 +270,7 @@ let AppCacheLogonOIDC = {
 
                 },
                 error: function (result) {
+                    refreshingAuth = false;
                     sap.ui.core.BusyIndicator.hide();
                     let errorText = 'Error logging on P9, or P9 not online';
                     if (result.responseJSON && result.responseJSON.status) errorText = result.responseJSON.status;
