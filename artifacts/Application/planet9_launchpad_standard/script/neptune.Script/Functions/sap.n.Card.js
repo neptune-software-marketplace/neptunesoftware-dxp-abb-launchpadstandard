@@ -400,7 +400,7 @@ sap.n.Card = {
 
         setTimeout(() => {
             this.loadAppIntoTile(app, parentObject, startParams);
-        }, 50);
+        }, AppCache.DelayOnRefreshingToken.AppInTile);
     },
 
     buildCardBodyApplication: function (config) {

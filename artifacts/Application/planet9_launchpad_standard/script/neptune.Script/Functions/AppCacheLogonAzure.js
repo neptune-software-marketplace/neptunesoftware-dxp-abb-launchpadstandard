@@ -434,6 +434,7 @@ let AppCacheLogonAzure = {
             refresh_token: refreshToken,
             grant_type: 'refresh_token',
         };
+        refreshingAuth = true;
         return new Promise((resolve, reject) => {
             const { type, path } = this.options;
             return request({
@@ -442,9 +443,11 @@ let AppCacheLogonAzure = {
                 contentType: 'application/x-www-form-urlencoded',
                 data: data,
                 success: (data) => {
+                    refreshingAuth = false;
                     resolve(data);
                 },
                 error: (result, status) => {
+                    refreshingAuth = false;
                     sap.ui.core.BusyIndicator.hide();
 
                     if (result.responseJSON && result.responseJSON.error_description) {
@@ -522,11 +525,13 @@ let AppCacheLogonAzure = {
 
     _loginP9: function (idToken, process) {
         const { type, path } = this.options;
+        refreshingAuth = true;
         return request({
             type: 'POST',
             url: `${AppCache.Url}/user/logon/${type}/${path}${AppCache._getLoginQuery()}`,
             headers: { 'Authorization': 'Bearer ' + idToken, 'login-path': getLoginData() },
             success: (data) => {
+                refreshingAuth = false;
                 setSelectedLoginType(this.options.type);
 
                 switch (process) {
@@ -553,6 +558,7 @@ let AppCacheLogonAzure = {
                 }
             },
             error: (result, status) => {
+                refreshingAuth = false;
                 sap.ui.core.BusyIndicator.hide();
                 let errorText = 'Error logging on P9, or P9 not online';
                 if (result.responseJSON && result.responseJSON.status) errorText = result.responseJSON.status;

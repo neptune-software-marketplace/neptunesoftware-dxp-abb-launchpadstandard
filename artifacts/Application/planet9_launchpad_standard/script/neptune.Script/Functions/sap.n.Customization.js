@@ -359,6 +359,13 @@ sap.n.Customization = {
     saveToP9() {
         if (!this.isP9Supported()) return;
 
+        if (refreshingAuth) {
+            setTimeout(() => {
+                this.saveToP9();
+            }, 100);
+            return;
+        }
+
         const deviceType = this.getDeviceType();
         return jsonRequest({
             type: "POST",

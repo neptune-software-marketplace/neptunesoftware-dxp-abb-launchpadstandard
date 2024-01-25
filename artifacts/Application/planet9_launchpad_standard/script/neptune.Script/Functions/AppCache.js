@@ -10,6 +10,11 @@ let AppCache = {
         role: '',
         disableLaunchpadChpass: false,
     },
+    DelayOnRefreshingToken: {
+        AppInTile: 50,
+        AdaptiveApps: 50,
+        SetUserInfo: 5,
+    },
     View: [],
     ViewChild: [],
     Dialogs: [],
@@ -205,6 +210,17 @@ let AppCache = {
     },
 
     LoadAdaptive: function (id, options) {
+        if (!refreshingAuth) {
+            AppCache.LoadAdaptiveApp(id, options);
+            return;
+        }
+
+        setTimeout(() => {
+            AppCache.LoadAdaptive(id, options);
+        }, AppCache.DelayOnRefreshingToken.AdaptiveApps);
+    },
+
+    LoadAdaptiveApp: function (id, options) {
         if (!options) options = {};
 
         sap.n.Adaptive.getConfig(id).then(function (config) {
@@ -1830,28 +1846,15 @@ let AppCache = {
         });
     },
 
-    afterUserInfo: function (offline, data) {
-        let userData = '';
-
-        if (offline && !AppCache.isMobile) {
-            getCacheAppCacheUsers();
-            userData = modelAppCacheUsers.oData[0];
-        } else {
-            if (data) {
-                userData = data[0];
-                ModelData.Update(AppCacheUsers, 'username', data[0].username, userData);
-                setCacheAppCacheUsers();
-            }
+    afterSetUserInfo: function () {
+        if (refreshingAuth) {
+            setTimeout(() => {
+                this.afterSetUserInfo();
+            }, AppCache.DelayOnRefreshingToken.SetUserInfo);
+            return;
         }
 
-        sap.ui.core.BusyIndicator.hide();
-        AppCache_inPassword.setValue();
-
-        if (AppCache.loginApp) AppCacheShellUI.setAppWidthLimited(true);
-
-        // User Information
-        if (userData) AppCache.userInfo = userData;
-        AppCache.setUserInfo();
+        const userData = AppCache.userInfo;
 
         // Azure/OIDC - No PIN Code
         if (!AppCache.enablePasscode) {
@@ -1928,6 +1931,32 @@ let AppCache = {
         if (!AppCache.enablePasscode) {
             AutoLockTimer.start();
         }
+    },
+
+    afterUserInfo: function (offline, data) {
+        let userData = '';
+
+        if (offline && !AppCache.isMobile) {
+            getCacheAppCacheUsers();
+            userData = modelAppCacheUsers.oData[0];
+        } else {
+            if (data) {
+                userData = data[0];
+                ModelData.Update(AppCacheUsers, 'username', data[0].username, userData);
+                setCacheAppCacheUsers();
+            }
+        }
+
+        sap.ui.core.BusyIndicator.hide();
+        AppCache_inPassword.setValue();
+
+        if (AppCache.loginApp) AppCacheShellUI.setAppWidthLimited(true);
+
+        // User Information
+        if (userData) AppCache.userInfo = userData;
+        AppCache.setUserInfo();
+
+        this.afterSetUserInfo();
     },
 
     clearPasscodeInputs: function () {
