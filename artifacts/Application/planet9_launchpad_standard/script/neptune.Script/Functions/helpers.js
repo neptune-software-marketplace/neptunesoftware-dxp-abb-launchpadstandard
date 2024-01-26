@@ -602,7 +602,7 @@ function disableChpass() {
 
 function getOpenUI5BootstrapPath() {
     const src = document.getElementById('sap-ui-bootstrap').getAttribute('src');
-    if (src.includes('openui5.hana.ondemand.com')) {
+    if (src.includes('openui5.hana.ondemand.com') || src.includes('sapui5.hana.ondemand.com')) {
         return {
             src,
             isCDN: true,

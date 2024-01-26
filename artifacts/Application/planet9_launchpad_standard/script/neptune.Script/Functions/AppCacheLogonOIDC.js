@@ -69,29 +69,25 @@ let AppCacheLogonOIDC = {
     },
 
     Logoff: function () {
-
-        this.options = this._getLogonData();
-
-        if (navigator.onLine && AppCache.isOffline === false) {
-
-            AppCacheLogonOIDC.Signout();
-
-            jsonRequest({
-                url: AppCache.Url + '/user/logout',
-                success: function (data) {
-                    AppCache.clearCookies();
-                    appCacheLog('OIDC: Successfully logged out');
-                },
-                error: function (result, status) {
-                    sap.ui.core.BusyIndicator.hide();
-                    AppCache.clearCookies();
-                    appCacheLog('OIDC: Successfully logged out, in offline mode');
-                }
-            });
-        } else {
+        if (isOffline()) {
             AppCache.clearCookies();
+            return;
         }
 
+        AppCacheLogonOIDC.Signout();
+        
+        jsonRequest({
+            url: `${AppCache.Url}/user/logout`,
+            success: function (data) {
+                AppCache.clearCookies();
+                appCacheLog('OIDC: Successfully logged out');
+            },
+            error: function (result, status) {
+                sap.ui.core.BusyIndicator.hide();
+                AppCache.clearCookies();
+                appCacheLog('OIDC: Successfully logged out, in offline mode');
+            }
+        });
     },
 
     Relog: function (refreshToken) {
@@ -104,9 +100,9 @@ let AppCacheLogonOIDC = {
     },
 
     Signout: function () {
-        this.options = this._getLogonData();
-        const signOut = window.open(AppCache.Url + '/user/logon/openid-connect/' + AppCacheLogonOIDC.options.path + '/logout', '_blank', 'location=no,width=5,height=5,left=-1000,top=3000');
-        
+        const logon = getLogonData();
+        const signOut = window.open(`${AppCache.Url}/user/logon/openid-connect/${logon.path}/logout`, '_blank', 'location=no,width=5,height=5,left=-1000,top=3000');
+
         // if pop-ups are blocked signout window.open will return null
         if (!signOut) return;
 
