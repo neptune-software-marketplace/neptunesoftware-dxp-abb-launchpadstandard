@@ -88,6 +88,13 @@ let AppCache = {
     },
 
     _loadQueue: function () {
+        if (refreshingAuth) {
+            setTimeout(() => {
+                this._loadQueue();
+            }, 10);
+            return;
+        }
+
         this.loadRunning = false;
 
         let appData = this.loadQueue[0];
