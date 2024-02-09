@@ -67,7 +67,7 @@ let AppCacheLogonSaml = {
         }
 
         // SAML Logout
-        const logon = getLogonData();
+        const logon = getLoginSettings();
         if (logon && logon.logoutUrl) {
             request({
                 type: "GET",

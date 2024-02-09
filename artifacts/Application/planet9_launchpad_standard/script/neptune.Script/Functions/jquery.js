@@ -119,6 +119,12 @@ function cordovaRequest(opts) {
                     }
                 }
 
+                if (result.status && result.status === 'UpdatePassword') {
+                    const url = new URL(AppCache.Url + result.link, result.href);
+                    url.searchParams.append('reason', result.reason || 'other');
+                    location.replace(url.toString());
+                }
+
                 success && success(result, 'success', {
                     headers: res.headers,
                     getResponseHeader: function (key) {

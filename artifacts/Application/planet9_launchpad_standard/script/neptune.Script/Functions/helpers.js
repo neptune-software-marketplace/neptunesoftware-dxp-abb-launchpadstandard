@@ -143,9 +143,10 @@ function appendIFrame(targetEl, params) {
 }
 
 function createStyle(cssText) {
-    const s = document.createElement('style');
-    s.appendChild(document.createTextNode(cssText))
-    return s;
+    const style = document.createElement('style');
+    style.type = 'text/css';
+    style.appendChild(document.createTextNode(cssText))
+    return style;
 }
 
 function appendStyle(targetEl, style) {
@@ -157,8 +158,8 @@ function isRTL() {
     return querySelector('html').getAttribute('dir').toLowerCase() === 'rtl';
 }
 
-function addCustomData(sapELm, list) {
-    for (const [key, value] of Object.entries(list)) {
+function addCustomData(sapELm, keyValueObjectList) {
+    for (const [key, value] of Object.entries(keyValueObjectList)) {
         sapELm.addCustomData(
             new sap.ui.core.CustomData(undefined, {
                 key, value, writeToDom: true,
@@ -630,15 +631,37 @@ function getResourceBundlePath(ui5Lib) {
     return `/public/openui5/${ui5Version}/${ui5LibConv}/messagebundle.properties`;
 }
 
-function getLogonData() {
-    if (AppCache.userInfo && AppCache.userInfo.logonData) {
-        return AppCache.userInfo.logonData;
+function getLoginSettings() {
+    // On mobile login types are store in model DataSettings
+    //  we don't have p9logonData available inside local storage on mobile
+    if (AppCache.isMobile) {
+        const loginId = AppCache_loginTypes.getSelectedKey();
+        const { logonTypes } = modelDataSettings.oData;
+        if (Array.isArray(logonTypes)) {
+            const loginSettings = logonTypes.find((loginType) => loginType.id === loginId);
+            if (typeof loginSettings !== 'undefined') {
+                return loginSettings;
+            }
+        }
     }
 
     try {
         const data = localStorage.getItem('p9logonData')
         return JSON.parse(data);
     } catch (err) {}
-    
+
+    if (AppCache.userInfo && AppCache.userInfo.logonData) {
+        return AppCache.userInfo.logonData;
+    }
+
     return null;
+}
+
+function addAriaLabel(ui5Elm, value) {
+    ui5Elm.addCustomData(
+        new sap.ui.core.CustomData({
+            key: 'aria-label',
+            value,
+        })
+    );
 }

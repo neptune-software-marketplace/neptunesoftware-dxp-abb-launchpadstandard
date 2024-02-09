@@ -388,10 +388,9 @@ sap.n.Launchpad = {
 
         if (layout.style) {
             const cssText = layout.style.replace('<style>', '').replace('</style>', '');
-            const s = createStyle(cssText);
             appendStyle(
                 elById('NeptuneStyleDiv'),
-                s
+                createStyle(cssText)
             );
         }
 
@@ -1721,8 +1720,9 @@ sap.n.Launchpad = {
                 alignItems: 'Center'
             }).addStyleClass('nepOpenAppsContainer');
 
-            let butOpenApp = new sap.m.Button(`${nepPrefix()}OpenApp${dataTile.id}`, {
-                text: sap.n.Launchpad.translateTile('title', dataTile),
+            const appTitle = sap.n.Launchpad.translateTile('title', dataTile);
+            const btnOpenApp = new sap.m.Button(`${nepPrefix()}OpenApp${dataTile.id}`, {
+                text: appTitle,
                 icon: sap.n.Launchpad.getIconUrl(dataTile),
                 iconFirst: true,
                 press: function (oEvent) {
@@ -1730,18 +1730,22 @@ sap.n.Launchpad = {
                     if (!AppCache.config.verticalMenu) sap.n.Launchpad.overflowMenuClose();
                 }
             }).addStyleClass('nepOpenAppsBtn nepOpenAppsBtnItem');
+            addAriaLabel(btnOpenApp, `open ${appTitle}`);
 
-            let butOpenAppClose = new sap.ui.core.Icon(nepId(), {
+            const iconCloseApp = new sap.ui.core.Icon(nepId(), {
                 size: '1.375rem',
                 src: 'sap-icon://sys-cancel',
+                alt: `Close ${appTitle}`,
+                tooltip: `Close ${appTitle}`,
+                useIconTooltip: true,
                 press: function (oEvent) {
                     sap.n.Shell.closeTile(dataTile);
                 }
             }).addStyleClass('nepOpenAppsClose');
 
             openApps.addItem(containerOpenApp);
-            containerOpenApp.addItem(butOpenApp);
-            containerOpenApp.addItem(butOpenAppClose);
+            containerOpenApp.addItem(btnOpenApp);
+            containerOpenApp.addItem(iconCloseApp);
             openAppMaster.setVisible(true);
         }
 
@@ -1787,14 +1791,16 @@ sap.n.Launchpad = {
                     width: '190px'
                 }).addStyleClass('nepNavBarBoxTitle');
 
+                const appTitle = sap.n.Launchpad.translateTile('title', dataTile);
                 let textTitle = new sap.m.Text(nepId(), {
-                    wrapping: false,
-                    text: sap.n.Launchpad.translateTile('title', dataTile),
+                    wrapping: true,
+                    text: appTitle,
                 }).addStyleClass('nepNavBarTitle');
 
+                const subTitleText = sap.n.Launchpad.translateTile('subTitle', dataTile).trim();
                 let textSubTitle = new sap.m.Text(nepId(), {
-                    wrapping: false,
-                    text: sap.n.Launchpad.translateTile('subTitle', dataTile),
+                    wrapping: true,
+                    text: subTitleText,
                 }).addStyleClass('nepNavBarSubTitle');
 
                 let boxActions = new sap.m.VBox(nepId(), {
@@ -1802,16 +1808,16 @@ sap.n.Launchpad = {
                     width: '40px'
                 });
 
-                let butClose = new sap.m.Button(nepId(), {
+                const btnClose = new sap.m.Button(nepId(), {
                     type: 'Transparent',
                     icon: 'sap-icon://sys-cancel',
+                    tooltip: `Close ${appTitle}`,
                     press: function (oEvent) {
                         sap.n.Shell.closeTile(dataTile);
                     }
                 });
-
-                let buttonStyle = sap.n.Launchpad.buildTileActionStyle(oBlockCell);
-                butClose.addStyleClass('nepTileAction nepNavBarAction ' + buttonStyle);
+                btnClose.addStyleClass('nepTileAction nepNavBarAction ' + sap.n.Launchpad.buildTileActionStyle(oBlockCell));
+                addAriaLabel(btnClose, `Close ${appTitle}`);
 
                 // Event - Click
                 boxIcon.attachBrowserEvent('click', function (oEvent) {
@@ -1827,7 +1833,7 @@ sap.n.Launchpad = {
                 boxTop.addItem(boxActions);
                 boxTitle.addItem(textTitle);
                 boxTitle.addItem(textSubTitle);
-                boxActions.addItem(butClose);
+                boxActions.addItem(btnClose);
 
                 blockRunningRow.addContent(oBlockCell);
 
@@ -1897,7 +1903,7 @@ sap.n.Launchpad = {
         });
 
         let boxIcon = new sap.m.VBox(nepId(), {
-            width: '38px'
+            width: '38px',
         }).addStyleClass('nepNavBarBoxIcon');
 
         if (dataTile.cardImage) {
@@ -1920,14 +1926,16 @@ sap.n.Launchpad = {
             width: '190px'
         }).addStyleClass('nepNavBarBoxTitle');
 
+        const appTitle = sap.n.Launchpad.translateTile('title', dataTile);
         let textTitle = new sap.m.Text(nepId(), {
-            wrapping: false,
-            text: sap.n.Launchpad.translateTile('title', dataTile),
+            wrapping: true,
+            text: appTitle,
         }).addStyleClass('nepNavBarTitle');
 
+        const subTitleText = sap.n.Launchpad.translateTile('subTitle', dataTile).trim();
         let textSubTitle = new sap.m.Text(nepId(), {
-            wrapping: false,
-            text: sap.n.Launchpad.translateTile('subTitle', dataTile),
+            wrapping: true,
+            text: subTitleText,
         }).addStyleClass('nepNavBarSubTitle');
 
         let boxActions = new sap.m.VBox(nepId(), {
@@ -1935,17 +1943,17 @@ sap.n.Launchpad = {
             width: '40px'
         });
 
-        let butClose = new sap.m.Button(nepId(), {
+        const btnClose = new sap.m.Button(nepId(), {
             type: 'Transparent',
             icon: 'sap-icon://sys-cancel',
+            tooltip: `Close ${appTitle}`,
             press: function (oEvent) {
                 sap.n.Shell.closeTile(dataTile);
                 popNavBar.close();
             }
         });
-
-        let buttonStyle = sap.n.Launchpad.buildTileActionStyle(oBlockCell);
-        butClose.addStyleClass('nepTileAction nepNavBarAction ' + buttonStyle);
+        btnClose.addStyleClass('nepTileAction nepNavBarAction ' + sap.n.Launchpad.buildTileActionStyle(oBlockCell));
+        addAriaLabel(btnClose, `Close ${appTitle}`);
 
         // Event - Click
         oBlockCell.attachBrowserEvent('click', function (oEvent) {
@@ -1961,7 +1969,7 @@ sap.n.Launchpad = {
         boxTitle.addItem(textTitle);
         boxTitle.addItem(textSubTitle);
         boxTop.addItem(boxActions);
-        boxActions.addItem(butClose);
+        boxActions.addItem(btnClose);
 
         return oBlockCell;
     },

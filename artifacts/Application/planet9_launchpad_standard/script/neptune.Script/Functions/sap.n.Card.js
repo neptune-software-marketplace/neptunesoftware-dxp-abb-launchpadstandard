@@ -124,7 +124,7 @@ sap.n.Card = {
         cardContainer.addEventDelegate({
             onkeyup: function (evt) {
                 // open the Tile on pressing Enter
-                if (evt.key === 'Enter') {
+                if (evt.key === 'Enter' || evt.key === ' ') {
                     sap.n.Launchpad.HandleTilePress(config.dataTile, config.dataCat);
                 }
             },

@@ -1,3 +1,7 @@
+*:focus {
+    outline: .125rem solid #0070f2;
+}
+
 .sapUiLoSplitter.sapUiLoSplitterH>.sapUiLoSplitterBar.sapUiLoSplitterNoResize,
 .sapUiLoSplitter.sapUiLoSplitterV>.sapUiLoSplitterBar.sapUiLoSplitterNoResize {
     height: 0 !important;
@@ -1520,6 +1524,10 @@ html.sap-desktop .sapMDialog .sapMShellAppWidthLimited .sapMShellCentralBox {
 
 .nepOpenAppsBtn .sapMBtnContent {
     padding-left: .5rem;
+    white-space: pre-wrap;
+    height: auto;
+    text-align: left;
+    line-height: inherit;
 }
 
 .sapUiSizeCompact .nepOpenAppsBtn .sapMBtnContent {

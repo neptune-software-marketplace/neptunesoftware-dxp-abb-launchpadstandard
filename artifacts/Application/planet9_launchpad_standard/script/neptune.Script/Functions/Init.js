@@ -292,6 +292,20 @@ sap.ui.getCore().attachInit(function () {
         
         // Blackout tile message
         sap.n.Adaptive.editor(descBlackout, { editable: false, buttonList: [] });
+
+        // hide focus indicator
+        if (
+            typeof AppCache.config.showAccessibilityFocusIndicator !== 'undefined' &&
+            !AppCache.config.showAccessibilityFocusIndicator
+        ) {
+            document.body.appendChild(
+                createStyle(`
+                    *:focus {
+                        outline: none;
+                    }
+                `)
+            );
+        }
     }, 100);
 
     setTimeout(disableChpass, 2000);
