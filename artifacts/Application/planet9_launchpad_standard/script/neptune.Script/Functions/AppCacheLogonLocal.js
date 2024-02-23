@@ -16,7 +16,7 @@ let AppCacheLogonLocal = {
             url: AppCache.Url + '/user/logon/local' + AppCache._getLoginQuery(),
             data: JSON.stringify(rec),
             headers: {
-                'login-path': getLoginData(),
+                'login-path': getLoginPath(),
             },
             success: function (data) {
                 if (data.status && data.status === 'UpdatePassword') {
@@ -24,7 +24,6 @@ let AppCacheLogonLocal = {
                     url.searchParams.append('reason', data.reason || 'other');
                     location.replace(url.toString());
                 } else {
-                    setSelectedLoginType('local');
                     AppCache.getUserInfo();
                     AppCacheLogonLocal.AutoLoginSet();
                 }
@@ -101,7 +100,7 @@ let AppCacheLogonLocal = {
                 url: AppCache.Url + '/user/logon/local' + AppCache._getLoginQuery(),
                 data: JSON.stringify(rec),
                 headers: {
-                    'login-path': getLoginData(),
+                    'login-path': getLoginPath(),
                 },  
                 success: function (data) {
                     refreshingAuth = false;
@@ -111,7 +110,6 @@ let AppCacheLogonLocal = {
                         location.replace(url.toString());
                         resolve('ERROR');
                     } else {
-                        setSelectedLoginType('local');
                         resolve('OK');
                     }
                 },
@@ -129,17 +127,7 @@ let AppCacheLogonLocal = {
     },
 
     Logoff: function () {
-        if (navigator.onLine && AppCache.isOffline === false) {
-            jsonRequest({
-                url: AppCache.Url + '/user/logout',
-                success: function (data) {
-                    AppCache.clearCookies();
-                },
-                error: function (result, status) {
-                    AppCache.clearCookies();
-                }
-            });
-        }
+        p9UserLogout('Local');
     },
 
     Init: function () { }

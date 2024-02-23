@@ -228,6 +228,20 @@ function setiOSPWAIcons() {
     });
 }
 
+function setAccessibilityFocusIndicator() {
+    if (AppCache.config.showAccessibilityFocusIndicator === false) {
+        addClass(document.body, ['wcag-hide-focus']);
+        return;
+    }
+
+    addClass(document.body, ['wcag-focus']);
+}
+
+function setOpenUI5Version() {
+    const version = sap.ui.version.split('.').slice(0, 2).join('-');
+    addClass(document.body, [`ui5-${version}`]);
+}
+
 // launchpad path is always like e.g. /launchpad/path-name
 //      path is not like /launchpad/path-name[/something/here]
 //      otherwise server throws a 404
@@ -236,11 +250,14 @@ function launchpadUrl() {
 }
 
 async function isUrlInCache({ url, cacheName }) {
+    if (typeof caches === 'undefined') return false;
     const cache = await caches.open(cacheName);
     return await cache.match(url)
 }
 
 async function addUrlToCache({ url, method, cacheName }) {
+    if (typeof caches === 'undefined') return;
+    
     const response = await fetch(url, { method });
     if (response.ok) {
         const cache = await caches.open(cacheName);
@@ -252,6 +269,8 @@ async function addUrlToCache({ url, method, cacheName }) {
 // If app is not offline, we can remove the launchpad main page from workbox cache
 //  otherwise even after logout we will see the launchpad screen
 function removeLaunchpadFromCache() {
+    if (typeof caches === 'undefined') return;
+
     const url = `${location.origin}${location.pathname}`;
     if (!AppCache.isOffline) {
         let cacheName = '';
@@ -343,15 +362,6 @@ function ensurePWACache() {
             addUrlToCache({ url, method, cacheName });
         }
     });
-}
-
-function setSelectedLoginType(type) {
-    localStorage.setItem('selectedLoginType', type);
-    AppCacheUserActionPassword.setVisible(!isChpassDisabled() && type === 'local');
-}
-
-function clearSelectedLoginType() {
-    localStorage.removeItem('selectedLoginType');
 }
 
 function emptyBase64Image() {
@@ -543,7 +553,7 @@ function fakePromise(returnValue, model, fnExpectedValue, defaultReturnValue, ti
     ]);
 }
 
-function getLoginData() {
+function getLoginPath() {
     return `${AppCache?.CurrentConfig || location?.pathname || '/'}`;
 }
 
@@ -631,30 +641,39 @@ function getResourceBundlePath(ui5Lib) {
     return `/public/openui5/${ui5Version}/${ui5LibConv}/messagebundle.properties`;
 }
 
-function getLoginSettings() {
-    // On mobile login types are store in model DataSettings
-    //  we don't have p9logonData available inside local storage on mobile
-    if (AppCache.isMobile) {
-        const loginId = AppCache_loginTypes.getSelectedKey();
-        const { logonTypes } = modelDataSettings.oData;
-        if (Array.isArray(logonTypes)) {
-            const loginSettings = logonTypes.find((loginType) => loginType.id === loginId);
-            if (typeof loginSettings !== 'undefined') {
-                return loginSettings;
-            }
+function getLoginSettingsForLoginId(loginId) {
+    const { logonTypes } = modelDataSettings.getData();
+    if (Array.isArray(logonTypes)) {
+        const loginSettings = logonTypes.find((loginType) => loginType.id === loginId);
+        if (typeof loginSettings !== 'undefined') {
+            return loginSettings;
         }
     }
 
-    try {
-        const data = localStorage.getItem('p9logonData')
-        return JSON.parse(data);
-    } catch (err) {}
+    // defaults to local login
+    return { type: 'local' };
+}
 
-    if (AppCache.userInfo && AppCache.userInfo.logonData) {
-        return AppCache.userInfo.logonData;
+function getAuthSettingsFromLoginType() {
+    const loginId = AppCache_loginTypes.getSelectedKey();
+    const settings = getLoginSettingsForLoginId(loginId);
+    if (settings) {
+        return settings;
     }
 
-    return null;
+    // default to local login
+    return { type: 'local' };
+}
+
+function getAuthSettingsForUser() {
+    // for backwards compatibility keeping logonData to store idp settings
+    // if userInfo object is available and logonData is available on top of that object and is an object with defined type
+    const userInfo = AppCache.userInfo;
+    if (typeof userInfo === 'object' && typeof userInfo.logonData === 'object' && typeof userInfo.logonData.type === 'string' && userInfo.logonData.type.length > 0) {
+        return userInfo.logonData;
+    }
+
+    return getAuthSettingsFromLoginType();
 }
 
 function addAriaLabel(ui5Elm, value) {
@@ -664,4 +683,146 @@ function addAriaLabel(ui5Elm, value) {
             value,
         })
     );
+}
+
+function userIsNotLoggedIn() {
+    return (
+        typeof AppCache.userInfo === 'undefined ' || 
+        typeof AppCache.userInfo === 'string' || 
+        Object.keys(AppCache.userInfo).length === 0
+    );
+}
+
+function p9UserLogout(authenticationType = '') {
+    if (isOffline()) {
+        AppCache.clearCookies();
+        return;
+    }
+
+    jsonRequest({
+        url: `${AppCache.Url}/user/logout`,
+        success: (data) => {
+            AppCache.clearCookies();
+            appCacheLog(`${authenticationType}: Successfully logged out`);
+
+            if (!AppCache.isMobile) {
+                location.hash = '';
+                location.reload();
+            }
+        },
+        error: (result, status) => {
+            sap.ui.core.BusyIndicator.hide();
+            AppCache.clearCookies();
+            appCacheLog(`${authenticationType}: Successfully logged out, in offline mode`);
+        }
+    });
+}
+
+function externalAuthUserLogoutUsingPopup(url, closePopupAfterSecs=5000) {
+    const logoutPopup = window.open(url, '_blank', 'location=no,width=5,height=5,left=-1000,top=3000');
+    
+    // if pop-ups are blocked signout window.open will return null
+    if (!logoutPopup) return;
+    
+    logoutPopup.blur && logoutPopup.blur();
+
+    if (isCordova()) {
+        logoutPopup.addEventListener('loadstop', () => {
+            logoutPopup.close();
+        });
+    } else {
+        logoutPopup.onload = () => {
+            logoutPopup.close();
+        };
+
+        logoutPopup.blur && logoutPopup.blur();
+
+        setTimeout(() => {
+            logoutPopup.close();
+        }, closePopupAfterSecs);
+    }
+}
+
+function createScriptTag(src, attributes = {}) {
+    const tag = document.createElement('script');
+    tag.setAttribute('src', src);
+    Object.entries(attributes).forEach(([k, v]) => {
+        tag.setAttribute(k, v);
+    });
+    return tag;
+}
+
+function createPopupWindow(url, target='_blank', width=-1, height=-1) {
+    if (isCordova()) {
+        return window.open(url, target, 'location=no');
+    }
+
+    const winLeft = window.screenLeft ? window.screenLeft : window.screenX;
+    const winTop = window.screenTop ? window.screenTop : window.screenY;
+    const winWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    const winHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+    // centering popup on the screen
+    const left = ((winWidth/2) - (width/2)) + winLeft;
+    const top = ((winHeight/2) - (height/2)) + winTop;
+
+    return window.open(url, target, `location=no,width=${width},height=${height},left=${left},top=${top}`);
+}
+
+function watchPopupState(popupWin, finalState=[], logState=[], callbackFn) {
+    let url = '';
+    let intervalId = setInterval(() => {
+        try {
+            url = popupWin.location.href ?? '';
+        } catch (err) {
+            url = ''; // otherwise it would error out on accessing string functions
+
+            if (err.name === 'SecurityError') {
+                // we are unable to read location.href
+            } else {
+                appCacheLog('watchPopupState popupWin', popupWin, 'error', err);
+            }
+        }
+
+        if (logState.some(param => url.includes(`${param}=`))) {
+            appCacheLog(`watchPopupState logging url - ${url} because it matched one of the following parameters = ${logState.join(', ')} `)
+        }
+
+        if (popupWin.closed || url.includes('error=')) {
+            clearInterval(intervalId);
+        }
+
+        if (finalState.some(param => url.includes(`${param}=`))) {
+            appCacheLog(`watchPopupState final state reached - ${url}`);
+            clearInterval(intervalId);
+            popupWin.close();
+            callbackFn(url);
+        }
+    }, 100);
+}
+
+function parseJsonWebToken(token) {
+    try {
+        return JSON.parse(atob(token.split('.')[1]));
+    } catch (e) {
+        return null;
+    }
+}
+
+function getHashParamsFromUrl(url) {
+    if (typeof url !== 'string') return null;
+    if (url.indexOf('?') > -1) url = url.split('?')[1];
+
+    let params = url.replace(/^(#|\?)/, '');
+    let hashParams = {};
+    let e,
+        a = /\+/g,
+        r = /([^&;=]+)=?([^&;]*)/g,
+        d = function (s) {
+            return decodeURIComponent(s.replace(a, ' '));
+        };
+    while (e = r.exec(params)) {
+        hashParams[d(e[1])] = d(e[2]);
+    }
+    return hashParams;
 }

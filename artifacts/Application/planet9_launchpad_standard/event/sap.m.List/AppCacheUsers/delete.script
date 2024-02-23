@@ -1,8 +1,7 @@
-let deleteItem = oEvent.getParameter('listItem');
-let context = deleteItem.getBindingContext();
-let data = context.getObject();
-
-ModelData.Delete(AppCacheUsers, ['username', 'logonData/type'], [data.username, data.logonData.type]);
+const deleteItem = oEvent.getParameter('listItem');
+const context = deleteItem.getBindingContext();
+const data = context.getObject();
+ModelData.Delete(AppCacheUsers, 'username', data.username);
 setCacheAppCacheUsers();
 
 // Remove iOS SAMKeychain library and Android SecureStorage key

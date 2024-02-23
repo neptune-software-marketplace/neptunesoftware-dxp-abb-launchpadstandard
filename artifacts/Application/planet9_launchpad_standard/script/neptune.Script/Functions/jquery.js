@@ -98,16 +98,16 @@ function cordovaRequest(opts) {
             params[key] = value;
         }
 
+        const options = {
+            method,
+            data: Object.keys(data).length > 0 ? data : {},
+        };
+        if (Object.keys(params).length > 0) options.params = params;
+        if (Object.keys(headers).length > 0) options.headers = headers;
+
         // https://www.npmjs.com/package/cordova-plugin-advanced-http
         cordova.plugin.http.sendRequest(
-            `${url.origin}${url.pathname}`,
-            {
-                params,
-                method,
-                data,
-                headers,
-            },
-            (res) => {
+            `${url.origin}${url.pathname}`, options, (res) => {
                 let result;
                 if (typeof res.data !== 'undefined') {
                     try {

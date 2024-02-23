@@ -6,6 +6,12 @@ let AppCacheLogonAzure = {
     msalObj: null,
     loginScopes: ['user.read', 'profile', 'openid', 'offline_access'],
 
+    Init: function () {},
+
+    useMsal: function () {
+        if (this.options.azureMSALv2 && !isCordova()) return true;
+    },
+
     InitMsal: function () {
         return new Promise((resolve) => {
             if (this.msalObj) return resolve();
@@ -31,39 +37,73 @@ let AppCacheLogonAzure = {
         });
     },
 
-    Logon: function (loginHint) {
-        this.options = this._getLogonData();
+    popupWin: null,
+    tryToOpenPopup(loginHint) {
+        if (this.popupWin && !this.popupWin.closed && typeof this.popupWin.close === 'function') {
+            this.popupWin.close();
+        }
 
+        this.popupWin = createPopupWindow(this._loginUrl(loginHint), 'neptune-azure-login-popup', 438, 600);
+
+        // if we are unable to open the popup
+        if (!this.popupWin) {
+            MessageBox.show('Unable to create the popup window for Azure login.', {
+                icon: MessageBox.Icon.INFORMATION,
+                title: "Azure Login",
+            });
+            return false;
+        }
+
+        return true;
+    },
+
+    Logon: function (loginHint) {
+        this.options = getAuthSettingsForUser();
         if (this.useMsal()) {
             this._loginMsal();
             return;
         }
 
         this.state = Date.now();
-        let logonWin = this._openPopup(this._loginUrl(loginHint));
+        if (!this.tryToOpenPopup(loginHint)) {
+            appCacheError(`Logon Azure > unable to open popup window to login - ${loginHint}`)
+            return;
+        }
 
-        if (!isCordova()) {
-            if (location.protocol === 'file:') {
-                sap.m.MessageToast.show('Testing Microsoft Entra ID from file is not allowed due to CSRF issues. Please test in mobile app');
+        if (isCordova()) {
+            return this.LogonCordova();
+        }
+        
+        this.LogonDesktop();
+    },
+
+    onLogonPopupClose: function () {
+        appCacheLog(`Azure/Logon popup has been closed`);
+    },
+
+    LogonCordova: function() {
+        const readSearchResponse = (url) => {
+            const authResponse = getHashParamsFromUrl(url[0]);
+
+            if (authResponse && authResponse.prompt === 'select_account') {
+                appCacheLog(`Azure/Logon reached account login selection screen`);
                 return;
             }
 
-            if (logonWin.focus) logonWin.focus();
+            if (authResponse) {
+                appCacheLog('LoadStop: Got search response');
+                appCacheLog('authResponse', authResponse);
 
-            // Browser
-            this._waitForPopupDesktop(logonWin, (url) => {
-                let authResponse = this._getHashParams(url);
+                // Error
+                if (authResponse.error) {
+                    this.popupWin.close();
+                    sap.m.MessageToast.show(authResponse.error);
+                    sap.ui.core.BusyIndicator.hide();
+                    return;
+                }
 
-                // Get response
-                if (authResponse) {
-                    if (authResponse.error) {
-                        sap.m.MessageToast.show(authResponse.error);
-                        sap.ui.core.BusyIndicator.hide();
-                        return;
-                    }
-
-                    appCacheLog('Azure Logon: Got code');
-                    appCacheLog(authResponse);
+                if (authResponse.state && authResponse.code) {
+                    this.popupWin.close();
 
                     // Prevent cross-site request forgery attacks
                     if (parseInt(authResponse.state) !== this.state) {
@@ -73,97 +113,94 @@ let AppCacheLogonAzure = {
 
                     // Request Access/Refresh Tokens 
                     this._getToken(authResponse);
-                } else {
-                    console.log('No token response, or window closed manually');
                 }
-            });
-        } else {
-            // Mobile InAppBrowser
-            logonWin.addEventListener('loadstop', () => {
-                logonWin.executeScript({ code: 'location.search' }, (url) => {
-                    let authResponse = this._getHashParams(url[0]);
-
-                    // Get response
-                    if (authResponse) {
-                        // Logging 
-                        appCacheLog('LoadStop: Got search response');
-                        appCacheLog(authResponse);
-
-                        // Error 
-                        if (authResponse.error) {
-                            logonWin.close();
-                            sap.m.MessageToast.show(authResponse.error);
-                            sap.ui.core.BusyIndicator.hide();
-                            return;
-                        }
-
-                        if (authResponse.state && authResponse.code) {
-                            logonWin.close();
-
-                            // Prevent cross-site request forgery attacks
-                            if (parseInt(authResponse.state) !== this.state) {
-                                sap.m.MessageToast.show('Cross-site request forgery detected');
-                                return;
-                            }
-
-                            // Request Access/Refresh Tokens 
-                            this._getToken(authResponse);
-                        }
-                    }
-                });
-            });
+            } else {
+                appCacheLog('LoadStop: Got NO search response');
+                appCacheLog('authResponse', JSON.stringify(authResponse));
+                this.popupWin.close();
+            }
         }
+
+        const onLoadStop = () => {
+            this.popupWin.executeScript({ code: 'location.search' }, readSearchResponse);
+        }
+        
+        this.popupWin.addEventListener('loadstop', onLoadStop);
+        this.popupWin.addEventListener('exit', this.onLogonPopupClose);
+    },
+
+    LogonDesktop: function(loginHint) {
+        this.popupWin.addEventListener('unload', this.onLogonPopupClose);
+
+        if (location.protocol === 'file:') {
+            sap.m.MessageToast.show('Testing Microsoft Entra ID from file is not allowed due to CSRF issues. Please test in mobile app');
+            this.popupWin.close();
+            return;
+        }
+
+        if (this.popupWin.focus) this.popupWin.focus();
+
+        watchPopupState(this.popupWin, ['code'], ['state', 'nonce'], (url) => {
+            const authResponse = getHashParamsFromUrl(url);
+            if (!authResponse) {
+                appCacheLog('No token response, or window closed manually');
+                return;
+            }
+
+            if (authResponse.error) {
+                sap.m.MessageToast.show(authResponse.error);
+                sap.ui.core.BusyIndicator.hide();
+                return;
+            }
+
+            appCacheLog('Azure Logon: Got code');
+            appCacheLog(authResponse);
+
+            // Prevent cross-site request forgery attacks
+            if (parseInt(authResponse.state) !== this.state) {
+                sap.m.MessageToast.show('Cross-site request forgery detected');
+                return;
+            }
+
+            // Request Access/Refresh Tokens 
+            this._getToken(authResponse);
+        });
     },
 
     GetTokenPopup: function (request) {
+        appCacheLog(`Azure.GetTokenPopup: trying to acquire token silently`)
         return this.msalObj.acquireTokenSilent(request).catch((err) => {
+            appCacheLog(`Azure.GetTokenPopup: failed to acquire token silently`)
+
             if (err instanceof msal.InteractionRequiredAuthError) {
                 return this.msalObj.acquireTokenPopup(request).then(tokenResponse => {
+                    appCacheLog(`Azure.GetTokenPopup: ${tokenResponse}`)
                     return tokenResponse;
-                }).catch(error => {
-                    appCacheError('Azure GetTokenPopup: ' + error);
+                }).catch(err => {
+                    appCacheError(`Azure.GetTokenPopup: ${err}`);
                 });
             } else {
-                appCacheError('Azure GetTokenPopup: ' + err);
+                appCacheError(`Azure.GetTokenPopup: ${err}`);
             }
         });
     },
 
     Signout: function () {
-        localStorage.removeItem('p9azuretoken');
-        localStorage.removeItem('p9azuretokenv2');
-
+        if (isOffline()) return;
+        
         if (this.options.azureSilentSignout) {
             let signoutFrame = document.getElementById('azureSignout');
             if (signoutFrame) signoutFrame.setAttribute('src', 'https://login.microsoftonline.com/common/oauth2/logout');
         } else {
-            const signOut = window.open('https://login.microsoftonline.com/common/oauth2/logout', '_blank', 'location=no,width=5,height=5,left=-1000,top=3000');
-            
-            // if pop-ups are blocked signout window.open will return null
-            if (!signOut) return;
-            
-            signOut.blur && signOut.blur();
-
-            if (isCordova()) {
-                signOut.addEventListener('loadstop', () => {
-                    signOut.close();
-                });
-            } else {
-                signOut.onload = () => {
-                    signOut.close();
-                };
-
-                setTimeout(() => {
-                    signOut.close();
-                }, 1000);
-            }
+            externalAuthUserLogoutUsingPopup('https://login.microsoftonline.com/common/oauth2/logout', 1000);
         }
+
+        localStorage.removeItem('p9azuretoken');
+        localStorage.removeItem('p9azuretokenv2');
     },
-
-
-
+    
     Relog: function (refreshToken, process) {
-        this._setOptionsIfEmpty();
+        this.options = getAuthSettingsForUser();
         if (this.useMsal() && !this.msalObj) {
             this.InitMsal().then(() => {
                 this._refreshToken(refreshToken, process);
@@ -174,31 +211,8 @@ let AppCacheLogonAzure = {
     },
 
     Logoff: function () {
-        // Logout Planet 9
-        if (navigator.onLine && AppCache.isOffline === false) {
-            this.Signout();
-
-            jsonRequest({
-                url: this.fullUri + '/user/logout',
-                success: (data) => {
-                    AppCache.clearCookies();
-                    appCacheLog('Azure Logon: Successfully logged out');
-                },
-                error: (result, status) => {
-                    sap.ui.core.BusyIndicator.hide();
-                    AppCache.clearCookies();
-                    appCacheLog('Azure Logon: Successfully logged out, in offline mode');
-                }
-            });
-        } else {
-            AppCache.clearCookies();
-        }
-    },
-
-    Init: function () {},
-
-    useMsal: function () {
-        if (this.options.azureMSALv2 && !isCordova()) return true;
+        this.Signout();
+        p9UserLogout('Azure');
     },
 
     _loginMsal: function () {
@@ -216,47 +230,12 @@ let AppCacheLogonAzure = {
         });
     },
 
-    _getHashParams: function (token) {
-        if (!token) return null;
-        if (token.indexOf('?') > -1) token = token.split('?')[1];
-
-        let params = token.replace(/^(#|\?)/, '');
-        let hashParams = {};
-        let e,
-            a = /\+/g,
-            r = /([^&;=]+)=?([^&;]*)/g,
-            d = function (s) {
-                return decodeURIComponent(s.replace(a, ' '));
-            };
-        while (e = r.exec(params)) {
-            hashParams[d(e[1])] = d(e[2]);
-        }
-        return hashParams;
-    },
-
-    _setOptionsIfEmpty: function() {
-        this._setFullUriIfEmpty();
-        if (Object.keys(this.options).length === 0) {
-            try {
-                this.options = JSON.parse(localStorage.getItem('p9logonData'));
-            } catch (err) {}
-        }
-    },
-
-    _setFullUriIfEmpty: function () {
+    getFullUri: function () {
         if (!this.fullUri) {
-            this.fullUri = AppCache.Url || location.origin;
-        }
-    },
-
-    _getLogonData: function () {
-        this._setFullUriIfEmpty();
-
-        if (AppCache.userInfo && AppCache.userInfo.logonData) {
-            return AppCache.userInfo.logonData;
+            return AppCache.Url || location.origin;
         }
 
-        return AppCache.getLogonTypeInfo(AppCache_loginTypes.getSelectedKey());
+        return this.fullUri;
     },
 
     _authUrl: function (endPoint) {
@@ -266,7 +245,7 @@ let AppCacheLogonAzure = {
     _loginUrl: function (loginHint) {
         let data = {
             client_id: this.options.clientID,
-            redirect_uri: this.fullUri + this.redirectUri,
+            redirect_uri: this.getFullUri() + this.redirectUri,
             scope: this.loginScopes.join(' '),
             // nonce: ModelData.genID(),
             state: this.state,
@@ -283,7 +262,7 @@ let AppCacheLogonAzure = {
 
     _logoutUrl: function () {
         let data = {
-            post_logout_redirect_uri: this.fullUri + this.redirectUri
+            post_logout_redirect_uri: this.getFullUri() + this.redirectUri
         };
 
         return this._authUrl('logout') + serializeDataForQueryString(data);
@@ -300,9 +279,10 @@ let AppCacheLogonAzure = {
             scope: data.scopes.join(' '),
             token_type: 'Bearer',
         };
+
         //New token format
         AppCache.userInfo.v2azureToken = data;
-        AppCache.userInfo.azureUser = this._parseJwt(AppCache.userInfo.azureToken.idToken);
+        AppCache.userInfo.azureUser = parseJsonWebToken(AppCache.userInfo.azureToken.idToken);
 
         if (resourceToken) {
             AppCache.userInfo.v2azureResourceToken = resourceToken;
@@ -325,11 +305,11 @@ let AppCacheLogonAzure = {
             data.expires_on = data.expires_on.getTime();
         }
 
-        // Autorelogin 
+        // Auto re-login 
         let expire_in_ms = (data.expires_in * 1000) - 120000;
 
         AppCache.userInfo.azureToken = data;
-        AppCache.userInfo.azureUser = this._parseJwt(AppCache.userInfo.azureToken.id_token);
+        AppCache.userInfo.azureUser = parseJsonWebToken(AppCache.userInfo.azureToken.id_token);
 
         if (resourceToken) {
             AppCache.userInfo.azureResourceToken = resourceToken;
@@ -345,15 +325,17 @@ let AppCacheLogonAzure = {
             this.Relog(data.refresh_token, 'refresh');
         }, expire_in_ms);
 
-        appCacheLog('Azure Logon: User Data');
+        appCacheLog('Azure: User Data');
         appCacheLog(AppCache.userInfo);
         return;
     },
 
     _getToken: function (response) {
+        appCacheLog('Azure: Get Token');
+
         const data = {
             client_id: this.options.clientID,
-            redirect_uri: this.fullUri + this.redirectUri,
+            redirect_uri: this.getFullUri() + this.redirectUri,
             scope: this.loginScopes.join(' '),
             code: response.code,
             grant_type: 'authorization_code',
@@ -361,7 +343,7 @@ let AppCacheLogonAzure = {
         const { type, path } = this.options;
         return request({
             type: 'POST',
-            url: `${this.fullUri}/user/logon/${type}/${path}/${encodeURIComponent(this._authUrl('token'))}`,
+            url: `${this.getFullUri()}/user/logon/${type}/${path}/${encodeURIComponent(this._authUrl('token'))}`,
             contentType: 'application/x-www-form-urlencoded',
             data: data,
             success: (data) => {
@@ -371,7 +353,7 @@ let AppCacheLogonAzure = {
                     return;
                 }
 
-                appCacheLog('Azure Logon: Got tokens');
+                appCacheLog("Azure: 'refresh_token' received");
                 appCacheLog(data);
 
                 AppCache.Auth = data.refresh_token;
@@ -397,12 +379,18 @@ let AppCacheLogonAzure = {
     },
 
     _refreshTokenMsal: function (process) {
+        appCacheLog('Azure: Refresh token MSAL');
+
         refreshingAuth = true;
         const account = this.msalObj.getAccountByUsername(AppCache.userInfo.username);
+
         this.GetTokenPopup({ scopes: this.loginScopes, account }).then((azureToken) => {
             refreshingAuth = false;
+
             if (this.options.scope) {
+                refreshingAuth = true;
                 this.GetTokenPopup({ scopes: this.options.scope.split(' '), account }).then((resourceToken) => {
+                    refreshingAuth = false;
                     this._onTokenReadyMsal(azureToken, resourceToken);
                     this._loginP9(azureToken.idToken, process);
                 });
@@ -439,7 +427,7 @@ let AppCacheLogonAzure = {
             const { type, path } = this.options;
             return request({
                 type: 'POST',
-                url: `${this.fullUri}/user/logon/${type}/${path}/${encodeURIComponent(this._authUrl('token'))}`,
+                url: `${this.getFullUri()}/user/logon/${type}/${path}/${encodeURIComponent(this._authUrl('token'))}`,
                 contentType: 'application/x-www-form-urlencoded',
                 data: data,
                 success: (data) => {
@@ -481,7 +469,7 @@ let AppCacheLogonAzure = {
         return request({
             data,
             type: 'POST',
-            url: `${this.fullUri}/user/logon/${type}/${path}/${encodeURIComponent(this._authUrl('token'))}`,
+            url: `${this.getFullUri()}/user/logon/${type}/${path}/${encodeURIComponent(this._authUrl('token'))}`,
             contentType: 'application/x-www-form-urlencoded',
             success: (data) => {
                 refreshingAuth = false;
@@ -529,10 +517,9 @@ let AppCacheLogonAzure = {
         return request({
             type: 'POST',
             url: `${AppCache.Url}/user/logon/${type}/${path}${AppCache._getLoginQuery()}`,
-            headers: { 'Authorization': 'Bearer ' + idToken, 'login-path': getLoginData() },
+            headers: { 'Authorization': 'Bearer ' + idToken, 'login-path': getLoginPath() },
             success: (data) => {
                 refreshingAuth = false;
-                setSelectedLoginType(this.options.type);
 
                 switch (process) {
                     case 'pin':
@@ -567,59 +554,4 @@ let AppCacheLogonAzure = {
             }
         });
     },
-
-    _waitForPopupDesktop: function (popupWin, onClose) {
-        let url = '';
-        let winCheckTimer = setInterval(() => {
-            try {
-                url = popupWin.location.href ?? '';
-            } catch (err) {
-                // otherwise it would error out on accessing string functions
-                url = '';
-
-                if (err.name === 'SecurityError') {
-                    // we are unable to read location.href
-                } else {
-                    console.log('_waitForPopupDesktop popupWin', popupWin, 'error', err);
-                }
-            }
-
-            if (url.indexOf('state=') > -1 || url.indexOf('nonce=') > -1) console.log(url);
-
-            if (popupWin.closed || url.indexOf('error=') > -1) {
-                clearInterval(winCheckTimer);
-            }
-            
-            if (url.indexOf('code=') > -1) {
-                console.log(url);
-                clearInterval(winCheckTimer);
-                popupWin.close();
-                onClose(url);
-            }
-        }, 100);
-    },
-
-    _parseJwt: function (token) {
-        try {
-            return JSON.parse(atob(token.split('.')[1]));
-        } catch (e) {
-            return null;
-        }
-    },
-
-    _openPopup: function (url, popUpWidth, popUpHeight) {
-        popUpWidth = popUpWidth || 483;
-        popUpHeight = popUpHeight || 600;
-
-        const winLeft = window.screenLeft ? window.screenLeft : window.screenX;
-        const winTop = window.screenTop ? window.screenTop : window.screenY;
-
-        const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-        const height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-
-        const left = ((width / 2) - (popUpWidth / 2)) + winLeft;
-        const top = ((height / 2) - (popUpHeight / 2)) + winTop;
-
-        return window.open(url, '_blank', 'location=no,width=' + popUpWidth + ',height=' + popUpHeight + ',left=' + left + ',top=' + top);
-    }
 };

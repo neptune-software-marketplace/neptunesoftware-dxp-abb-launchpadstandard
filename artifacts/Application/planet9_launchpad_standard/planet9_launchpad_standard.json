@@ -4432,6 +4432,14 @@
 																			"translation": []
 																		},
 																		{
+																			"attribute": "navigate",
+																			"grouping": "Events",
+																			"value": "Anonymous Function",
+																			"script": "file://event/sap.m.NavContainer/AppCacheNav/navigate.js",
+																			"language": "javascript",
+																			"translation": []
+																		},
+																		{
 																			"attribute": "afterNavigate",
 																			"grouping": "Events",
 																			"value": "Anonymous Function",
@@ -6821,8 +6829,8 @@
 																												{
 																													"attribute": "change",
 																													"grouping": "Events",
-																													"value": "sap.n.Utils.setLogonScreen();",
-																													"script": "sap.n.Utils.setLogonScreen();",
+																													"value": "sap.n.Utils.setupLoginScreen();",
+																													"script": "sap.n.Utils.setupLoginScreen();",
 																													"translation": []
 																												}
 																											],
@@ -12276,8 +12284,9 @@
 																												{
 																													"attribute": "liveChange",
 																													"grouping": "Events",
-																													"value": "this.setValue(sanitizePincode(this.getValue()));",
-																													"script": "this.setValue(sanitizePincode(this.getValue()));",
+																													"value": "Anonymous Function",
+																													"script": "file://event/sap.m.Input/AppCache_inPasscode1/liveChange.js",
+																													"language": "javascript",
 																													"translation": []
 																												}
 																											],
@@ -12689,8 +12698,9 @@
 																												{
 																													"attribute": "liveChange",
 																													"grouping": "Events",
-																													"value": "this.setValue(sanitizePincode(this.getValue()));",
-																													"script": "this.setValue(sanitizePincode(this.getValue()));",
+																													"value": "Anonymous Function",
+																													"script": "file://event/sap.m.Input/AppCache_inPasscode2/liveChange.js",
+																													"language": "javascript",
 																													"translation": []
 																												}
 																											],
@@ -50687,7 +50697,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "24.02.09.1059",
+	"ver": "24.02.23.1254",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",

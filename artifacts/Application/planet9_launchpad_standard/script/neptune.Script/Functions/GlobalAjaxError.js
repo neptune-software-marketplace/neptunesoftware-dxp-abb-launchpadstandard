@@ -16,8 +16,8 @@ jQuery(document).ajaxError(function (_event, request, _settings) {
         // handling based on authentication method
         const process = 'refresh';
         const user = AppCache.userInfo;
-        if (user && user.logonData && user.logonData.type) {
-            const type = user.logonData.type;
+        if (user) {
+            const { type } = getAuthSettingsForUser();
             const decrypted = user.authDecrypted;
 
             // if decryption fails we have nothing for relogin
@@ -34,6 +34,9 @@ jQuery(document).ajaxError(function (_event, request, _settings) {
             setTimeout(()=> {
                 _reloginInProgress = false;
             }, 1000)
+
+            // if auto-login is enabled and control ends below it would try to login using local login, which might not be desired
+            return;
         }
 
         // AutoLogin

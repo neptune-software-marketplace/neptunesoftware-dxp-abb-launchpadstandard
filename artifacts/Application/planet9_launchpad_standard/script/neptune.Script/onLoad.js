@@ -86,7 +86,7 @@ function onDeviceReady() {
     // InAppBrowser 
     if (isCordova()) window.open = cordova.InAppBrowser.open;
 
-    if (isCordova()) {
+    if (isCordova() && cordova.plugin && cordova.plugin.http) {
         let fnAjaxTransportProxy = function (options, originalOptions, jqXHR) {
             const { dataType, dataTypes, contentType } = options;
             if (

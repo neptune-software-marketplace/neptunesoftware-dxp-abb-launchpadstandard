@@ -2,10 +2,9 @@ let AppCacheLogonSaml = {
     Logon: function (data) {
         refreshingAuth = true;
         AppCache.Auth = JSON.stringify(data);
-        AppCache.samlData = data;
 
-        let loginWin = window.open(data.entryPoint, "_blank", "location=yes");
-
+        const loginWin = window.open(data.entryPoint, "_blank", "location=yes");
+        
         // Apply Event Hander for inAppBrowser
         setTimeout(function () {
             loginWin.addEventListener("loadstart", function (event) {
@@ -61,13 +60,8 @@ let AppCacheLogonSaml = {
     },
 
     Logoff: function () {
-        if (isOffline()) {
-            AppCache.clearCookies();
-            return;
-        }
-
         // SAML Logout
-        const logon = getLoginSettings();
+        const logon = getAuthSettingsForUser();
         if (logon && logon.logoutUrl) {
             request({
                 type: "GET",
@@ -76,16 +70,7 @@ let AppCacheLogonSaml = {
             });
         }
 
-        // P9 Logout
-        jsonRequest({
-            url: `${AppCache.Url}/user/logout`,
-            success: function (data) {
-                AppCache.clearCookies();
-            },
-            error: function (result, status) {
-                AppCache.clearCookies();
-            },
-        });
+        p9UserLogout('SAML');
     },
 
     Init: function () {},

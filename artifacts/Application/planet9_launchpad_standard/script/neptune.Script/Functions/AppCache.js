@@ -67,7 +67,6 @@ let AppCache = {
     numPasscode: 5,
     Encrypted: '',
     loginApp: '',
-    samlData: false,
     inBackground: false,
 
     loadLibrary: function (url) {
@@ -513,27 +512,18 @@ let AppCache = {
     },
 
     initIDPProvider: function () {
-        if (AppCache.userInfo.logonData && AppCache.userInfo.logonData.type) {
-            switch (AppCache.userInfo.logonData.type) {
-                case 'local':
-                    if (!isChpassDisabled()) {
-                        AppCacheUserActionPassword.setVisible(true);
-                    }
-                    AppCacheLogonLocal.Init();
-                    break;
-
-                case 'azure-bearer':
-                    AppCacheLogonAzure.Init();
-                    break;
-
-                case 'openid-connect':
-                    AppCacheLogonOIDC.Init();
-                    break;
-
-                case 'ldap':
-                    AppCacheLogonLdap.Init();
-                    break;
+        const { type: authType } = getAuthSettingsForUser();
+        if (authType === 'azure-bearer') {
+            AppCacheLogonAzure.Init();
+        } else if (authType === 'openid-connect') {
+            AppCacheLogonOIDC.Init();
+        } else if (authType === 'ldap') {
+            AppCacheLogonLdap.Init();
+        } else if (authType === 'local') {
+            if (!isChpassDisabled()) {
+                AppCacheUserActionPassword.setVisible(true);
             }
+            AppCacheLogonLocal.Init();
         }
     },
 
@@ -1472,6 +1462,8 @@ let AppCache = {
             return;
         }
 
+        const { actionWebApp: webAppName } = dataTile;
+        const url = `${AppCache.Url}/webapp/${webAppName}?isMobile=true`;
         appendIFrame(
             querySelector('#AppCache_URLDiv'),
             {
@@ -1480,7 +1472,7 @@ let AppCache = {
                 'style': 'border: 0;',
                 'width': '100%',
                 'height': '100%',
-                'srcdoc': viewData
+                'src': url,
             }
         );
     },
@@ -1502,26 +1494,14 @@ let AppCache = {
             sap.n.Layout.setHeaderPadding();
         }, 100);
 
-        // Logoff 
-        if (AppCache.userInfo.logonData && AppCache.userInfo.logonData.type) {
-            switch (AppCache.userInfo.logonData.type) {
-                case 'local':
-                    AppCacheLogonLocal.Logoff();
-                    break;
-
-                case 'azure-bearer':
-                    AppCacheLogonAzure.Logoff();
-                    break;
-
-                case 'openid-connect':
-                    AppCacheLogonOIDC.Logoff();
-                    break;
-
-                case 'ldap':
-                    AppCacheLogonLdap.Logoff();
-                    break;
-            }
-        } else {
+        const { type: authType } = getAuthSettingsForUser();
+        if (authType === 'azure-bearer') {
+            AppCacheLogonAzure.Logoff();
+        } else if (authType === 'openid-connect') {
+            AppCacheLogonOIDC.Logoff();
+        } else if (authType === 'ldap') {
+            AppCacheLogonLdap.Logoff();
+        } else if (authType === 'local') {
             AppCacheLogonLocal.Logoff();
         }
 
@@ -1548,7 +1528,6 @@ let AppCache = {
 
     Logout: function () {
         AppCache_boxLogon.setVisible(true);
-        clearSelectedLoginType();
         
         // Enhancement
         if (sap.n.Enhancement.BeforeLogout) {
@@ -1562,6 +1541,7 @@ let AppCache = {
         AutoLockTimer.stop();
         removeLaunchpadFromCache();
 
+        const { type: authType } = getAuthSettingsForUser();
         if (AppCache.isMobile) {
             // Restricted Area
             AppCache.restrictedEnable();
@@ -1578,61 +1558,35 @@ let AppCache = {
 
             if (AppCache.enableAutoLogin) AppCacheLogonLocal.AutoLoginRemove();
 
-            // Logoff 
-            if (AppCache.userInfo && AppCache.userInfo.logonData) {
-                switch (AppCache.userInfo.logonData.type) {
-                    case 'azure-bearer':
-                        AppCacheLogonAzure.Logoff();
-                        break;
-
-                    case 'openid-connect':
-                        AppCacheLogonOIDC.Logoff();
-                        break;
-
-                    case 'ldap':
-                        AppCacheLogonLdap.Logoff();
-                        break;
-
-                    default:
-                        AppCacheLogonLocal.Logoff();
-                        break;
-                }
+            if (authType === 'azure-bearer') {
+                AppCacheLogonAzure.Logoff();
+            } else if (authType === 'openid-connect') {
+                AppCacheLogonOIDC.Logoff();
+            } else if (authType === 'ldap') {
+                AppCacheLogonLdap.Logoff();
             } else {
                 AppCacheLogonLocal.Logoff();
             }
         } else {
-            // Logoff 
-            if (AppCache.userInfo && AppCache.userInfo.logonData) {
-                switch (AppCache.userInfo.logonData.type) {
-                    case 'azure-bearer':
-                        AppCacheLogonAzure.Signout();
-                        break;
-
-                    case 'openid-connect':
-                        AppCacheLogonOIDC.Signout();
-                        break;
-
-                    default:
-                        break;
-                }
+            if (authType === 'azure-bearer') {
+                AppCacheLogonAzure.Signout();
+                p9UserLogout('Azure');
+            } else if (authType === 'openid-connect') {
+                AppCacheLogonOIDC.Signout();
+                p9UserLogout('OpenID Connect');
+            } else if (authType === 'ldap') {
+                AppCacheLogonLdap.Logoff();
+            } else {
+                AppCacheLogonLocal.Logoff();
             }
-            // Enhancement
-            if (sap.n.Enhancement.AfterLogout) {
-                try {
-                    sap.n.Enhancement.AfterLogout();
-                } catch (e) {
-                    appCacheError('Enhancement AfterLogout ' + e);
-                }
-            }
+        }
 
-            jsonRequest({
-                url: AppCache.Url + '/user/logout',
-                success: function (data) {
-                    location.hash = '';
-                    location.reload();
-                },
-                error: function (result, status) { }
-            });
+        if (sap.n.Enhancement.AfterLogout) {
+            try {
+                sap.n.Enhancement.AfterLogout();
+            } catch (e) {
+                appCacheError('Enhancement AfterLogout ' + e);
+            }
         }
 
         AppCache.translate(navigator.language.slice(0, 2).toUpperCase());
@@ -1647,70 +1601,23 @@ let AppCache = {
     },
 
     Logon: function () {
-        let logonData = AppCache.getLogonTypeInfo(AppCache_loginTypes.getSelectedKey());
+        const settings = getAuthSettingsForUser();
+        const { type: authType } = settings;
 
-        // Logon 
-        switch (logonData.type) {
-            case 'local':
-                AppCacheLogonLocal.Logon();
-                break;
+        if (authType !== 'local') AppCacheLogonLocal.AutoLoginRemove();
 
-            case 'sap':
-                AppCacheLogonLocal.AutoLoginRemove();
-                AppCacheLogonSap.Logon();
-                break;
-
-            case 'azure-bearer':
-                AppCacheLogonLocal.AutoLoginRemove();
-                AppCacheLogonAzure.Logon();
-                break;
-
-            case 'openid-connect':
-                AppCacheLogonLocal.AutoLoginRemove();
-                AppCacheLogonOIDC.Logon();
-                break;
-
-            case 'saml':
-                AppCacheLogonLocal.AutoLoginRemove();
-                if (AppCache.isMobile) {
-                    AppCacheLogonSaml.Logon(logonData);
-                } else {
-                    window.open(logonData.entryPoint);
-                }
-                break;
-
-            case 'ldap':
-                AppCacheLogonLocal.AutoLoginRemove();
-                AppCacheLogonLdap.Logon();
-                break;
+        if (authType === 'local') AppCacheLogonLocal.Logon();
+        else if (authType === 'sap') AppCacheLogonSap.Logon();
+        else if (authType === 'azure-bearer') AppCacheLogonAzure.Logon();
+        else if (authType === 'openid-connect') AppCacheLogonOIDC.Logon();
+        else if (authType === 'ldap') AppCacheLogonLdap.Logon();
+        else if (authType === 'saml') {
+            if (AppCache.isMobile) {
+                AppCacheLogonSaml.Logon(settings);
+            } else {
+                window.open(settings.entryPoint);
+            }
         }
-    },
-
-    getLogonTypeInfo: function (id) {
-        let info = { type: 'local' };
-        const { logonTypes } = modelDataSettings.oData;
-        if (!Array.isArray(logonTypes)) {
-            return info;
-        }
-
-        logonTypes.forEach(function (data) {
-            if (data.id === id) info = data;
-        });
-
-        delete info.bindCredentials;
-        delete info.bindDn;
-        delete info.filterGroup;
-        delete info.filterUser;
-        delete info.findGroupsForUserFilter;
-        delete info.groupKeyField;
-        delete info.mapGroup;
-        delete info.mapUser;
-        delete info.searchBase;
-        delete info.searchFilter;
-        delete info.searchGroupFilter;
-        delete info.searchUserFilter;
-
-        return info;
     },
 
     setUserInfo: function () {
@@ -1730,29 +1637,8 @@ let AppCache = {
 
         if (AppCache.isMobile) return;
 
-        // logonData 
-        let logonData = localStorage.getItem('p9logonData');
-
-        if (logonData) {
-            try {
-                AppCache.userInfo.logonData = JSON.parse(logonData);
-                delete AppCache.userInfo.logonData.bindCredentials;
-                delete AppCache.userInfo.logonData.bindDn;
-                delete AppCache.userInfo.logonData.filterGroup;
-                delete AppCache.userInfo.logonData.filterUser;
-                delete AppCache.userInfo.logonData.findGroupsForUserFilter;
-                delete AppCache.userInfo.logonData.groupKeyField;
-                delete AppCache.userInfo.logonData.mapGroup;
-                delete AppCache.userInfo.logonData.mapUser;
-                delete AppCache.userInfo.logonData.searchBase;
-                delete AppCache.userInfo.logonData.searchFilter;
-                delete AppCache.userInfo.logonData.searchGroupFilter;
-                delete AppCache.userInfo.logonData.searchUserFilter;
-            } catch (e) { }
-        }
-
-        // Azure Bearer 
-        if (AppCache.userInfo.logonData && AppCache.userInfo.logonData.type === 'azure-bearer') {
+        const { type: authType } = getAuthSettingsForUser();
+        if (authType === 'azure-bearer') {
             let tokenData = localStorage.getItem('p9azuretoken');
             let tokenDatav2 = localStorage.getItem('p9azuretokenv2');
 
@@ -1761,9 +1647,8 @@ let AppCache = {
                     if (tokenDatav2) {
                         AppCacheLogonAzure.Relog(null);
                     } else {
-
                         AppCache.userInfo.azureToken = JSON.parse(tokenData);
-                        AppCache.userInfo.azureUser = AppCacheLogonAzure._parseJwt(AppCache.userInfo.azureToken.id_token);
+                        AppCache.userInfo.azureUser = parseJsonWebToken(AppCache.userInfo.azureToken.id_token);
                         AppCache.userInfo.authDecrypted = AppCache.userInfo.azureToken.refresh_token;
 
                         if (AppCache.userInfo.azureToken.refresh_token) {
@@ -1772,15 +1657,12 @@ let AppCache = {
                     }
                 } catch (e) { }
             }
-        }
-
-        // OIDC Bearer 
-        if (AppCache.userInfo.logonData && AppCache.userInfo.logonData.type === 'openid-connect') {
+        } else if (authType === 'openid-connect') {
             let tokenDataOIDC = localStorage.getItem('p9oidctoken');
             if (tokenDataOIDC) {
                 try {
                     AppCache.userInfo.oidcToken = JSON.parse(tokenData);
-                    AppCache.userInfo.oidcUser = AppCacheLogonOIDC._parseJwt(AppCache.userInfo.azureToken.id_token);
+                    AppCache.userInfo.oidcUser = parseJsonWebToken(AppCache.userInfo.azureToken.id_token);
                     AppCache.userInfo.authDecrypted = AppCache.userInfo.oidcToken.refresh_token;
                 } catch (e) { }
             }
@@ -1789,7 +1671,6 @@ let AppCache = {
         // localStorage.removeItem('p9azuretoken');
         // localStorage.removeItem('p9azuretokenv2');
         // localStorage.removeItem('p9oidctoken');
-        // localStorage.removeItem('p9logonData');
     },
 
     getUserInfo: function () {
@@ -1865,24 +1746,17 @@ let AppCache = {
 
         // Azure/OIDC - No PIN Code
         if (!AppCache.enablePasscode) {
-            if (AppCache.userInfo && AppCache.userInfo.azureToken) userData.azureToken = AppCache.userInfo.azureToken;
-            if (AppCache.userInfo && AppCache.userInfo.azureUser) userData.azureUser = AppCache.userInfo.azureUser;
-            if (AppCache.userInfo && AppCache.userInfo.oidcToken) userData.oidcToken = AppCache.userInfo.oidcToken;
-            if (AppCache.userInfo && AppCache.userInfo.oidcUser) userData.oidcUser = AppCache.userInfo.oidcUser;
-
-            const selectedKey = AppCache_loginTypes.getSelectedKey();
-            AppCache.userInfo.logonData = AppCache.getLogonTypeInfo(selectedKey);
-
-            // if modelDataSettings.oData.logonTypes fail to load
-            // by default logonData.type will be set to local, which might be incorrect
-            if (selectedKey === '') {
-                if (userData.azureToken || userData.azureUser) AppCache.userInfo.logonData.type = 'azure-bearer';
-                if (userData.oidcToken || userData.oidcUser) AppCache.userInfo.logonData.type = 'openid-connect';
+            if (AppCache.userInfo) {
+                if (AppCache.userInfo.azureToken) userData.azureToken = AppCache.userInfo.azureToken;
+                if (AppCache.userInfo.azureUser) userData.azureUser = AppCache.userInfo.azureUser;
+                if (AppCache.userInfo.oidcToken) userData.oidcToken = AppCache.userInfo.oidcToken;
+                if (AppCache.userInfo.oidcUser) userData.oidcUser = AppCache.userInfo.oidcUser;
             }
 
             if (isPWAEnabled()) {
-                if (AppCache.userInfo.logonData.type === 'azure-bearer') AppCacheLogonAzure.Signout();
-                if (AppCache.userInfo.logonData.type === 'openid-connect') AppCacheLogonOIDC.Signout();
+                const { type: authType } = getAuthSettingsForUser();
+                if (authType === 'azure-bearer') AppCacheLogonAzure.Signout();
+                if (authType === 'openid-connect') AppCacheLogonOIDC.Signout();
             }
         }
 
@@ -1941,17 +1815,15 @@ let AppCache = {
     },
 
     afterUserInfo: function (offline, data) {
-        let userData = '';
-
+        let userData = {};
         if (offline && !AppCache.isMobile) {
             getCacheAppCacheUsers();
             userData = modelAppCacheUsers.oData[0];
-        } else {
-            if (data) {
-                userData = data[0];
-                ModelData.Update(AppCacheUsers, 'username', data[0].username, userData);
-                setCacheAppCacheUsers();
-            }
+        } else if (data) {
+            userData = data[0];
+            userData.logonData = getAuthSettingsFromLoginType(); // setting authentication settings on user object
+            ModelData.Update(AppCacheUsers, 'username', data[0].username, userData);
+            setCacheAppCacheUsers();
         }
 
         sap.ui.core.BusyIndicator.hide();
@@ -1962,6 +1834,10 @@ let AppCache = {
         // User Information
         if (userData) AppCache.userInfo = userData;
         AppCache.setUserInfo();
+
+        // show/hide change password in user menu
+        const { type: authType } = userData.logonData;
+        AppCacheUserActionPassword.setVisible(authType === 'local' && !isChpassDisabled());
 
         this.afterSetUserInfo();
     },
@@ -1975,6 +1851,8 @@ let AppCache = {
     },
 
     SetPasscode: function () {
+        if (userIsNotLoggedIn()) return;
+
         const p1 = AppCache_inPasscode1;
         const p2 = AppCache_inPasscode2;
 
@@ -2031,6 +1909,9 @@ let AppCache = {
         if (isCordova() && typeof cordova.plugins !== 'undefined' && typeof cordova.plugins.SecureKeyStore !== 'undefined') {
             let sksKey = AppCache.AppID + '-' + AppCache.userInfo.username;
             cordova.plugins.SecureKeyStore.set(function (res) { }, function (error) {
+                // The SecureKeyStore plugin still creates an entry, even on error, so we remove it.
+                cordova.plugins.SecureKeyStore.remove((successMessage) => { }, (error) => { }, sksKey);
+
                 AppCache.userInfo.auth = encrypted.toString();
             }, sksKey, encrypted.toString());
         } else {
@@ -2040,14 +1921,6 @@ let AppCache = {
         // Store data to user 
         if (isCordova() && !window.navigator.simulator && AppCache.biometricAuthentication) AppCache.userInfo.biometric = true;
 
-        // Logon Type 
-        if (AppCache.samlData) {
-            AppCache.userInfo.logonData = AppCache.samlData;
-            AppCache.userInfo.logonData.type = 'saml';
-        } else {
-            AppCache.userInfo.logonData = AppCache.getLogonTypeInfo(AppCache_loginTypes.getSelectedKey());
-        }
-
         // Only Biometric for 1. User
         if (modelAppCacheUsers.oData.length > 1) AppCache.userInfo.biometric = false;
         if (modelAppCacheUsers.oData.length === 1 && modelAppCacheUsers.oData[0].username !== AppCache.userInfo.username) AppCache.userInfo.biometric = false;
@@ -2056,14 +1929,13 @@ let AppCache = {
         setCacheAppCacheUsers();
         modelAppCacheUsers.refresh();
 
-        // PWA - Azure 
-        if (isPWAEnabled() && AppCache.userInfo.logonData.type === 'azure-bearer') {
-            AppCacheLogonAzure.Signout();
-        }
-
-        // PWA - OIDC 
-        if (isPWAEnabled() && AppCache.userInfo.logonData.type === 'openid-connect') {
-            AppCacheLogonOIDC.Signout();
+        const { type: authType } = getAuthSettingsForUser();
+        if (isPWAEnabled()) {
+            if (authType === 'azure-bearer') {
+                AppCacheLogonAzure.Signout();
+            } else if (authType === 'openid-connect') {
+                AppCacheLogonOIDC.Signout();
+            }
         }
 
         // Store passcode to OS SAMKeychain library or Android SecureStorage
@@ -2316,7 +2188,6 @@ let AppCache = {
                     appCacheError('Enhancement AfterUpdate ' + e);
                 }
             }
-
         }
 
         // Enhancement
@@ -2636,12 +2507,13 @@ let AppCache = {
             }
 
             if (!document.getElementById('cai-webchat')) {
-                let s = document.createElement('script');
-                s.setAttribute('id', 'cai-webchat');
-                s.setAttribute('src', 'https://cdn.cai.tools.sap/webchat/webchat.js');
-                s.setAttribute('channelId', AppCache.config.sapcai_channelid);
-                s.setAttribute('token', AppCache.config.sapcai_token);
-                document.body.appendChild(s);
+                document.body.appendChild(
+                    createScriptTag('https://cdn.cai.tools.sap/webchat/webchat.js', {
+                        'id': 'cai-webchat',
+                        'channelId': AppCache.config.sapcai_channelid,
+                        'token': AppCache.config.sapcai_token
+                    })
+                );
             } else {
                 let s = document.getElementById('cai-webchat');
                 s.setAttribute('channelId', AppCache.config.sapcai_channelid);
@@ -2661,9 +2533,9 @@ let AppCache = {
             };
 
             setTimeout(function () {
-                const t = document.createElement('script');
-                t.src = 'https://web-chat.global.assistant.watson.appdomain.cloud/loadWatsonAssistantChat.js';
-                document.head.appendChild(t);
+                document.head.appendChild(
+                    createScriptTag('https://web-chat.global.assistant.watson.appdomain.cloud/loadWatsonAssistantChat.js')
+                );
             });
         }
 
@@ -2920,14 +2792,6 @@ let AppCache = {
                         AppCache.Encrypted = encrypted.toString();
                         AppCache.userInfo.auth = encrypted.toString();
 
-                        // Logon Type 
-                        if (AppCache.samlData) {
-                            AppCache.userInfo.logonData = AppCache.samlData;
-                            AppCache.userInfo.logonData.type = 'saml';
-                        } else {
-                            AppCache.userInfo.logonData = AppCache.getLogonTypeInfo(AppCache_loginTypes.getSelectedKey());
-                        }
-
                         modelAppCacheUsers.oData[0].webauthid = userid;
                         setCacheAppCacheUsers();
                         AppCache.Update();
@@ -2957,11 +2821,19 @@ let AppCache = {
         AppCacheNav.to('AppCache_boxUsers', 'show');
         AppCache.handleUserMenu();
         AppCache.calculateUserScreen();
+
+        const users = modelAppCacheUsers.getData();
+        const numUsers = users.length ?? 0;
+        if (numUsers === 0) {
+            AppCacheNav.to('AppCache_boxLogon', 'show');
+        }
     },
 
     calculateUserScreen: function () {
+        const users = modelAppCacheUsers.getData();
+        const numUsers = users.length ?? 0;
 
-        if (modelAppCacheUsers.oData.length > 1) {
+        if (numUsers > 1) {
             toolUsersSort.setVisible(true);
             toolUsersFilter.setVisible(true);
             setTimeout(function () {
@@ -2972,71 +2844,18 @@ let AppCache = {
             toolUsersFilter.setVisible(false);
         }
 
-        // Calculate Heights 
+        // Calculate Heights
         if (sap.n.Launchpad.isPhone()) {
-
-            if (modelAppCacheUsers.oData.length <= 1) {
-                AppCacheUserScroll.setHeight('100px');
-                return;
-            }
-
-            if (modelAppCacheUsers.oData.length <= 2) {
-                AppCacheUserScroll.setHeight('200px');
-                return;
-            }
-
-            if (modelAppCacheUsers.oData.length <= 3) {
-                AppCacheUserScroll.setHeight('300px');
-                return;
-            }
-
-            if (modelAppCacheUsers.oData.length > 4) {
-                AppCacheUserScroll.setHeight('400px');
-                return;
-            }
-
+            AppCacheUserScroll.setHeight(numUsers >= 4 ? '400px' : `${numUsers * 100}px`);
+            return;
         }
 
         // Desktop
-        if (modelAppCacheUsers.oData.length <= 1) {
-            AppCache_boxLogonUsers.setHeight('75%');
-            AppCacheUserScroll.setHeight('100px');
-            return;
-        }
-
-        if (modelAppCacheUsers.oData.length <= 2) {
-            AppCache_boxLogonUsers.setHeight('75%');
-            AppCacheUserScroll.setHeight('200px');
-            return;
-        }
-
-        if (modelAppCacheUsers.oData.length <= 3) {
-            AppCache_boxLogonUsers.setHeight('75%');
-            AppCacheUserScroll.setHeight('300px');
-            return;
-        }
-
-        if (modelAppCacheUsers.oData.length <= 4) {
-            AppCache_boxLogonUsers.setHeight('75%');
-            AppCacheUserScroll.setHeight('400px');
-            return;
-        }
-
-        if (modelAppCacheUsers.oData.length <= 5) {
-            AppCache_boxLogonUsers.setHeight('100%');
-            AppCacheUserScroll.setHeight('500px');
-            return;
-        }
-
-        if (modelAppCacheUsers.oData.length > 5) {
-            AppCache_boxLogonUsers.setHeight('100%');
-            AppCacheUserScroll.setHeight('600px');
-        }
+        AppCache_boxLogonUsers.setHeight(numUsers > 4 ? '100%' : '75%');
+        AppCacheUserScroll.setHeight(numUsers > 5 ? '600px' : `${numUsers * 100}px`);
     },
 
     setEnableLogonScreen: function () {
-        AppCache.samlData = false;
-
         closeContentNavigator();
         sap.n.Launchpad.setHideTopButtons(true);
 
@@ -3189,41 +3008,35 @@ let AppCache = {
         if (data.settings.name) txtFormLoginSubTitle1.setText(data.settings.name);
         if (data.settings.description) txtFormLoginSubTitle2.setText(data.settings.description);
 
-        // Parse Logon Types
-        let idps = [];
-
         data.logonTypes.sort(sort_by('description', false));
 
         AppCache_loginTypes.removeAllItems();
-
-        if (!data.settingsLaunchpad.config.hideLoginLocal || !data.logonTypes.length) {
+        if (!data.settingsLaunchpad.config.hideLoginLocal || data.logonTypes.length > 0) {
             AppCache_loginTypes.addItem(new sap.ui.core.Item({
                 key: 'local',
                 text: 'Local'
             }));
         }
 
-        for (let i = 0, length = data.logonTypes.length; i < length; i++) {
-            if (data.logonTypes[i].show) {
-
-                if (data.logonTypes[i].type === 'saml') continue;
-                if (data.logonTypes[i].type === 'oauth2') continue;
-
+        data.logonTypes
+            .filter(loginType => loginType.show)
+            .filter(loginType => loginType.type !== 'saml' && loginType.type !== 'oauth2')
+            .forEach((loginType) => {
                 AppCache_loginTypes.addItem(new sap.ui.core.Item({
-                    key: data.logonTypes[i].id,
-                    text: data.logonTypes[i].description
+                    key: loginType.id,
+                    text: loginType.description
                 }));
-
-                if (!AppCache.config.hideLoginSelection) AppCache_loginTypes.setVisible(true);
-            }
-        }
+            })
+        if (!AppCache.config.hideLoginSelection) AppCache_loginTypes.setVisible(true);
 
         if (AppCache.config && AppCache.config.hideLoginSelection) AppCache_loginTypes.setVisible(false);
-        if (AppCache.defaultLoginIDP) AppCache_loginTypes.setSelectedKey(AppCache.defaultLoginIDP);
+
+        if (AppCache.defaultLoginIDP) {
+            AppCache_loginTypes.setSelectedKey(AppCache.defaultLoginIDP);
+        }
 
         // Texts 
         if (data.customizing.length) {
-
             if (data.customizing[0].txtLogin1Enable || data.customizing[0].txtLogin2Enable || data.customizing[0].txtLogin3Enable) {
                 panLinksPin.setVisible(true);
                 panLinksUsers.setVisible(true);
@@ -3360,7 +3173,7 @@ let AppCache = {
         }
 
         // Set Logon Screen
-        sap.n.Utils.setLogonScreen();
+        sap.n.Utils.setupLoginScreen();
 
         // Startup
         if (!skipStartup) {
@@ -3440,114 +3253,77 @@ let AppCache = {
             imgAndroid.setSrc(AppCache.Url + imgAndroid.getSrc());
             imgIos.setSrc(AppCache.Url + imgIos.getSrc());
 
+            setTimeout(function () {
+                if (typeof navigator.splashscreen !== 'undefined') navigator.splashscreen.hide();
+            }, 300);
+            
             if (AppCache.isPublic) {
                 AppCacheShellUser.destroy();
                 AppCache.Update();
 
-                setTimeout(function () {
-                    if (typeof navigator.splashscreen !== 'undefined') navigator.splashscreen.hide();
-                }, 300);
-
             } else {
-
                 appCacheLog('AppCache.Startup: Clear cookies');
                 AppCache.clearCookies();
 
                 appCacheLog('AppCache.Startup: Fetching users from database');
-                cacheLoaded = 0;
-
                 getCacheAppCacheUsers(true);
 
-                // incase of decryption error or for some other reason we fail to cacheLoaded++
-                //  we can continue forward using an attempt counter
+                // If localStorage fails to decrypt
+                if (!modelAppCacheUsers || !modelAppCacheUsers.oData) modelAppCacheUsers.oData = [];
                 
-                let waitingForCacheCounter = 0;
-                (function () {
-                    function waitForCache() {
-                        waitingForCacheCounter++;
-                        if (waitingForCacheCounter > 20 || cacheLoaded >= 1) {
-                            appCacheLog('AppCache.Startup: Got users from database');
+                // Passcode or Logon
+                if (AppCache.enablePasscode) {
+                    // Set Visible Markers
+                    switch (AppCache.passcodeLength) {
+                        case 6:
+                            Passcode5.setVisible(true);
+                            Passcode6.setVisible(true);
+                            break;
 
-                            // If localStorage fails to decrypt
-                            if (!modelAppCacheUsers || !modelAppCacheUsers.oData) modelAppCacheUsers.oData = [];
+                        case 8:
+                            Passcode5.setVisible(true);
+                            Passcode6.setVisible(true);
+                            Passcode7.setVisible(true);
+                            Passcode8.setVisible(true);
+                            break;
 
-                            // Remove Users from Desktop, if used in browser
-                            for (i = 0; i < modelAppCacheUsers.oData.length; i++) {
-                                let data = modelAppCacheUsers.oData[i];
-                                if (!data.logonData || !data.logonData.type) data.delete = true;
-                            }
-
-                            ModelData.Delete(AppCacheUsers, 'delete', true);
-                            appCacheLog(modelAppCacheUsers.oData);
-
-                            // Passcode or Logon
-                            if (AppCache.enablePasscode) {
-                                // Set Visible Markers
-                                switch (AppCache.passcodeLength) {
-                                    case 6:
-                                        Passcode5.setVisible(true);
-                                        Passcode6.setVisible(true);
-                                        break;
-
-                                    case 8:
-                                        Passcode5.setVisible(true);
-                                        Passcode6.setVisible(true);
-                                        Passcode7.setVisible(true);
-                                        Passcode8.setVisible(true);
-                                        break;
-
-                                    default:
-                                        break;
-                                }
-
-                                if (!modelAppCacheUsers.oData.length) {
-                                    AppCache.setEnableLogonScreen();
-                                } else {
-                                    AppCache.setEnableUsersScreen();
-                                }
-                            } else {
-                                // Check for AutoLogin
-                                AppCacheLogonLocal.AutoLoginGet().then(function (auth) {
-
-                                    appCacheLog('AppCache.Startup: Autologin starting');
-
-                                    if (auth) {
-                                        let action = [];
-                                        AppCache.enableAutoLogin = true;
-                                        AppCacheLogonLocal.Init();
-                                        action.push(AppCacheLogonLocal.Relog(auth));
-                                        Promise.all(action).then(function (values) {
-                                            if (values[0] === 'OK') {
-                                                AppCache.getUserInfo(auth);
-                                                appCacheLog('AppCache.Startup: Autologin found user in database');
-                                            } else {
-                                                sap.m.MessageToast.show(AppCache_tWrongUserNamePass.getText());
-                                                AppCache.Logout();
-                                            }
-                                        });
-                                    } else {
-                                        AppCache.setEnableLogonScreen();
-                                        appCacheLog('AppCache.Startup: Autologin no user found in database');
-                                    }
-
-                                });
-
-                            }
-
-                            setTimeout(function () {
-                                if (typeof navigator.splashscreen !== 'undefined') navigator.splashscreen.hide();
-                            }, 300);
-                        } else {
-                            setTimeout(waitForCache, 50);
-                        }
+                        default:
+                            break;
                     }
-                    waitForCache();
-                })()
 
+                    if (modelAppCacheUsers.oData.length === 0) {
+                        AppCache.setEnableLogonScreen();
+                    } else {
+                        AppCache.setEnableUsersScreen();
+                    }
+                } else {
+                    // Check for AutoLogin
+                    AppCacheLogonLocal.AutoLoginGet().then(function (auth) {
+
+                        appCacheLog('AppCache.Startup: Autologin starting');
+
+                        if (auth) {
+                            let action = [];
+                            AppCache.enableAutoLogin = true;
+                            AppCacheLogonLocal.Init();
+                            action.push(AppCacheLogonLocal.Relog(auth));
+                            Promise.all(action).then(function (values) {
+                                if (values[0] === 'OK') {
+                                    AppCache.getUserInfo(auth);
+                                    appCacheLog('AppCache.Startup: Autologin found user in database');
+                                } else {
+                                    sap.m.MessageToast.show(AppCache_tWrongUserNamePass.getText());
+                                    AppCache.Logout();
+                                }
+                            });
+                        } else {
+                            AppCache.setEnableLogonScreen();
+                            appCacheLog('AppCache.Startup: Autologin no user found in database');
+                        }
+                    });
+                }
             }
-
         } else {
-
             appCacheLog('AppCache.Startup: Desktop Client');
 
             AppCacheUserActionSettings.setVisible(true);

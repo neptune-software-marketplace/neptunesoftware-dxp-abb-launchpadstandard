@@ -4,20 +4,28 @@ AppCache_inUsername.setValue(userName.trim());
 AppCache_inUsername.setValueState();
 AppCache_inPassword.setValueState();
 
-// Checks
-if (AppCache_inUsername.getVisible() && !AppCache_inUsername.getValue()) {
-    AppCache_inUsername.setValueState('Error');
+function isValid(field) {
+    // if the field is invisible then it is valid
+    if (!field.getVisible()) return true;
+
+    const value = field.getValue();
+    return typeof value === 'string' && value.length > 0;
+}
+
+function setErrorState(field) {
+    field.setValueState('Error');
     setTimeout(function () {
-        AppCache_inUsername.focus();
+        field.focus();
     }, 400);
+}
+
+if (!isValid(AppCache_inUsername)) {
+    setErrorState(AppCache_inUsername);
     return;
 }
 
-if (AppCache_inPassword.getVisible() && !AppCache_inPassword.getValue()) {
-    AppCache_inPassword.setValueState('Error');
-    setTimeout(function () {
-        AppCache_inPassword.focus();
-    }, 400);
+if (!isValid(AppCache_inPassword)) {
+    setErrorState(AppCache_inPassword);
     return;
 }
 

@@ -58,39 +58,28 @@ sap.n.Utils = {
         diaMessage.open();
     },
 
-    setLogonScreen: function () {
+    setupLoginScreen: function () {
         AppCache_butLogon.setVisible(true);
-        AppCache_inUsername.setVisible(false);
-        AppCache_inPassword.setVisible(false);
-        AppCache_inRememberMe.setVisible(false);
-        AppCache_inShowPass.setVisible(false);
 
-        AppCache_inUsername.setValueState();
-        AppCache_inPassword.setValueState();
+        // hide fields
+        [AppCache_inUsername, AppCache_inPassword, AppCache_inRememberMe, AppCache_inShowPass].forEach(field => field.setVisible(false));
 
-        let logonData = AppCache.getLogonTypeInfo(AppCache_loginTypes.getSelectedKey());
-        switch (logonData.type) {
-            case 'azure-bearer':
-            case 'openid-connect':
-            case 'saml':
-                AppCache_inUsername.setVisible(false);
-                AppCache_inPassword.setVisible(false);
-                break;
+        // clear field statuses
+        [AppCache_inUsername, AppCache_inPassword].forEach(field => field.setValueState());
 
-            case 'ldap':
-                AppCache_inUsername.setVisible(true);
-                AppCache_inPassword.setVisible(true);
-                AppCache_inShowPass.setVisible(true);
-                break;
-
-            // Local 
-            case 'local':
-            case 'sap':
-                if (!AppCache.enablePasscode) AppCache_inRememberMe.setVisible(true);
-                AppCache_inUsername.setVisible(true);
-                AppCache_inPassword.setVisible(true);
-                AppCache_inShowPass.setVisible(true);
-                break;
+        const { type: authType } = getAuthSettingsForUser();
+        if (['azure-bearer', 'openid-connect', 'saml'].includes(authType)) {
+            AppCache_inUsername.setVisible(false);
+            AppCache_inPassword.setVisible(false);
+        } else if (authType === 'ldap') {
+            AppCache_inUsername.setVisible(true);
+            AppCache_inPassword.setVisible(true);
+            AppCache_inShowPass.setVisible(true);
+        } else if (['local', 'sap'].includes(authType)) {
+            if (!AppCache.enablePasscode) AppCache_inRememberMe.setVisible(true);
+            AppCache_inUsername.setVisible(true);
+            AppCache_inPassword.setVisible(true);
+            AppCache_inShowPass.setVisible(true);
         }
     }
 }

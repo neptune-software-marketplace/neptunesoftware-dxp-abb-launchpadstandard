@@ -251,43 +251,25 @@ const NumPad = {
         } else {
             appCacheLog('NumPad.Logon: Starting in online mode');
 
-            // SAML 
-            if (AppCache.userInfo.logonData.type === 'saml') {
+            const { type: authType } = getAuthSettingsForUser();
+            if (authType === 'saml') {
                 AppCacheLogonSaml.Relog(auth)
-                return;
-            }
-
-            // OIDC 
-            if (AppCache.userInfo.logonData.type === 'openid-connect') {
+            } else if (authType === 'openid-connect') {
                 AppCacheLogonOIDC.Relog(auth)
-                return;
-            }
-
-            // Azure
-            if (AppCache.userInfo.logonData.type === 'azure-bearer') {
+            } else if (authType === 'azure-bearer') {
                 AppCacheLogonAzure.Relog(auth)
-                return;
             }
 
-            // LDAP/Local
-            const action = [];
-            switch (AppCache.userInfo.logonData.type) {
-                case 'local':
-                    action.push(AppCacheLogonLocal.Relog(auth));
-                    break;
+            if (['saml', 'openid-connect', 'azure-bearer'].includes(authType)) return;
 
-                case 'ldap':
-                    action.push(AppCacheLogonLdap.Relog(auth));
-                    break;
-
-                case 'sap':
-                    action.push(AppCacheLogonSap.Relog(auth));
-                    break;
-            }
+            const actions = [];
+            if (authType === 'local') actions.push(AppCacheLogonLocal.Relog(auth));
+            else if (authType === 'ldap') actions.push(AppCacheLogonLdap.Relog(auth));
+            else if (authType === 'sap') actions.push(AppCacheLogonSap.Relog(auth));
 
             // Build Data
             Promise
-                .all(action)
+                .all(actions)
                 .then(function (values) {
                     // Check if OK 
                     if (values[0] === 'OK') {

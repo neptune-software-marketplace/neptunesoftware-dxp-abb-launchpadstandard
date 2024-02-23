@@ -262,8 +262,8 @@ sap.ui.getCore().attachInit(function () {
                 }
             }
 
-            let logonType = localStorage.getItem('selectedLoginType');
-            if (logonType === 'local' && !isChpassDisabled()) {
+            const { type } = getAuthSettingsForUser();
+            if (type === 'local' && !isChpassDisabled()) {
                 AppCacheUserActionPassword.setVisible(true);
             }
 
@@ -292,24 +292,13 @@ sap.ui.getCore().attachInit(function () {
         
         // Blackout tile message
         sap.n.Adaptive.editor(descBlackout, { editable: false, buttonList: [] });
-
-        // hide focus indicator
-        if (
-            typeof AppCache.config.showAccessibilityFocusIndicator !== 'undefined' &&
-            !AppCache.config.showAccessibilityFocusIndicator
-        ) {
-            document.body.appendChild(
-                createStyle(`
-                    *:focus {
-                        outline: none;
-                    }
-                `)
-            );
-        }
     }, 100);
 
+    setOpenUI5Version();
+    
     setTimeout(disableChpass, 2000);
     setTimeout(setiOSPWAIcons, 2000);
+    setTimeout(setAccessibilityFocusIndicator, 100);
 });
 
 // Sorter Function

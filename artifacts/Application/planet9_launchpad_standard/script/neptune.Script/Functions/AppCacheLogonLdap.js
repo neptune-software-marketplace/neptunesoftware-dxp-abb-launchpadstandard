@@ -8,20 +8,14 @@ let AppCacheLogonLdap = {
         rec.loginid = AppCache_loginTypes.getSelectedKey();
         AppCache.Auth = Base64.encode(JSON.stringify(rec));
 
-        let logonData = AppCache.getLogonTypeInfo(AppCache_loginTypes.getSelectedKey());
-
-        if (!logonData.path && AppCache.userInfo && AppCache.userInfo.logonData) {
-            logonData = AppCache.getLogonTypeInfo(AppCache.userInfo.logonData.id);
-        }
-
+        const { path } = getAuthSettingsForUser();
         jsonRequest({
-            url: AppCache.Url + '/user/logon/ldap/' + logonData.path + AppCache._getLoginQuery(),
+            url: `${AppCache.Url}/user/logon/ldap/${path}${AppCache._getLoginQuery()}`,
             data: JSON.stringify(rec),
             headers: {
-                'login-path': getLoginData(),
+                'login-path': getLoginPath(),
             },
             success: function (data) {
-                setSelectedLoginType('ldap');
                 AppCache.getUserInfo();
             },
             error: function (result, status) {
@@ -35,25 +29,20 @@ let AppCacheLogonLdap = {
     Relog: function (auth) {
         refreshingAuth = true;
         return new Promise(function (resolve, reject) {
-            let logonData = AppCache.getLogonTypeInfo(AppCache_loginTypes.getSelectedKey());
-            if (!logonData.path && AppCache.userInfo && AppCache.userInfo.logonData) {
-                logonData = AppCache.getLogonTypeInfo(AppCache.userInfo.logonData.id);
-            }
-
             let rec = Base64.decode(auth);
             try {
                 rec = JSON.parse(rec);
-            } catch (e) { }
+            } catch (e) {}
 
+            const { path } = getAuthSettingsForUser();
             jsonRequest({
-                url: AppCache.Url + '/user/logon/ldap/' + logonData.path + AppCache._getLoginQuery(),
+                url: `${AppCache.Url}/user/logon/ldap/${path}${AppCache._getLoginQuery()}`,
                 data: JSON.stringify(rec),
                 headers: {
-                    'login-path': getLoginData(),
+                    'login-path': getLoginPath(),
                 },
                 success: function (data) {
                     refreshingAuth = false;
-                    setSelectedLoginType('ldap');
                     resolve(data);
                 },
                 error: function (result, status) {
@@ -70,19 +59,7 @@ let AppCacheLogonLdap = {
     },
 
     Logoff: function () {
-        if (navigator.onLine && AppCache.isOffline === false) {
-            jsonRequest({
-                url: AppCache.Url + '/user/logout',
-                success: function (data) {
-                    AppCache.clearCookies();
-                },
-                error: function (result, status) {
-                    AppCache.clearCookies();
-                }
-            });
-        } else {
-            AppCache.clearCookies();
-        }
+        p9UserLogout('LDAP');
     },
 
     Init: function () { }

@@ -151,7 +151,10 @@ function setTabIndicesForAppCacheListMenu() {
         launchpadSettingsBtn.focus();
 
         globalTabIndex = 10010;
-        setTabIndexOnItemsRecursively(AppCacheListMenu);
+        const firstVisibleItem = AppCacheListMenu.getItems().find(item => item.getVisible());
+        if (firstVisibleItem) {
+            setTabIndex(firstVisibleItem, globalTabIndex);
+        }
     }, 100);
 }
 
