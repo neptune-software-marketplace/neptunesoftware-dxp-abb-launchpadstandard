@@ -136,7 +136,7 @@ sap.n.HashNavigation = {
     },
 }
 
-// Register Event
-window.onhashchange = function () {
+window.addEventListener('hashchange', () => {
+    sap.n.Launchpad.setLaunchpadContentWidth();
     sap.n.HashNavigation._handler();
-}
+});

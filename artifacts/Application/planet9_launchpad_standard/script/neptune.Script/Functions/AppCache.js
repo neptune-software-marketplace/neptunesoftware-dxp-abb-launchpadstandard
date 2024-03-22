@@ -29,7 +29,6 @@ let AppCache = {
     LoadOptions: {},
     diaView: '',
     loadQueue: new Array(),
-    loadRunning: false,
     enablePush: false,
     enableTrace: false,
     enableLogging: false,
@@ -94,8 +93,6 @@ let AppCache = {
             return;
         }
 
-        this.loadRunning = false;
-
         let appData = this.loadQueue[0];
         if (appData) {
             this.loadQueue.splice(0, 1);
@@ -108,7 +105,7 @@ let AppCache = {
         appCacheLog(`AppCache.load: APPLID=${value}`);
 
         // Check Queue - Put in queue of working
-        if (this.loadRunning) {
+        if (refreshingAuth) {
             let appData = {
                 'APPLID': value,
                 'OPTIONS': options || {}
@@ -116,8 +113,6 @@ let AppCache = {
             this.loadQueue.push(appData);
             return;
         }
-
-        this.loadRunning = true;
 
         // Format ID
         let applid = value.replace(/\//g, '');
@@ -149,7 +144,7 @@ let AppCache = {
             openFullscreen: options.openFullscreen || false,
             rootDir: options.rootDir || '',
             sapICFNode: options.sapICFNode || '',
-            defaultLanguage: options.defaultLanguage || "en",
+            defaultLanguage: options.defaultLanguage || "EN",
         }
 
         // Check for AppCache.Load when Remote System
@@ -181,38 +176,34 @@ let AppCache = {
             }
         }
 
-        if (AppCache.userInfo.language && AppCache.userInfo.language !== 'en') {
-            AppCache.LoadOptions.defaultLanguage = AppCache.userInfo.language;
-        }
+        AppCache.LoadOptions.defaultLanguage = getLaunchpadLanguage();
 
         // Get App from DB/LS if exist in repository
-        let app = ModelData.FindFirst(AppCacheData, ['application', 'language', 'appPath'], [value.toUpperCase(), AppCache.userInfo.language, AppCache.LoadOptions.appPath]);
+        let app = ModelData.FindFirst(AppCacheData, ['application', 'language', 'appPath'], [value.toUpperCase(), getLaunchpadLanguage(), AppCache.LoadOptions.appPath]);
         if (app) {
             if (AppCache.isOffline || !app.invalid) {
-                let viewName = 'app:' + value + ':' + AppCache.userInfo.language + ':' + AppCache.LoadOptions.appPath;
-                if (typeof p9Database !== 'undefined' && p9Database !== null) {
-                    p9GetView(viewName.toUpperCase()).then(function (viewData) {
-                        if (viewData.length > 2) {
-                            AppCache.initView(value, viewData);
-                        } else {
-                            AppCache.getView(value);
-                        }
-                    });
-                } else {
+                let viewName = 'app:' + value + ':' + getLaunchpadLanguage() + ':' + AppCache.LoadOptions.appPath;
+                p9GetView(viewName.toUpperCase()).then(function (viewData) {
+                    if (typeof viewData !== 'undefined' && viewData.length > 2) {
+                        AppCache.initView(value, viewData);
+                    } else {
+                        AppCache.getView(value);
+                    }
+                }).catch((err) => {
+                    appCacheLog('AppCache.Load: catch, while trying to load view from p9GetView', err);
                     let data = sapStorageGet(viewName.toUpperCase());
                     if (data) {
                         AppCache.initView(value, data);
                     } else {
                         AppCache.getView(value);
                     }
-                }
+                });
             } else {
                 AppCache.getView(value);
             }
         } else {
             AppCache.getView(value);
         }
-
     },
 
     LoadAdaptive: function (id, options) {
@@ -310,22 +301,20 @@ let AppCache = {
             }
 
             // Get App from Cache
-            if (typeof p9Database !== 'undefined' && p9Database !== null) {
-                p9GetView(viewName).then(function (viewData) {
-                    if (viewData.length > 10 && !webApp.invalid) {
-                        AppCache.buildWebApp(dataTile, viewData, dataCat);
-                    } else {
-                        AppCache.getWebApp(dataTile, dataCat);
-                    }
-                });
-            } else {
+            p9GetView(viewName).then(function (viewData) {
+                if (viewData.length > 10 && !webApp.invalid) {
+                    AppCache.buildWebApp(dataTile, viewData, dataCat);
+                } else {
+                    AppCache.getWebApp(dataTile, dataCat);
+                }
+            }).catch(() => {
                 let data = sapStorageGet(viewName);
                 if (data && !webApp.invalid) {
                     AppCache.buildWebApp(dataTile, data, dataCat);
                 } else {
                     AppCache.getWebApp(dataTile, dataCat);
                 }
-            }
+            });
         } else {
             AppCache.getWebApp(dataTile, dataCat);
         }
@@ -339,7 +328,7 @@ let AppCache = {
         AppCacheUserActionSettings.setVisible(false);
         AppCacheShellMenu.setVisible(false);
         AppCacheShellHelp.setVisible(false);
-        AppCacheUserActionPassword.setVisible(false);
+        AppCacheUserActionChangePassword.setVisible(false);
         launchpadContentMenu.setWidth('0px');
         sap.n.Shell.closeSidepanel();
         sap.n.Shell.closeAllSidepanelTabs();
@@ -520,9 +509,7 @@ let AppCache = {
         } else if (authType === 'ldap') {
             AppCacheLogonLdap.Init();
         } else if (authType === 'local') {
-            if (!isChpassDisabled()) {
-                AppCacheUserActionPassword.setVisible(true);
-            }
+            AppCacheUserActionChangePassword.setVisible(!isChpassDisabled() && !isOffline());
             AppCacheLogonLocal.Init();
         }
     },
@@ -910,7 +897,6 @@ let AppCache = {
             AppCache.buildView(applid);
 
         } else {
-
             sap.ui.core.mvc.JSView.create({
                 viewName: value.toUpperCase()
             }).then(function (oView) {
@@ -1106,16 +1092,9 @@ let AppCache = {
         }
         sap.ui.core.BusyIndicator.hide();
         this._loadQueue();
-
     },
 
     getView: function (value) {
-        if (status === 'NOT_LOGGED_IN') {
-            AppCache.handleTileError('getView: NOT_LOGGED_IN');
-            AppCache.showTileErrorMessage(AppCache_tSessionTimeout.getText());
-            return;
-        }
-
         let url = '';
         const params = new URLSearchParams();
 
@@ -1163,12 +1142,7 @@ let AppCache = {
 
         url = AppCache.Url + url;
 
-        let lang = AppCache.LoadOptions.defaultLanguage;
-        if (AppCache.userInfo.language && AppCache.userInfo.language !== 'en') {
-            lang = AppCache.userInfo.language;
-        }
-
-        if (lang) params.append('lang', lang);
+        params.append('lang', getLaunchpadLanguage());
 
         const winParams = new URLSearchParams(window.location.search);
         if (winParams.has('debug')) params.append('debug', true);
@@ -1193,12 +1167,8 @@ let AppCache = {
                 AppCache.hideGlobalAjaxError = true;
 
                 // Save in DB/LocalStorage
-                const viewName = `app:${value}:${lang}:${AppCache.LoadOptions.appPath}`;
-                if (typeof p9Database !== 'undefined' && p9Database !== null) {
-                    p9SaveView(viewName.toUpperCase(), data);
-                } else {
-                    sapStoragePut(viewName.toUpperCase(), data)
-                }
+                const viewName = `app:${value}:${getLaunchpadLanguage()}:${AppCache.LoadOptions.appPath}`;
+                saveView(viewName.toUpperCase(), data);
 
                 // Set App Initialized
                 AppCache.Initialized = true;
@@ -1213,12 +1183,12 @@ let AppCache = {
 
                     // Get TimeStamp from App 
                     if (updatedAt) {
-                        ModelData.Update(AppCacheData, ['application', 'language', 'appPath'], [value.toUpperCase(), AppCache.userInfo.language, AppCache.LoadOptions.appPath], {
+                        ModelData.Update(AppCacheData, ['application', 'language', 'appPath'], [value.toUpperCase(), getLaunchpadLanguage(), AppCache.LoadOptions.appPath], {
                             appType: 'app',
                             application: value.toUpperCase(),
                             updatedAt: updatedAt,
                             invalid: false,
-                            language: AppCache.userInfo.language,
+                            language: getLaunchpadLanguage(),
                             appPath: AppCache.LoadOptions.appPath
                         });
 
@@ -1249,12 +1219,12 @@ let AppCache = {
                             headers,
                             data: JSON.stringify({ application: value }),
                             success: function (data) {
-                                ModelData.Update(AppCacheData, ['application', 'language', 'appPath'], [value.toUpperCase(), AppCache.userInfo.language, AppCache.LoadOptions.appPath], {
+                                ModelData.Update(AppCacheData, ['application', 'language', 'appPath'], [value.toUpperCase(), getLaunchpadLanguage(), AppCache.LoadOptions.appPath], {
                                     appType: 'app',
                                     application: value.toUpperCase(),
                                     updatedAt: data.updatedAt,
                                     invalid: false,
-                                    language: AppCache.userInfo.language,
+                                    language: getLaunchpadLanguage(),
                                     appPath: AppCache.LoadOptions.appPath
                                 });
                                 setCacheAppCacheData();
@@ -1271,8 +1241,13 @@ let AppCache = {
                 AppCache.initView(value, data);
 
             },
-            error: function (error) {
-                if (error.status === 404) {
+            error: function (err) {
+                if (err.status === 401) {
+                    diaSessionTimeout.open();
+                    return;
+                }
+
+                if (err.status === 404) {
                     Array.isArray(modelAppCacheTiles.oData) && modelAppCacheTiles.oData.forEach(function (tile) {
                         if (tile && (tile.actionApplication === value || tile.tileApplication === value)) {
                             let b = sap.ui.getCore().byId(`but${tile.id}`);
@@ -1282,17 +1257,15 @@ let AppCache = {
                     AppCache.showTileErrorMessage(AppCache_tAppNotFound.getText());
                 }
 
-                AppCache.handleTileError(error.statusText);
+                AppCache.handleTileError(err.statusText);
                 setTimeout(function () {
                     AppCache.hideGlobalAjaxError = false;
                 }, 100);
             }
         });
-
     },
 
     handleTileError: function (err) {
-        AppCache.loadRunning = false;
         sap.n.currentView = '';
         sap.n.Shell.closeTile({ id: AppCache.LoadOptions.appGUID });
         sap.n.Shell.closeSidepanel();
@@ -1305,23 +1278,17 @@ let AppCache = {
     },
 
     showTileErrorMessage: function (err) {
-        const oDialog = new sap.m.Dialog({
-            type: sap.m.DialogType.Message,
-            title: 'Tile Error',
-            state: 'Error',
-            content: new sap.m.Text({ text: err.toString() }),
-            beginButton: new sap.m.Button({
-                text: 'OK',
-                press: function () {
-                    oDialog.close();
-                }
-            }),
-            afterClose: function() {
-                oDialog.destroy();
-            },
-        });
+        const msg = err.toString();
+        if (diaTileError.isOpen()) {
+            const existing = diaTileErrorContent.getText();
+            if (!existing.includes(msg)) {
+                diaTileErrorContent.setText(`${existing}\n${msg}`);
+            }
+            return;    
+        }
 
-        oDialog.open();
+        diaTileErrorContent.setText(msg);
+        diaTileError.open();
     },
 
     getWebApp: function (dataTile, dataCat) {
@@ -1357,12 +1324,7 @@ let AppCache = {
             success: function (data) {
                 // Save in DB/LocalStorage
                 let viewName = 'webapp:' + dataTile.actionWebApp + ':' + dataTile.urlApplication;
-
-                if (typeof p9Database !== 'undefined' && p9Database !== null) {
-                    p9SaveView(viewName, data);
-                } else {
-                    sapStoragePut(viewName, data);
-                }
+                saveView(viewName, data);
 
                 let url = '/api/functions/Launchpad/GetAppTimestamp';
                 let headers = {};
@@ -1398,7 +1360,7 @@ let AppCache = {
                             appPath: dataTile.urlApplication,
                             updatedAt: data.updatedAt,
                             invalid: false,
-                            language: AppCache.userInfo.language
+                            language: getLaunchpadLanguage(),
                         });
                         setCacheAppCacheData();
                     },
@@ -1480,10 +1442,12 @@ let AppCache = {
     Lock: function () {
         AppCache_boxLogon.setVisible(true);
 
+        const { type: authType } = getAuthSettingsForUser();
+
         // Enhancement
         if (sap.n.Enhancement.BeforeLock) {
             try {
-                sap.n.Enhancement.BeforeLock();
+                sap.n.Enhancement.BeforeLock(authType);
             } catch (e) {
                 appCacheError(`Enhancement BeforeLock ${e}`);
             }
@@ -1494,7 +1458,6 @@ let AppCache = {
             sap.n.Layout.setHeaderPadding();
         }, 100);
 
-        const { type: authType } = getAuthSettingsForUser();
         if (authType === 'azure-bearer') {
             AppCacheLogonAzure.Logoff();
         } else if (authType === 'openid-connect') {
@@ -1513,12 +1476,14 @@ let AppCache = {
             return;
         }
 
-        AppCache.translate(navigator.language.slice(0, 2).toUpperCase());
+        AppCache.translate(getLaunchpadLanguage());
 
         // Clear NumPad
         NumPad.attempts = 0;
         NumPad.numValue = '';
         NumPad.Verify = false;
+
+        destroyTopAndSidebarOpenAppButtons();
 
         AppCache.setEnableUsersScreen();
         AppCacheNav.rerender();
@@ -1528,11 +1493,13 @@ let AppCache = {
 
     Logout: function () {
         AppCache_boxLogon.setVisible(true);
+
+        const { type: authType } = getAuthSettingsForUser();
         
         // Enhancement
         if (sap.n.Enhancement.BeforeLogout) {
             try {
-                sap.n.Enhancement.BeforeLogout();
+                sap.n.Enhancement.BeforeLogout(authType);
             } catch (e) {
                 appCacheError('Enhancement BeforeLogout ' + e);
             }
@@ -1540,8 +1507,8 @@ let AppCache = {
 
         AutoLockTimer.stop();
         removeLaunchpadFromCache();
+        destroyTopAndSidebarOpenAppButtons();
 
-        const { type: authType } = getAuthSettingsForUser();
         if (AppCache.isMobile) {
             // Restricted Area
             AppCache.restrictedEnable();
@@ -1583,13 +1550,13 @@ let AppCache = {
 
         if (sap.n.Enhancement.AfterLogout) {
             try {
-                sap.n.Enhancement.AfterLogout();
+                sap.n.Enhancement.AfterLogout(authType);
             } catch (e) {
                 appCacheError('Enhancement AfterLogout ' + e);
             }
         }
 
-        AppCache.translate(navigator.language.slice(0, 2).toUpperCase());
+        AppCache.translate(getLaunchpadLanguage());
         sap.ui.core.BusyIndicator.hide();
     },
 
@@ -1622,7 +1589,7 @@ let AppCache = {
 
     setUserInfo: function () {
         AppCacheUserActionText.setText(AppCache.userInfo.name || AppCache.userInfo.username);
-        inAppCacheFormSettingsLang.setSelectedKey(AppCache.userInfo.language);
+        inAppCacheFormSettingsLang.setSelectedKey(getLaunchpadLanguage());
 
         sap.n.Launchpad.validateActiveLanguageOrRevert();
 
@@ -1770,7 +1737,7 @@ let AppCache = {
 
         // Desktop 
         if (!AppCache.isMobile) {
-            AppCache.translate(AppCache.userInfo.language);
+            AppCache.translate(getLaunchpadLanguage());
 
             cacheLoaded = 0;
             getCacheAppCacheTiles(true);
@@ -1793,7 +1760,7 @@ let AppCache = {
         } else {
             // Translate if Mobile and not PIN Code
             if (!AppCache.enablePasscode) {
-                AppCache.translate(AppCache.userInfo.language);
+                AppCache.translate(getLaunchpadLanguage());
             }
 
             if (AppCache.enablePasscode) {
@@ -1837,7 +1804,7 @@ let AppCache = {
 
         // show/hide change password in user menu
         const { type: authType } = userData.logonData;
-        AppCacheUserActionPassword.setVisible(authType === 'local' && !isChpassDisabled());
+        AppCacheUserActionChangePassword.setVisible(authType === 'local' && !isChpassDisabled() && !isOffline());
 
         this.afterSetUserInfo();
     },
@@ -1961,7 +1928,7 @@ let AppCache = {
                             p2.setEnabled(false);
 
                             // Get user language
-                            let pluginLanguage = sap.n.Fingerprint.android.getLanguage(AppCache.userInfo.language);
+                            let pluginLanguage = sap.n.Fingerprint.android.getLanguage(getLaunchpadLanguage());
 
                             // Biometric authentication config
                             let encryptConfig = {
@@ -2060,26 +2027,23 @@ let AppCache = {
     },
 
     RemoveAllCache: function () {
-
         appCacheLog('AppCache.RemoveAllCache triggered');
 
         // Remove iOS SAMKeychain library and Android SecureStorage keys
         if (isCordova() && !window.navigator.simulator) {
-
             if (sap.ui.Device.os.ios || sap.ui.Device.os.android) {
 
                 // KeyChain & SecureStorage
-                if (typeof cordova !== 'undefined' && typeof cordova.plugins !== 'undefined' && cordova.plugins.SecureKeyStore && modelAppCacheUsers.oData) {
-
-                    for (i = 0; i < modelAppCacheUsers.oData.length; i++) {
-
-                        let sksKey = AppCache.AppID + '-' + modelAppCacheUsers.oData[i].username;
-
+                if (isSecureKeyStorePluginAvailableOnCordova() && Array.isArray(modelAppCacheUsers.oData)) {
+                    const users = modelAppCacheUsers.getData();
+                    users.forEach((user) => {
+                        const key = `${AppCache.AppID}-${user.username}`;
                         cordova.plugins.SecureKeyStore.remove(function (res) {
+                            appCacheLog(`${key} removed successfully`, res);
                         }, function (error) {
-                            console.error(error);
-                        }, sksKey);
-                    }
+                            appCacheError(`unable to remove key ${key}`, error);
+                        }, key);
+                    });
                 }
 
                 let serviceKey;
@@ -2103,41 +2067,22 @@ let AppCache = {
                         }
                     });
                 }
-
             }
-
         }
 
         // LocalStorage
         localStorage.clear();
 
         // IndexedDB
-        if (typeof p9Database !== 'undefined' && p9Database !== null) {
-            let db, tx, store;
+        p9ClearViews();
+        p9ClearModels();
 
-            db = p9Models.result;
-
-            tx = db.transaction('model', 'readwrite');
-            store = tx.objectStore('model');
-            store.clear();
-
-            db = p9Views.result;
-            tx = db.transaction('view', 'readwrite');
-            store = tx.objectStore('view');
-            store.clear();
-        }
-
-        // Old implementation
-        if (typeof p9ModelsDB !== 'undefined') p9ModelsDB.p9Models.clear();
-        if (typeof p9ViewsDB !== 'undefined') p9ViewsDB.p9Views.clear();
-
-        modelAppCacheUsers.setData([]);
-        modelAppCacheData.setData([]);
-        modelAppCacheTiles.setData([]);
-        modelAppCacheTilesRun.setData([]);
-        modelAppCacheCategory.setData([]);
-        modelAppCacheCategoryChild.setData([]);
-
+        [
+            modelAppCacheUsers, modelAppCacheData, modelAppCacheTiles, 
+            modelAppCacheTilesRun, modelAppCacheCategory, modelAppCacheCategoryChild
+        ].forEach((model) => {
+            model.setData([]);
+        });
     },
 
     Update: function () {
@@ -2490,19 +2435,15 @@ let AppCache = {
 
             window.webchatMethods = {
                 getMemory: function (conversationId) {
-                    let userName = AppCache.userInfo.name || 'anonymous';
-                    let userId = AppCache.userInfo.username || 'anonymous';
-                    let userLanguage = AppCache.userInfo.language || 'na';
-                    let customData = AppCache.sapCAICustomData || {};
-
-                    const memory = {
-                        userName: userName,
-                        userId: userId,
-                        userLanguage: userLanguage,
-                        customData: customData
+                    return {
+                        merge: true,
+                        memory:  {
+                            userName: AppCache.userInfo.name ?? 'anonymous',
+                            userId: AppCache.userInfo.username ?? 'anonymous',
+                            userLanguage: getLaunchpadLanguage(),
+                            customData: AppCache.sapCAICustomData ?? {},
+                        }
                     }
-
-                    return { memory: memory, merge: true }
                 }
             }
 
@@ -2584,8 +2525,10 @@ let AppCache = {
         let eventId;
         let preventDefault = false;
 
-        if (sap.n.Launchpad.currentTile && sap.n.Launchpad.currentTile.id) {
-            eventId = sap.n.Launchpad.currentTile.id;
+        const { currentTile } = sap.n.Launchpad;
+
+        if (currentTile && currentTile.id) {
+            eventId = currentTile.id;
         } else {
             eventId = AppCache.CurrentApp.toUpperCase();
         }
@@ -2614,6 +2557,10 @@ let AppCache = {
         sap.n.Launchpad.SetHeader();
         sap.n.Layout.setHeaderPadding();
         sap.n.Launchpad.handleAppTitle(AppCache.launchpadTitle);
+
+        if (currentTile && currentTile.actionType === 'A' && currentTile.urlApplication === '') {
+            AppCache._Back();
+        }
     },
 
     Back: function () {
@@ -2656,16 +2603,21 @@ let AppCache = {
         sap.n.Shell.closeSidepanel();
 
         // Navigate 
-        if (AppCacheNav.getCurrentPage().sId.indexOf('page') > -1) {
-            AppCacheNav.back();
-        } else {
-            if (!sap.n.Launchpad.backApp) {
-                AppCache.Home();
-            } else if (sap.n.Launchpad.backApp && sap.n.currentView && sap.n.currentView.sViewName === sap.n.Launchpad.backApp.sViewName) {
-                AppCache.Home();
+        try {
+            if (AppCacheNav.getCurrentPage().sId.indexOf('page') > -1) {
+                AppCacheNav.back();
             } else {
-                AppCacheNav.backToPage(sap.n.Launchpad.backApp);
+                if (!sap.n.Launchpad.backApp) {
+                    AppCache.Home();
+                } else if (sap.n.Launchpad.backApp && sap.n.currentView && sap.n.currentView.sViewName === sap.n.Launchpad.backApp.sViewName) {
+                    AppCache.Home();
+                } else {
+                    AppCacheNav.backToPage(sap.n.Launchpad.backApp);
+                }
             }
+        } catch (err) {
+            appCacheLog('Unable to navigate back', err);
+            AppCache.Home();
         }
 
         //  Back Button - Only hide when top menu. 
@@ -2707,7 +2659,7 @@ let AppCache = {
         AppCache.setUserInfo();
 
         delete AppCache.userInfo.azureToken;
-        AppCache.translate(AppCache.userInfo.language);
+        AppCache.translate(getLaunchpadLanguage());
 
         AppCache_boxPasscodeEntry.setVisible(true);
         AppCacheNav.to('AppCache_boxPasscodeEntry', 'show');
@@ -2729,11 +2681,10 @@ let AppCache = {
         // Fetch Encrypted String
         const { userInfo } = AppCache;
 
-        if (typeof cordova !== 'undefined') {
-            const c = cordova;
-            if (c !== undefined && c.plugins !== undefined && c.plugins.SecureKeyStore !== undefined) {
+        if (isCordova()) {
+            if (isSecureKeyStorePluginAvailableOnCordova()) {
                 const sksKey = `${AppCache.AppID}-${userInfo.username}`;
-                c.plugins.SecureKeyStore.get(function (res) {
+                cordova.plugins.SecureKeyStore.get(function (res) {
                     AppCache.Encrypted = res;
                     appCacheLog('setEnablePasscodeEntry: Got data from SecureKeyStorage');
                 }, function (err) {
@@ -2830,6 +2781,7 @@ let AppCache = {
     },
 
     calculateUserScreen: function () {
+        modelAppCacheUsers.refresh();
         const users = modelAppCacheUsers.getData();
         const numUsers = users.length ?? 0;
 
@@ -2884,10 +2836,10 @@ let AppCache = {
     handleUserMenu: function () {
         [
             AppCacheUserActionSettings, AppCacheUserActionSwitch, AppCacheUserActionLock,
-            AppCacheUserActionPassword, AppCacheUserActionLogin, AppCacheUserActionLogoff,
+            AppCacheUserActionChangePassword, AppCacheUserActionLogin, AppCacheUserActionLogoff,
             AppCacheUserActionEditScreen,
-        ].forEach(function (ua) {
-            ua.setVisible(false);
+        ].forEach(function (listItem) {
+            listItem.setVisible(false);
         });
 
         AppCacheShellUser.setEnabled(true);
@@ -2947,6 +2899,10 @@ let AppCache = {
             } else {
                 AppCacheShellUser.setEnabled(false);
             }
+        }
+
+        if (['AppCache_boxLogon', 'AppCache_boxPasscodeEntry', 'AppCache_boxPasscode'].includes(pageId)) {
+            AppCacheShellUser.setEnabled(false);
         }
 
         handleNumPadKeyEvents();
@@ -3190,6 +3146,8 @@ let AppCache = {
     },
 
     Startup: function () {
+        startHasUserLoggedOutTimer();
+
         // Check if CurrentConfig
         if (!AppCache.CurrentConfig) {
             sap.m.MessageToast.show(AppCache_tNoCurrentConfig.getText());
@@ -3240,7 +3198,7 @@ let AppCache = {
 
             appCacheLog('AppCache.Startup: Mobile Client');
 
-            AppCache.translate(navigator.language.slice(0, 2).toUpperCase());
+            AppCache.translate(getLaunchpadLanguage());
 
             // Status Bar - Fullscreen
             if (typeof StatusBar !== 'undefined') {
@@ -3268,8 +3226,8 @@ let AppCache = {
                 appCacheLog('AppCache.Startup: Fetching users from database');
                 getCacheAppCacheUsers(true);
 
-                // If localStorage fails to decrypt
-                if (!modelAppCacheUsers || !modelAppCacheUsers.oData) modelAppCacheUsers.oData = [];
+                // if localStorage fails to decrypt
+                if (typeof modelAppCacheUsers === 'undefined' || !Array.isArray(modelAppCacheUsers.oData)) modelAppCacheUsers.setData([]);
                 
                 // Passcode or Logon
                 if (AppCache.enablePasscode) {
@@ -3359,7 +3317,7 @@ let AppCache = {
 
         // PWA Install
         setTimeout(function () {
-            if (_pwaInstall) {
+            if (AppCache.enablePwa) {
                 AppCacheInstallPWASettings.setVisible(true);
 
                 if (modeldiaPWAInstall && modeldiaPWAInstall.oData) {

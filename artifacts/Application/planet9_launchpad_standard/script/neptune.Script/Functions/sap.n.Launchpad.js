@@ -321,17 +321,15 @@ sap.n.Launchpad = {
     },
 
     updateUserLanguage(language = '') {
-        AppCache.userInfo.language = language;
-        ModelData.Update(AppCacheUsers, 'username', AppCache.userInfo.username, AppCache.userInfo);
-        setCacheAppCacheUsers();
-
+        setLaunchpadLanguage(language);
+        
         sap.n.Planet9.function({
             id: dataSet,
             method: 'UpdateUserDetails',
             data: { language },
-            success: function (data) {
+            success: function () {
                 if (AppCache.isMobile) {
-                    AppCache.translate(language);
+                    AppCache.translate(getLaunchpadLanguage());
                     sap.n.Launchpad.RebuildTiles();
                     sap.n.Launchpad.BuildMenuTop();
                     sap.n.Launchpad.BuildTreeMenu();
@@ -346,12 +344,8 @@ sap.n.Launchpad = {
     validateActiveLanguageOrRevert() {
         // supported for user selected language has been removed
         const { languages } = AppCache.config;
-        const { language } = AppCache.userInfo;
-        if (
-            typeof language !== 'undefined' && (
-                Array.isArray(languages) && !languages.includes(language)
-            ) && language !== 'EN'
-        ) {
+        const language = getLaunchpadLanguage();
+        if (language !== 'EN' && Array.isArray(languages) && !languages.includes(language)) {
             // revert to default language
             this.updateUserLanguage();
         }
@@ -1579,22 +1573,20 @@ sap.n.Launchpad = {
                     }
 
                     // Get App from Cache
-                    if (typeof p9Database !== 'undefined' && p9Database !== null) {
-                        p9GetView(viewName).then(function (viewData) {
-                            if (viewData.length > 10 && !webApp.invalid) {
-                                AppCache.buildWebApp(dataTile, viewData, dataCat);
-                            } else {
-                                AppCache.getWebApp(dataTile, dataCat);
-                            }
-                        });
-                    } else {
+                    p9GetView(viewName).then(function (viewData) {
+                        if (viewData.length > 10 && !webApp.invalid) {
+                            AppCache.buildWebApp(dataTile, viewData, dataCat);
+                        } else {
+                            AppCache.getWebApp(dataTile, dataCat);
+                        }
+                    }).catch(() => {
                         let data = sapStorageGet(viewName);
                         if (data && !webApp.invalid) {
                             AppCache.buildWebApp(dataTile, data, dataCat);
                         } else {
                             AppCache.getWebApp(dataTile, dataCat);
                         }
-                    }
+                    })
                 } else {
                     AppCache.getWebApp(dataTile, dataCat);
                 }
@@ -2604,7 +2596,7 @@ sap.n.Launchpad = {
         if (!dataTile.translation || dataTile.translation === '[]' || dataTile.translation.length === 0) return text;
 
         dataTile.translation.forEach(function (data) {
-            if (data.language === AppCache.userInfo.language) text = data[field];
+            if (data.language === getLaunchpadLanguage()) text = data[field];
         });
 
         return text;
@@ -2627,7 +2619,7 @@ sap.n.Launchpad = {
                 let app = ModelData.FindFirst(AppCacheData,
                     ['application', 'language', 'appPath'],
                     [dataTile.actionApplication.toUpperCase(),
-                    AppCache.userInfo.language,
+                    getLaunchpadLanguage(),
                     dataTile.urlApplication || '']);
                 if (!app) openEnabled = false;
             }
@@ -2639,13 +2631,11 @@ sap.n.Launchpad = {
                     let viewName = 'webapp:' + dataTile.actionWebApp + ':' + dataTile.urlApplication;
 
                     // Get App from Cache
-                    if (typeof p9Database !== 'undefined' && p9Database !== null) {
-                        p9GetView(viewName.toUpperCase()).then(function (viewData) {
-                            if (viewData.length < 10) openEnabled = false;
-                        });
-                    } else {
+                    p9GetView(viewName.toUpperCase()).then(function (viewData) {
+                        if (viewData.length < 10) openEnabled = false;
+                    }).catch(() => {
                         if (!sapStorageGet(viewName.toUpperCase())) openEnabled = false;
-                    }
+                    });
                 }
             }
         }
@@ -2669,7 +2659,7 @@ sap.n.Launchpad = {
                         text: dataTile.blackoutText,
                         type: 'Emphasized',
                         press: function (oEvent) {
-                            descBlackout.editor.setData(dataTile.blackoutDescription);
+                            blackoutDescriptionMessage.setHtmlText(dataTile.blackoutDescription);
                             popBlackout.openBy(this);
                         }
                     });
@@ -2812,14 +2802,13 @@ sap.n.Launchpad = {
                 icon: 'sap-icon://sys-help',
                 type: 'Transparent',
                 press: function (oEvent) {
-                    descBlackout.editor.setData(dataTile.helpText);
+                    blackoutDescriptionMessage.setHtmlText(dataTile.helpText);
                     popBlackout.openBy(this);
                 }
             });
 
             oBlockContent.addItem(butHelp);
         }
-
 
         // Footer
         if (dataTile.footer) {

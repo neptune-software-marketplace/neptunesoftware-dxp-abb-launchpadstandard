@@ -36,7 +36,7 @@ sap.n.Enhancement = {
             title: 'Before Logout',
             name: 'BeforeLogout',
             description: 'Triggers right after user starts the logout process.',
-            param: '',
+            param: 'authType',
             sort: 51,
             group: 'Common'
         },
@@ -44,7 +44,7 @@ sap.n.Enhancement = {
             title: 'After Logout',
             name: 'AfterLogout',
             description: 'Triggers when a logout process finishes successfully.',
-            param: '',
+            param: 'authType',
             sort: 52,
             group: 'Common'
         },
@@ -92,7 +92,7 @@ sap.n.Enhancement = {
             title: 'Before Lock',
             name: 'BeforeLock',
             description: 'Triggers before user is logged out when locking the user. Can be used to logoff user in other systems',
-            param: '',
+            param: 'authType',
             sort: 201,
             group: 'Mobile/PWA'
         },

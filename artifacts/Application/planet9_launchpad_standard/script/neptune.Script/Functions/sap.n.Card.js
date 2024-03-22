@@ -576,7 +576,7 @@ sap.n.Card = {
                 let app = ModelData.FindFirst(AppCacheData,
                     ['application', 'language', 'appPath'],
                     [dataTile.actionApplication.toUpperCase(),
-                    AppCache.userInfo.language,
+                    getLaunchpadLanguage(),
                     dataTile.urlApplication || '']);
                 if (!app) openEnabled = false;
             }
@@ -588,13 +588,11 @@ sap.n.Card = {
                     let viewName = 'webapp:' + dataTile.actionWebApp + ':' + dataTile.urlApplication;
 
                     // Get App from Cache
-                    if (typeof p9Database !== 'undefined' && p9Database !== null) {
-                        p9GetView(viewName).then(function (viewData) {
-                            if (viewData.length < 10) openEnabled = false;
-                        });
-                    } else {
+                    p9GetView(viewName).then(function (viewData) {
+                        if (viewData.length < 10) openEnabled = false;
+                    }).catch(() => {
                         if (!sapStorageGet(viewName)) openEnabled = false;
-                    }
+                    });
                 }
             }
         }
@@ -619,7 +617,7 @@ sap.n.Card = {
                     butStart = new sap.m.Button(nepId(), {
                         text: dataTile.blackoutText,
                         press: function (oEvent) {
-                            descBlackout.editor.setData(dataTile.blackoutDescription);
+                            blackoutDescriptionMessage.setHtmlText(dataTile.blackoutDescription);
                             popBlackout.openBy(this);
                         }
                     });
@@ -804,7 +802,7 @@ sap.n.Card = {
                 tooltip: AppCache_tHelp.getText(),
                 icon: 'sap-icon://sys-help',
                 press: function (oEvent) {
-                    descBlackout.editor.setData(dataTile.helpText);
+                    blackoutDescriptionMessage.setHtmlText(dataTile.helpText);
                     popBlackout.openBy(this);
                 }
             });

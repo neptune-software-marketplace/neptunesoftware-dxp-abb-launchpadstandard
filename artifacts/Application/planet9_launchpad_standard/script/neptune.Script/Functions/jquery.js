@@ -120,9 +120,9 @@ function cordovaRequest(opts) {
                 }
 
                 if (result.status && result.status === 'UpdatePassword') {
-                    const url = new URL(AppCache.Url + result.link, result.href);
-                    url.searchParams.append('reason', result.reason || 'other');
-                    location.replace(url.toString());
+                    let newUrl = new URL(AppCache.Url + result.link);
+                    newUrl.searchParams.append('reason', result.reason || 'other');
+                    location.replace(newUrl.href.toString());
                 }
 
                 success && success(result, 'success', {
@@ -172,6 +172,7 @@ function request(opts) {
 
     return jQuery.ajax(Object.assign({}, opts));
 }
+window._request = request;
 
 function jsonRequest(opts) {
     return request(
@@ -181,6 +182,7 @@ function jsonRequest(opts) {
         }, opts)
     );
 }
+window._jsonRequest = jsonRequest;
 
 function sapLoadLanguage(lang) {
     return jQuery.sap.loadResource(`sap/ui/core/cldr/${lang}.json`, {

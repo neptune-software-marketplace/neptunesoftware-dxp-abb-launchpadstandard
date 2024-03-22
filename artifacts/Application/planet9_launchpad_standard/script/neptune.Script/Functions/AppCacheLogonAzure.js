@@ -530,7 +530,6 @@ let AppCacheLogonAzure = {
                         NumPad.Clear();
                         NumPad.Verify = true;
                         AppCache.Encrypted = '';
-                        AutoLockTimer.start();
                         if (AppCache.isMobile) AppCache.Update();
                         break;
 

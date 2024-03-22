@@ -263,12 +263,20 @@ sap.ui.getCore().attachInit(function () {
             }
 
             const { type } = getAuthSettingsForUser();
-            if (type === 'local' && !isChpassDisabled()) {
-                AppCacheUserActionPassword.setVisible(true);
-            }
+            AppCacheUserActionChangePassword.setVisible(!isOffline() && type === 'local' && !isChpassDisabled());
 
             // Startup
             AppCache.Startup();
+        }
+
+        if (AppCache.enablePasscode) {
+            AppCache_boxPasscodeEntry.addEventDelegate({
+                onkeyup: (evt) => {
+                    if (evt.key === 'Escape') {
+                        AppCache.Lock();
+                    }
+                },
+            })
         }
 
         // UI Settings
@@ -289,9 +297,6 @@ sap.ui.getCore().attachInit(function () {
         if (sap.n.Layout.isVerticalMenuPinned()) {
             AppCacheShellMenu.setVisible(false);
         }
-        
-        // Blackout tile message
-        sap.n.Adaptive.editor(descBlackout, { editable: false, buttonList: [] });
     }, 100);
 
     setOpenUI5Version();

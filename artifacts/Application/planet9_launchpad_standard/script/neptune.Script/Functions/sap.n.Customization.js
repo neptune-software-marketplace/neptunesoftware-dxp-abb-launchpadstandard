@@ -607,9 +607,11 @@ sap.n.Customization = {
 
     getCategory(categoryId) {
         const category = ModelData.FindFirst(AppCacheCategory, "id", categoryId);
-        if (category) return Object.assign({}, JSON.parse(JSON.stringify(category)), {
-            status: "active",
-        });
+        if (category) {
+            return Object.assign({}, JSON.parse(JSON.stringify(category)), {
+                status: "active",
+            });
+        }
 
         return this.getCategories().find((category) => category.id === categoryId);
     },
@@ -632,7 +634,7 @@ sap.n.Customization = {
 
     getCategories() {
         const { categories } = this.getCustomizationsInContext();
-        if (typeof categories === "undefined") {
+        if (!Array.isArray(categories)) {
             return modelAppCacheCategory
                 .getData()
                 .map((c) => Object.assign({}, JSON.parse(JSON.stringify(c))), {
@@ -643,8 +645,14 @@ sap.n.Customization = {
         return categories
             .filter((category) => this.filterByActiveStatus(category))
             .map((category) => {
-                if (category.isCustom) return category;
-                return Object.assign({}, this.getCategory(category.id), {
+                if (category.isCustom) {
+                    return category
+                };
+
+                const categoryData = ModelData.FindFirst(AppCacheCategory, "id", category.id);
+                if (!categoryData) return;
+
+                return Object.assign({}, categoryData, {
                     status: "active",
                 });
             })

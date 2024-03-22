@@ -33,7 +33,7 @@ jQuery(document).ajaxError(function (_event, request, _settings) {
             
             setTimeout(()=> {
                 _reloginInProgress = false;
-            }, 1000)
+            }, 1000);
 
             // if auto-login is enabled and control ends below it would try to login using local login, which might not be desired
             return;

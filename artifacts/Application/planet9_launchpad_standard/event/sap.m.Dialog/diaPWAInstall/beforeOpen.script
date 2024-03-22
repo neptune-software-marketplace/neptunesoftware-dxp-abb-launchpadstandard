@@ -1,4 +1,9 @@
-pwaInstallAppTitle.setText(AppCache.launchpadTitle ?? '');
+if (AppCache.launchpadTitle === 'null' || AppCache.launchpadTitle === '') {
+    pwaInstallAppTitle.setText(AppCache.CurrentConfig ?? '');
+} else {
+    pwaInstallAppTitle.setText(AppCache.launchpadTitle ?? '');
+}
+
 pwaInstallAppUrl.setText(window.location.host);
 
 if (AppCache.CustomLogo && AppCache.CustomLogo !== 'null') {

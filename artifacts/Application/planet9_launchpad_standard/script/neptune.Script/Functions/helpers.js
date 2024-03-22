@@ -458,14 +458,25 @@ function setCookieConfirmationQueryStatus() {
 }
 
 function promptForPWAInstall() {
+    if (!_pwadeferredPrompt) {
+        appCacheError("beforeinstallprompt was not called or it did not set _pwadeferredPrompt correctly.");
+        return;
+    }
+
     _pwadeferredPrompt.prompt();
     _pwadeferredPrompt.userChoice
-    .then(function(choiceResult) {
-        if (choiceResult.outcome === 'accepted') {
-            diaPWAInstall.close();
-        }
-        _pwadeferredPrompt = null;        
-    });
+        .then(function(choiceResult) {
+            const { outcome } = choiceResult;
+            if (outcome === 'accepted') {
+                diaPWAInstall.close();
+                appCacheLog('User accepted the install prompt.');
+            } else if (outcome === 'dismissed') {
+                appCacheLog('User dismissed the install prompt.');
+            }
+        }).finally(() => {
+            // The deferredPrompt can only be used once.
+            _pwadeferredPrompt = null;
+        })
 }
 
 function setLaunchpadIcons() {
@@ -607,7 +618,7 @@ function isChpassDisabled() {
 
 function disableChpass() {
     if (isChpassDisabled()) {
-        AppCacheUserActionPassword.setVisible(false);
+        AppCacheUserActionChangePassword.setVisible(false);
     }
 }
 
@@ -641,6 +652,11 @@ function getResourceBundlePath(ui5Lib) {
     return `/public/openui5/${ui5Version}/${ui5LibConv}/messagebundle.properties`;
 }
 
+function isLogonTypesEmpty() {
+    const { logonTypes } = modelDataSettings.getData();
+    return !logonTypes;
+}
+
 function getLoginSettingsForLoginId(loginId) {
     const { logonTypes } = modelDataSettings.getData();
     if (Array.isArray(logonTypes)) {
@@ -656,6 +672,19 @@ function getLoginSettingsForLoginId(loginId) {
 
 function getAuthSettingsFromLoginType() {
     const loginId = AppCache_loginTypes.getSelectedKey();
+    
+    // when user arrives from cockpit login to launchpad, we might not have any logonSettings available.
+    //  prioritize to using p9logonData from local storage if available, for backwards compatibility.
+    if (isLogonTypesEmpty()) {
+        const p9logonData = localStorage.getItem('p9logonData');
+        if (typeof p9logonData === 'string') {
+            try {
+                const settings = JSON.parse(localStorage.getItem('p9logonData'));
+                if (typeof settings === 'object' && Object.keys(settings).length > 0) return settings;
+            } catch (err) {}
+        }
+    }
+
     const settings = getLoginSettingsForLoginId(loginId);
     if (settings) {
         return settings;
@@ -669,7 +698,12 @@ function getAuthSettingsForUser() {
     // for backwards compatibility keeping logonData to store idp settings
     // if userInfo object is available and logonData is available on top of that object and is an object with defined type
     const userInfo = AppCache.userInfo;
-    if (typeof userInfo === 'object' && typeof userInfo.logonData === 'object' && typeof userInfo.logonData.type === 'string' && userInfo.logonData.type.length > 0) {
+    if (
+        typeof userInfo === 'object' && 
+        typeof userInfo.logonData === 'object' && 
+        typeof userInfo.logonData.type === 'string' && 
+        userInfo.logonData.type.length > 0
+    ) {
         return userInfo.logonData;
     }
 
@@ -825,4 +859,87 @@ function getHashParamsFromUrl(url) {
         hashParams[d(e[1])] = d(e[2]);
     }
     return hashParams;
+}
+
+function saveView(viewName, data) {
+    p9SaveView(viewName, data).then(()=> {
+        appCacheLog(`Saved View: ${viewName}`)
+    }).catch(() => {
+        sapStoragePut(viewName, data);
+    });
+}
+
+function sanitizeLanguageString(language) {
+    return language.trim().trim("'").trim('"');
+}
+
+function setLaunchpadLanguage(language = 'EN') {
+    const data = {
+        code: 'EN'
+    };
+
+    const code = sanitizeLanguageString(language);
+    if (code && code.length > 0) {
+        data.code = code;
+    }
+
+    setCacheAppCacheLanguage(data);
+}
+
+function getLaunchpadLanguage() {
+    const saved = getCacheAppCacheLanguage();
+    if (saved && saved.code) {
+        return saved.code ?? 'EN';
+    }
+
+    // use language set for the user profile
+    if (AppCache.userInfo.language) {
+        setLaunchpadLanguage(AppCache.userInfo.language);
+    }
+
+    return getCacheAppCacheLanguage()?.code ?? 'EN';
+}
+
+function destroyTopAndSidebarOpenAppButtons() {
+    openApps.getItems().forEach((item) => item.destroy());
+    AppCacheShellOpenApps.getItems().forEach((item) => item.destroy());
+}
+
+function hasUserLoggedOut() {
+    if (AppCache.isOffline || userIsNotLoggedIn()) {
+        startHasUserLoggedOutTimer();
+        return;
+    }
+
+    fetchUserInfo(
+        () => {},
+        ({ status }) => {
+            if (status === 401) {
+                diaSessionTimeout && diaSessionTimeout.open();
+            }
+        }
+    );
+    startHasUserLoggedOutTimer();
+}
+
+// return the number of seconds to check if the user has logged out
+function calculateHasUserLoggedOutTimerInSecs() {
+    const minTime = 300; // 5 minutes
+    const maxTime = 3600; // 1 hour
+
+    const data = modelDataSettings.getData();
+    if (data && data.settings && data.settings.sessionTimeout) {
+        // session timeout is in minutes, convert it to seconds
+        const sessionTimeout = parseInt(data.settings.sessionTimeout) * 60;
+
+        if (sessionTimeout <= minTime) return minTime;
+        else if (sessionTimeout < maxTime) return sessionTimeout;
+        else if (sessionTimeout >= maxTime) return maxTime;
+    }
+
+    return minTime;
+}
+
+function startHasUserLoggedOutTimer() {
+    setTimeout(hasUserLoggedOut, calculateHasUserLoggedOutTimerInSecs() * 1000);
 }

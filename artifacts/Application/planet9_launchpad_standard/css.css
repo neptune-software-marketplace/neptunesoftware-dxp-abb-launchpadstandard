@@ -4415,7 +4415,8 @@ html[dir=rtl] body.resizing {
 }
 
 #diaPWAInstall .sapMTB.sapMTBStandard,
-#diaCookie .sapMTB.sapMTBStandard {
+#diaCookie .sapMTB.sapMTBStandard,
+#diaSessionTimeout .sapMTB.sapMTBStandard {
     border-bottom: 0;
 }
 #pwaInstallAppLogo {
@@ -4424,6 +4425,6 @@ html[dir=rtl] body.resizing {
 #pwaInstallAppTitle {
     font-size: 22px;
 }
-#diaPWAInstallFooter, #diaCookieFooter {
+#diaPWAInstallFooter, #diaCookieFooter, #diaSessionTimeoutFooter {
     border-top: 1px solid #d3d7d9;
 }

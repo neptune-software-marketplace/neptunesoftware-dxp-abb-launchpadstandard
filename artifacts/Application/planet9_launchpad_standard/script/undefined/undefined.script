@@ -4353,7 +4353,8 @@ html[dir=rtl] body.resizing {
   }
 }
 #diaPWAInstall .sapMTB.sapMTBStandard,
-#diaCookie .sapMTB.sapMTBStandard {
+#diaCookie .sapMTB.sapMTBStandard,
+#diaSessionTimeout .sapMTB.sapMTBStandard {
   border-bottom: 0;
 }
 
@@ -4365,6 +4366,6 @@ html[dir=rtl] body.resizing {
   font-size: 22px;
 }
 
-#diaPWAInstallFooter, #diaCookieFooter {
+#diaPWAInstallFooter, #diaCookieFooter, #diaSessionTimeoutFooter {
   border-top: 1px solid #d3d7d9;
 }

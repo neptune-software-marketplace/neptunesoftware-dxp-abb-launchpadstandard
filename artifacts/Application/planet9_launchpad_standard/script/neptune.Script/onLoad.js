@@ -19,6 +19,10 @@ function isCordova() {
     return window.hasOwnProperty('cordova') || typeof (cordova) === 'object';
 }
 
+function isSecureKeyStorePluginAvailableOnCordova() {
+    return isCordova() && typeof cordova.plugins !== 'undefined' && typeof cordova.plugins.SecureKeyStore !== 'undefined';
+}
+
 // Browser/Phonegap Startup
 if (isCordova()) {
     document.addEventListener('deviceready', onDeviceReady, false);
@@ -146,6 +150,7 @@ function onOffline() {
     AppCache.isOffline = true;
     AppCacheShellNetwork.setVisible(true);
     AppCache_butNewUser.setEnabled(false);
+    AppCacheUserActionChangePassword.setVisible(false);
 
     if (AppCache.isMobile && AppCache.isRestricted) return;
 
@@ -163,6 +168,9 @@ function onOnline() {
     } else {
         AppCache.isOffline = false;
     }
+
+    const { type: authType } = getAuthSettingsForUser();
+    AppCacheUserActionChangePassword.setVisible(!AppCache.isOffline && authType === 'local' && !isChpassDisabled());
 
     if (!AppCache.isOffline) {
         fetchAppUpdates();

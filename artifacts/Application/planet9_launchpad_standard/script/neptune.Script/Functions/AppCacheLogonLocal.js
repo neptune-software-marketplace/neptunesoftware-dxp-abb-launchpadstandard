@@ -19,7 +19,7 @@ let AppCacheLogonLocal = {
                 'login-path': getLoginPath(),
             },
             success: function (data) {
-                if (data.status && data.status === 'UpdatePassword') {
+                if (data.status && data.status === 'UpdatePassword' && !isCordova()) {
                     const url = new URL(data.link, location.href);
                     url.searchParams.append('reason', data.reason || 'other');
                     location.replace(url.toString());
@@ -39,7 +39,7 @@ let AppCacheLogonLocal = {
 
     AutoLoginSet: function () {
         if (AppCache_inRememberMe.getSelected()) {
-            if (typeof cordova !== 'undefined' && typeof cordova.plugins !== 'undefined' && typeof cordova.plugins.SecureKeyStore !== 'undefined') {
+            if (isSecureKeyStorePluginAvailableOnCordova()) {
                 cordova.plugins.SecureKeyStore.set(
                     function (res) { },
                     function (error) {
@@ -57,12 +57,12 @@ let AppCacheLogonLocal = {
 
     AutoLoginRemove: function () {
         AppCache.enableAutoLogin = false;
-        if (typeof cordova !== 'undefined' && typeof cordova.plugins !== 'undefined' && typeof cordova.plugins.SecureKeyStore !== 'undefined') {
-            cordova.plugins.SecureKeyStore.remove(
-                function (res) { },
-                function (error) {
-                    localStorage.removeItem(AppCacheLogonLocal.autoLoginKey);
-                }, AppCacheLogonLocal.autoLoginKey);
+        if (isSecureKeyStorePluginAvailableOnCordova()) {
+            cordova.plugins.SecureKeyStore.remove(function (res) {
+                
+            }, function (error) {
+                localStorage.removeItem(AppCacheLogonLocal.autoLoginKey);
+            }, AppCacheLogonLocal.autoLoginKey);
         } else {
             localStorage.removeItem(AppCacheLogonLocal.autoLoginKey);
         }
@@ -70,7 +70,7 @@ let AppCacheLogonLocal = {
 
     AutoLoginGet: function () {
         return new Promise(function (resolve, reject) {
-            if (typeof cordova !== 'undefined' && typeof cordova.plugins !== 'undefined' && typeof cordova.plugins.SecureKeyStore !== 'undefined') {
+            if (isSecureKeyStorePluginAvailableOnCordova()) {
                 cordova.plugins.SecureKeyStore.get(
                     function (res) {
                         resolve(res);

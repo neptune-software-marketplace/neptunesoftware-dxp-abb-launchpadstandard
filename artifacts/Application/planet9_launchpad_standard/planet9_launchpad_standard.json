@@ -14147,6 +14147,13 @@
 																													"translation": []
 																												},
 																												{
+																													"attribute": "updateFinished",
+																													"grouping": "Events",
+																													"value": "AppCache.calculateUserScreen();",
+																													"script": "AppCache.calculateUserScreen();",
+																													"translation": []
+																												},
+																												{
 																													"attribute": "delete",
 																													"grouping": "Events",
 																													"value": "Anonymous Function",
@@ -19503,7 +19510,7 @@
 														},
 														{
 															"fieldNo": "b4020d10-847d-4f76-a79d-c18480cd1261",
-															"fieldName": "AppCacheUserActionPassword",
+															"fieldName": "AppCacheUserActionChangePassword",
 															"fieldParent": "b8737006-c98d-42a6-d22a-4cc385959ab5",
 															"fieldType": "sap.m.StandardListItem",
 															"script": "",
@@ -22395,84 +22402,28 @@
 									"value": "PreferredBottomOrFlip",
 									"script": "",
 									"translation": []
-								},
-								{
-									"attribute": "contentWidth",
-									"grouping": "Properties",
-									"value": "600px",
-									"script": "",
-									"translation": []
-								},
-								{
-									"attribute": "contentHeight",
-									"grouping": "Properties",
-									"value": "400px",
-									"script": "",
-									"translation": []
 								}
 							],
 							"data": [
 								{
-									"fieldNo": "217961dd-d0a8-4eb8-e0fa-9fd8f34e85d7",
-									"fieldName": "scrollBlackout",
+									"fieldNo": "56885e93-232c-4f35-89e5-5b44ed955a08",
+									"fieldName": "blackoutDescriptionMessage",
 									"fieldParent": "f4aaa6e7-327a-4600-bffc-b6c705bfa826",
-									"fieldType": "sap.m.ScrollContainer",
+									"fieldType": "sap.m.FormattedText",
 									"script": "",
 									"customComponent": false,
 									"request": [],
 									"response": [],
 									"attributes": [
 										{
-											"attribute": "width",
+											"attribute": "styleClassMargin",
 											"grouping": "Properties",
-											"value": "100%",
-											"script": "",
-											"translation": []
-										},
-										{
-											"attribute": "vertical",
-											"grouping": "Properties",
-											"value": "true",
-											"script": "",
-											"translation": []
-										},
-										{
-											"attribute": "horizontal",
-											"grouping": "Properties",
-											"value": "false",
-											"script": "",
-											"translation": []
-										},
-										{
-											"attribute": "height",
-											"grouping": "Properties",
-											"value": "100%",
+											"value": "sapUiMediumMargin",
 											"script": "",
 											"translation": []
 										}
 									],
-									"data": [
-										{
-											"fieldNo": "1965721f-736a-4721-d016-77c0ebd213a6",
-											"fieldName": "descBlackout",
-											"fieldParent": "217961dd-d0a8-4eb8-e0fa-9fd8f34e85d7",
-											"fieldType": "sap.m.FlexBox",
-											"script": "",
-											"customComponent": false,
-											"request": [],
-											"response": [],
-											"attributes": [
-												{
-													"attribute": "renderType",
-													"grouping": "Properties",
-													"value": "Bare",
-													"script": "",
-													"translation": []
-												}
-											],
-											"data": []
-										}
-									]
+									"data": []
 								}
 							]
 						},
@@ -40189,6 +40140,362 @@
 									]
 								}
 							]
+						},
+						{
+							"fieldNo": "b3dd4448-adfa-4cc1-bd13-21be08208ceb",
+							"fieldName": "diaSessionTimeout",
+							"fieldParent": "2af20b8c-2c59-4dc5-e76a-6871398cb8b1",
+							"fieldType": "sap.m.Dialog",
+							"script": "",
+							"customComponent": false,
+							"request": [],
+							"response": [],
+							"attributes": [
+								{
+									"attribute": "state",
+									"grouping": "Properties",
+									"value": "Error",
+									"script": "",
+									"translation": []
+								},
+								{
+									"attribute": "afterClose",
+									"grouping": "Events",
+									"value": "AppCache.Lock();",
+									"script": "AppCache.Lock();",
+									"translation": []
+								}
+							],
+							"data": [
+								{
+									"fieldNo": "b7baff49-55ba-46ae-acea-d1eacd465854",
+									"fieldName": "diaSessionTimeoutHeader",
+									"fieldParent": "b3dd4448-adfa-4cc1-bd13-21be08208ceb",
+									"fieldType": "sap.m.Bar",
+									"script": "",
+									"customComponent": false,
+									"request": [],
+									"response": [],
+									"attributes": [
+										{
+											"attribute": "position",
+											"grouping": "Parent",
+											"value": "setCustomHeader",
+											"script": "",
+											"translation": []
+										}
+									],
+									"data": [
+										{
+											"fieldNo": "01b6f32c-45ac-481e-9e38-af44f62277d5",
+											"fieldName": "diaSessionTimeoutHeaderLeft",
+											"fieldParent": "b7baff49-55ba-46ae-acea-d1eacd465854",
+											"fieldType": "neptune.BarContent",
+											"script": "",
+											"customComponent": false,
+											"request": [],
+											"response": [],
+											"attributes": [
+												{
+													"attribute": "position",
+													"grouping": "Parent",
+													"value": "ContentLeft",
+													"script": "",
+													"translation": []
+												}
+											],
+											"data": [
+												{
+													"fieldNo": "3523b73c-6b51-47f8-b4e1-a045dc2a2b86",
+													"fieldName": "diaSessionTimeoutHeaderTitle",
+													"fieldParent": "01b6f32c-45ac-481e-9e38-af44f62277d5",
+													"fieldType": "sap.m.Title",
+													"script": "",
+													"customComponent": false,
+													"request": [],
+													"response": [],
+													"attributes": [
+														{
+															"attribute": "text",
+															"grouping": "Properties",
+															"value": "Session Timed Out",
+															"script": "",
+															"translation": []
+														}
+													],
+													"data": []
+												}
+											]
+										},
+										{
+											"fieldNo": "b73cbb63-5787-4c65-875f-5add6437425c",
+											"fieldName": "diaSessionTimeoutHeaderRight",
+											"fieldParent": "b7baff49-55ba-46ae-acea-d1eacd465854",
+											"fieldType": "neptune.BarContent",
+											"script": "",
+											"customComponent": false,
+											"request": [],
+											"response": [],
+											"attributes": [
+												{
+													"attribute": "position",
+													"grouping": "Parent",
+													"value": "ContentRight",
+													"script": "",
+													"translation": []
+												}
+											],
+											"data": [
+												{
+													"fieldNo": "adff69ab-7fb3-4420-afec-c768100e5888",
+													"fieldName": "diaSessionTimeoutHeaderCloseBtn",
+													"fieldParent": "b73cbb63-5787-4c65-875f-5add6437425c",
+													"fieldType": "sap.m.Button",
+													"script": "",
+													"customComponent": false,
+													"request": [],
+													"response": [],
+													"attributes": [
+														{
+															"attribute": "styleClass",
+															"grouping": "Properties",
+															"value": "nepCloseBtn",
+															"script": "",
+															"translation": []
+														},
+														{
+															"attribute": "icon",
+															"grouping": "Properties",
+															"value": "sap-icon://decline",
+															"script": "",
+															"translation": []
+														},
+														{
+															"attribute": "press",
+															"grouping": "Events",
+															"value": "diaSessionTimeout.close();",
+															"script": "diaSessionTimeout.close();",
+															"translation": []
+														}
+													],
+													"data": []
+												}
+											]
+										}
+									]
+								},
+								{
+									"fieldNo": "495e7b8b-5af3-4a1d-8ca1-651cdecc4697",
+									"fieldName": "diaSessionTimeoutFlexBox",
+									"fieldParent": "b3dd4448-adfa-4cc1-bd13-21be08208ceb",
+									"fieldType": "sap.m.FlexBox",
+									"script": "",
+									"customComponent": false,
+									"request": [],
+									"response": [],
+									"attributes": [
+										{
+											"attribute": "styleClassMargin",
+											"grouping": "Properties",
+											"value": "sapUiSmallMargin",
+											"script": "",
+											"translation": []
+										}
+									],
+									"data": [
+										{
+											"fieldNo": "d5cb34d9-ba1d-4f55-caa5-151e1bad305f",
+											"fieldName": "diaSessionTimeoutContent",
+											"fieldParent": "495e7b8b-5af3-4a1d-8ca1-651cdecc4697",
+											"fieldType": "sap.m.Text",
+											"script": "",
+											"customComponent": false,
+											"request": [],
+											"response": [],
+											"attributes": [
+												{
+													"attribute": "text",
+													"grouping": "Properties",
+													"value": "Session timed out - please try again",
+													"script": "",
+													"translation": []
+												}
+											],
+											"data": []
+										}
+									]
+								},
+								{
+									"fieldNo": "0178524e-598e-473a-d121-d377916fc693",
+									"fieldName": "diaSessionTimeoutFooter",
+									"fieldParent": "b3dd4448-adfa-4cc1-bd13-21be08208ceb",
+									"fieldType": "sap.m.Toolbar",
+									"script": "",
+									"customComponent": false,
+									"request": [],
+									"response": [],
+									"attributes": [
+										{
+											"attribute": "position",
+											"grouping": "Parent",
+											"value": "InfoToolbar",
+											"script": "",
+											"translation": []
+										}
+									],
+									"data": [
+										{
+											"fieldNo": "3ab1f3d2-0b93-49d5-e920-a46d18d4e612",
+											"fieldName": "diaSessionTimeoutFooterSpacer",
+											"fieldParent": "0178524e-598e-473a-d121-d377916fc693",
+											"fieldType": "sap.m.ToolbarSpacer",
+											"script": "",
+											"customComponent": false,
+											"request": [],
+											"response": [],
+											"attributes": [],
+											"data": []
+										},
+										{
+											"fieldNo": "880ddcf3-1228-4785-b3ac-eae429de656e",
+											"fieldName": "diaSessionTimeoutFooterOkButton",
+											"fieldParent": "0178524e-598e-473a-d121-d377916fc693",
+											"fieldType": "sap.m.Button",
+											"script": "",
+											"customComponent": false,
+											"request": [],
+											"response": [],
+											"attributes": [
+												{
+													"attribute": "text",
+													"grouping": "Properties",
+													"value": "OK",
+													"script": "",
+													"translation": []
+												},
+												{
+													"attribute": "press",
+													"grouping": "Events",
+													"value": "diaSessionTimeout.close();",
+													"script": "diaSessionTimeout.close();",
+													"translation": []
+												}
+											],
+											"data": []
+										}
+									]
+								}
+							]
+						},
+						{
+							"fieldNo": "8a53e564-4c12-4eae-aaf0-2ae70b567646",
+							"fieldName": "diaTileErrorOkButton",
+							"fieldParent": "2af20b8c-2c59-4dc5-e76a-6871398cb8b1",
+							"fieldType": "sap.m.Button",
+							"script": "",
+							"customComponent": false,
+							"request": [],
+							"response": [],
+							"attributes": [
+								{
+									"attribute": "text",
+									"grouping": "Properties",
+									"value": "OK",
+									"script": "",
+									"translation": []
+								},
+								{
+									"attribute": "press",
+									"grouping": "Events",
+									"value": "diaTileError.close();",
+									"script": "diaTileError.close();",
+									"translation": []
+								}
+							],
+							"data": []
+						},
+						{
+							"fieldNo": "3eaf1b7f-b6f2-4f4b-9ba2-c15863b7cfee",
+							"fieldName": "diaTileError",
+							"fieldParent": "2af20b8c-2c59-4dc5-e76a-6871398cb8b1",
+							"fieldType": "sap.m.Dialog",
+							"script": "",
+							"customComponent": false,
+							"request": [],
+							"response": [],
+							"attributes": [
+								{
+									"attribute": "type",
+									"grouping": "Properties",
+									"value": "Message",
+									"script": "",
+									"translation": []
+								},
+								{
+									"attribute": "title",
+									"grouping": "Properties",
+									"value": "Tile Error",
+									"script": "",
+									"translation": []
+								},
+								{
+									"attribute": "state",
+									"grouping": "Properties",
+									"value": "Error",
+									"script": "",
+									"translation": []
+								},
+								{
+									"attribute": "endButton",
+									"grouping": "Associations",
+									"value": "diaTileErrorOkButton",
+									"script": "",
+									"translation": []
+								}
+							],
+							"data": [
+								{
+									"fieldNo": "57b6312f-6986-4e70-b6e5-e27ad9922cf2",
+									"fieldName": "diaTileErrorFlexBox",
+									"fieldParent": "3eaf1b7f-b6f2-4f4b-9ba2-c15863b7cfee",
+									"fieldType": "sap.m.FlexBox",
+									"script": "",
+									"customComponent": false,
+									"request": [],
+									"response": [],
+									"attributes": [
+										{
+											"attribute": "styleClassMargin",
+											"grouping": "Properties",
+											"value": "sapUiSmallMargin",
+											"script": "",
+											"translation": []
+										}
+									],
+									"data": [
+										{
+											"fieldNo": "d7e391a2-d520-4b74-97ab-775a4baea809",
+											"fieldName": "diaTileErrorContent",
+											"fieldParent": "57b6312f-6986-4e70-b6e5-e27ad9922cf2",
+											"fieldType": "sap.m.Text",
+											"script": "",
+											"customComponent": false,
+											"request": [],
+											"response": [],
+											"attributes": [
+												{
+													"attribute": "text",
+													"grouping": "Properties",
+													"value": "Session timed out - please try again",
+													"script": "",
+													"translation": []
+												}
+											],
+											"data": []
+										}
+									]
+								}
+							]
 						}
 					]
 				},
@@ -40534,6 +40841,50 @@
 									"grouping": "Events",
 									"value": "cacheLoaded++;",
 									"script": "cacheLoaded++;",
+									"translation": []
+								}
+							],
+							"data": []
+						},
+						{
+							"fieldNo": "cf1c1961-9517-4695-ecb8-195332b45b73",
+							"fieldName": "AppCacheLanguage",
+							"fieldParent": "f9c6b141-66b7-4cff-b4c2-9c652c5a0dca",
+							"fieldType": "neptune.model.object",
+							"script": "",
+							"customComponent": false,
+							"bindingValue": "Generic Object",
+							"bindingType": "u",
+							"bindingSource": "P9",
+							"request": [],
+							"response": [],
+							"attributes": [
+								{
+									"attribute": "setInitLoad",
+									"grouping": "Model",
+									"value": "cache",
+									"script": "",
+									"translation": []
+								},
+								{
+									"attribute": "setEnableCache",
+									"grouping": "Model",
+									"value": "true",
+									"script": "",
+									"translation": []
+								},
+								{
+									"attribute": "setCacheUserBased",
+									"grouping": "Model",
+									"value": "true",
+									"script": "",
+									"translation": []
+								},
+								{
+									"attribute": "setCacheType",
+									"grouping": "Model",
+									"value": "LocalStorage",
+									"script": "",
 									"translation": []
 								}
 							],
@@ -50697,7 +51048,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "24.02.23.1254",
+	"ver": "24.03.21.1345",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",

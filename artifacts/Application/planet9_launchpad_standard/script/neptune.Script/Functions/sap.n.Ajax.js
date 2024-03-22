@@ -106,25 +106,21 @@ sap.n.Ajax = {
 
         // Application
         if (dataTile.actionApplication) {
-            let viewName = 'app:' + dataTile.actionApplication + ':' + AppCache.userInfo.language + ':' + dataTile.urlApplication;
+            let viewName = 'app:' + dataTile.actionApplication + ':' + getLaunchpadLanguage() + ':' + dataTile.urlApplication;
             viewName = viewName.toUpperCase();
 
-            if (typeof p9Database !== 'undefined' && p9Database !== null) {
-                p9GetView(viewName).then(function (viewData) {
-                    if (viewData.length <= 2) {
-                        appCacheLog(`LoadApps: loading ${dataTile.actionApplication}`);
-                        AppCache.Load(dataTile.actionApplication, {
-                            load: 'download',
-                            appPath: dataTile.urlApplication,
-                            appType: dataTile.urlType,
-                            appAuth: dataTile.urlAuth,
-                            sapICFNode: dataTile.sapICFNode,
-                        });
-                    }
-                }).catch(function (e) {
-                    console.log(e);
-                });
-            } else {
+            p9GetView(viewName).then(function (viewData) {
+                if (viewData.length <= 2) {
+                    appCacheLog(`LoadApps: loading ${dataTile.actionApplication}`);
+                    AppCache.Load(dataTile.actionApplication, {
+                        load: 'download',
+                        appPath: dataTile.urlApplication,
+                        appType: dataTile.urlType,
+                        appAuth: dataTile.urlAuth,
+                        sapICFNode: dataTile.sapICFNode,
+                    });
+                }
+            }).catch(function (e) {
                 if (!sapStorageGet(viewName)) {
                     appCacheLog(`LoadApps: loading ${dataTile.actionApplication}`);
                     AppCache.Load(dataTile.actionApplication, {
@@ -135,33 +131,29 @@ sap.n.Ajax = {
                         sapICFNode: dataTile.sapICFNode,
                     });
                 }
-            }
+            });
         }
 
         // Application in Tile
         if (dataTile.type === 'application' && dataTile.tileApplication) {
-            let viewName = 'app:' + dataTile.tileApplication + ':' + AppCache.userInfo.language + ':' + dataTile.urlApplication;
+            let viewName = 'app:' + dataTile.tileApplication + ':' + getLaunchpadLanguage() + ':' + dataTile.urlApplication;
             viewName = viewName.toUpperCase();
 
-            if (typeof p9Database !== 'undefined' && p9Database !== null) {
-                p9GetView(viewName).then(function (viewData) {
-                    if (viewData.length <= 2) {
-                        appCacheLog(`LoadApps: loading ${dataTile.tileApplication}`);
-                        AppCache.Load(dataTile.tileApplication, {
-                            load: 'download'
-                        });
-                    }
-                }).catch(function (e) {
-                    console.log(e);
-                });
-            } else {
+            p9GetView(viewName).then(function (viewData) {
+                if (viewData.length <= 2) {
+                    appCacheLog(`LoadApps: loading ${dataTile.tileApplication}`);
+                    AppCache.Load(dataTile.tileApplication, {
+                        load: 'download'
+                    });
+                }
+            }).catch(function (e) {
                 if (!sapStorageGet(viewName)) {
                     appCacheLog(`LoadApps: loading ${dataTile.tileApplication}`);
                     AppCache.Load(dataTile.tileApplication, {
                         load: 'download'
                     });
                 }
-            }
+            });
         }
     }
 }

@@ -1200,133 +1200,106 @@ sap.n.Adaptive = {
         }
     },
 
-    formatter: function (fieldName, formatter) {
-        var formatDate00 = sap.ui.core.format.DateFormat.getDateTimeInstance();
-        var formatDate01 = sap.ui.core.format.DateFormat.getDateTimeInstance({
-            pattern: "dd.MM.yyyy",
-        });
-        var formatDate02 = sap.ui.core.format.DateFormat.getDateTimeInstance({
-            pattern: "mm-dd-yyyy",
-        });
-        var formatDate03 = sap.ui.core.format.DateFormat.getDateTimeInstance({
-            pattern: "yyyy MMM",
-        });
-        var formatDate04 = sap.ui.core.format.DateFormat.getDateTimeInstance({
-            pattern: "yyyy QQ",
-        });
+    formatDateField: function (fieldName, pattern) {
+        return sap.ui.core.format.DateFormat.getDateTimeInstance({
+            pattern,
+        })?.format(sap.n.Adaptive.getDate(fieldName));
+    },
 
-        var formatNumber01 = sap.ui.core.format.NumberFormat.getFloatInstance({
-            maxFractionDigits: 0,
-            minFractionDigits: 0,
-            groupingEnabled: true,
-            groupingSeparator: " ",
-        });
-        var formatNumber02 = sap.ui.core.format.NumberFormat.getFloatInstance({
-            maxFractionDigits: 1,
-            minFractionDigits: 1,
-            groupingEnabled: true,
-            groupingSeparator: " ",
-            decimalSeparator: ",",
-        });
-        var formatNumber03 = sap.ui.core.format.NumberFormat.getFloatInstance({
-            maxFractionDigits: 2,
-            minFractionDigits: 2,
-            groupingEnabled: true,
-            groupingSeparator: " ",
-            decimalSeparator: ",",
-        });
-        var formatNumber04 = sap.ui.core.format.NumberFormat.getFloatInstance({
-            maxFractionDigits: 3,
-            minFractionDigits: 3,
-            groupingEnabled: true,
-            groupingSeparator: " ",
-            decimalSeparator: ",",
-        });
-        var formatNumber05 = sap.ui.core.format.NumberFormat.getFloatInstance({
-            maxFractionDigits: 1,
-            minFractionDigits: 1,
-            groupingEnabled: true,
-            groupingSeparator: " ",
-            decimalSeparator: ".",
-        });
-        var formatNumber06 = sap.ui.core.format.NumberFormat.getFloatInstance({
-            maxFractionDigits: 2,
-            minFractionDigits: 2,
-            groupingEnabled: true,
-            groupingSeparator: " ",
-            decimalSeparator: ".",
-        });
-        var formatNumber07 = sap.ui.core.format.NumberFormat.getFloatInstance({
-            maxFractionDigits: 3,
-            minFractionDigits: 3,
-            groupingEnabled: true,
-            groupingSeparator: " ",
-            decimalSeparator: ".",
-        });
+    formatNumberField: function (fieldName, enableGrouping, decimals, decimalSeparator) {
+        if ((typeof decimalSeparator === 'undefined' || decimalSeparator === 'browserDefault')) {
+            return parseFloat(fieldName).toLocaleString(undefined, {
+                useGrouping: enableGrouping,
+                minimumFractionDigits: decimals,
+                maximumFractionDigits: decimals
+            });
+        }
 
+        const options = {
+            groupingSeparator: " ",
+            decimalSeparator: decimalSeparator,
+            groupingEnabled: enableGrouping,
+            maxFractionDigits: decimals,
+            minFractionDigits: decimals,
+        };
+
+        return sap.ui.core.format.NumberFormat.getFloatInstance(options)?.format(fieldName);
+    },
+
+    formatter: function (fieldName, formatter, decimals, separator, enableGrouping = true) {
         switch (formatter) {
             case "date00":
-                return formatDate00.format(sap.n.Adaptive.getDate(fieldName));
-
+                return sap.n.Adaptive.formatDateField(fieldName);
             case "date01":
-                return formatDate01.format(sap.n.Adaptive.getDate(fieldName));
-
+                return sap.n.Adaptive.formatDateField(fieldName, "dd.MM.yyyy");
             case "date02":
-                return formatDate02.format(sap.n.Adaptive.getDate(fieldName));
-
+                return sap.n.Adaptive.formatDateField(fieldName, "MM-dd-yyyy");
             case "date03":
-                return formatDate03.format(sap.n.Adaptive.getDate(fieldName));
-
+                return sap.n.Adaptive.formatDateField(fieldName, "yyyy MMM");
             case "date04":
-                return formatDate04.format(sap.n.Adaptive.getDate(fieldName));
-
+                return sap.n.Adaptive.formatDateField(fieldName, "yyyy QQ");
+            case "date05":
+                return sap.n.Adaptive.formatDateField(fieldName, "HH:mm");
             case "sapdate01":
                 return fieldName.substr(6, 2) + "." + fieldName.substr(4, 2) + "." + fieldName.substr(0, 4);
-
             case "sapdate02":
                 return fieldName.substr(4, 2) + "-" + fieldName.substr(6, 2) + "-" + fieldName.substr(0, 4);
-
             case "zero":
                 return fieldName.replace(/^0+/, "");
-
             case "uppercase":
                 return fieldName.toUpperCase();
-
             case "lowercase":
                 return fieldName.toLowerCase();
-
             case "number00":
-                return parseFloat(fieldName).toLocaleString();
-
+                return sap.n.Adaptive.formatNumberField(fieldName, enableGrouping);
             case "number01":
-                return formatNumber01.format(fieldName);
-
+                return sap.n.Adaptive.formatNumberField(fieldName, enableGrouping, 0, " ");
             case "number02":
-                return formatNumber02.format(fieldName);
-
+                return sap.n.Adaptive.formatNumberField(fieldName, enableGrouping, 1, ",");
             case "number03":
-                return formatNumber03.format(fieldName);
-
+                return sap.n.Adaptive.formatNumberField(fieldName, enableGrouping, 2, ",");
             case "number04":
-                return formatNumber04.format(fieldName);
-
+                return sap.n.Adaptive.formatNumberField(fieldName, enableGrouping, 3, ",");
             case "number05":
-                return formatNumber05.format(fieldName);
-
+                return sap.n.Adaptive.formatNumberField(fieldName, enableGrouping, 1, ".");
             case "number06":
-                return formatNumber06.format(fieldName);
-
+                return sap.n.Adaptive.formatNumberField(fieldName, enableGrouping, 2, ".");
             case "number07":
-                return formatNumber07.format(fieldName);
-
+                return sap.n.Adaptive.formatNumberField(fieldName, enableGrouping, 3, ".");
+            case "numberCustom":
+                const decimalSeparator = separator === 'comma' ? "," : separator === "point" ? "." : 'browserDefault';
+                const decimalsNum = decimals ?? 0;
+                return sap.n.Adaptive.formatNumberField(fieldName, enableGrouping, decimalsNum, decimalSeparator);
             case "file":
-                oFileSizeFormat = sap.ui.core.format.FileSizeFormat.getInstance({
+                return sap.ui.core.format.FileSizeFormat.getInstance({
                     binaryFilesize: false,
                     decimals: 2,
-                });
-                return oFileSizeFormat.format(fieldName);
-                break;
+                })?.format(fieldName);
+            default:
+                return fieldName;
+        }
+    },
 
+    parseFormatting: function (fieldName, columnType) {
+        switch (columnType) {
+            case "boolean":
+                return fieldName.toLowerCase() === 'true';
+            case "timestamptz":
+            case "timestamp":
+                const parsedDate = Date.parse(fieldName);
+                if (isNaN(parsedDate)) {
+                    return null;
+                }
+                return new Date(parsedDate);
+            case "decimal":
+            case "smallint":
+            case "integer":
+            case "bigint":
+                return sap.ui.core.format.NumberFormat.getFloatInstance({
+                    groupingSeparator: "",
+                    decimalSeparator: fieldName.includes(',') ? "," : ".",
+                    groupingEnabled: false,
+                })?.parse(fieldName);
             default:
                 return fieldName;
         }

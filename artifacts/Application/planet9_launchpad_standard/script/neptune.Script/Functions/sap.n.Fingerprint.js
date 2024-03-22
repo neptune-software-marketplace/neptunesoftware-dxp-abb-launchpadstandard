@@ -54,7 +54,7 @@ sap.n.Fingerprint = {
                     setKeypadBtn('mri-scan', true);
 
                     // Get user language
-                    const pluginLanguage = sap.n.Fingerprint.android.getLanguage(AppCache.userInfo.language);
+                    const pluginLanguage = sap.n.Fingerprint.android.getLanguage(getLaunchpadLanguage());
 
                     // Biometric authentication config
                     const decryptConfig = {

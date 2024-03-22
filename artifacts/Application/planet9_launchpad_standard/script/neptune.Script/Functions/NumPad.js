@@ -248,6 +248,8 @@ const NumPad = {
             AppCache.Encrypted = '';
             AppCache.Update();
 
+            AppCacheShellUser.setEnabled(true);
+            AutoLockTimer.start();
         } else {
             appCacheLog('NumPad.Logon: Starting in online mode');
 
@@ -260,7 +262,11 @@ const NumPad = {
                 AppCacheLogonAzure.Relog(auth)
             }
 
-            if (['saml', 'openid-connect', 'azure-bearer'].includes(authType)) return;
+            if (['saml', 'openid-connect', 'azure-bearer'].includes(authType)) {
+                AutoLockTimer.start();
+                AppCacheShellUser.setEnabled(true);
+                return;
+            }
 
             const actions = [];
             if (authType === 'local') actions.push(AppCacheLogonLocal.Relog(auth));
@@ -281,6 +287,8 @@ const NumPad = {
                         // Start App
                         AppCache.Encrypted = '';
                         AppCache.Update();
+
+                        AppCacheShellUser.setEnabled(true);
 
                         // ensures non-usage of launchpad locks the screen
                         AutoLockTimer.start();
