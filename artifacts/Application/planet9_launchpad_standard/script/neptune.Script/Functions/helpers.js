@@ -400,6 +400,14 @@ function downloadLazyLoadImages() {
     }
 
     const { src, target, type } = _lazyLoadImagesList.shift();
+
+    // for some reason, if src, target is undefined
+    if (typeof src === 'undefined' || typeof target === 'undefined') {
+        lazyLoadImagesInProgress = false;
+        downloadLazyLoadImages();
+        return;
+    }
+
     if (src.startsWith('data:')) {
         setImageSrc(src, target, type);
         lazyLoadImagesInProgress = false;
@@ -942,4 +950,8 @@ function calculateHasUserLoggedOutTimerInSecs() {
 
 function startHasUserLoggedOutTimer() {
     setTimeout(hasUserLoggedOut, calculateHasUserLoggedOutTimerInSecs() * 1000);
+}
+
+function isRunningInStandaloneMode() {
+    return window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
 }

@@ -365,7 +365,11 @@ sap.n.Card = {
     },
 
     setCardContentHeight: function (config, cardContent) {
-        if (config.dataTile.bodyHeight) cardContent.setHeight(config.dataTile.bodyHeight);
+        if (config.dataTile.bodyHeight && typeof config.dataTile.bodyHeight === 'string' && config.dataTile.bodyHeight.trim().length > 0) {
+            cardContent.setHeight(config.dataTile.bodyHeight);
+        } else {
+            cardContent.setHeight('100%');
+        }
     },
 
     buildCardBodyAdaptive: function (config) {

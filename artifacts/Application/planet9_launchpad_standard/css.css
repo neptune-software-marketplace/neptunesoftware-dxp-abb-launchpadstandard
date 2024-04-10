@@ -4285,6 +4285,9 @@ html[dir=rtl] body.resizing {
 }
 
 /* to take remove card item out of flex flow */
+.nepBlockLayoutTileRow {
+    margin-left: 1rem;
+}
 .lp-is-customizable .nepBlockLayoutTileRow:not(.favorite-cards) .nepFCardContainer > .sapMFlexItem:first-of-type {
     display: none;
     position: absolute;

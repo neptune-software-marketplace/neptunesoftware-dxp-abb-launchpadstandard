@@ -252,7 +252,7 @@ sap.n.Launchpad = {
         // Card Group
         if (config.parentCat && config.parentCat.cardPerRow && !config.dataCat.cardPerRow) config.dataCat.cardPerRow = config.parentCat.cardPerRow;
         let cardPerRow = config.dataCat.cardPerRow || sap.n.Layout.row.MORE;
-        config.cardParent.addStyleClass('nepBlockLayoutTileRow ' + rowId + ' nepGrid' + cardPerRow);
+        config.cardParent.addStyleClass(`nepBlockLayoutTileRow ${rowId} nepGrid${cardPerRow}`);
 
         sap.n.Launchpad.backgroundShade = '';
 
@@ -2402,13 +2402,15 @@ sap.n.Launchpad = {
                 if (dataTile.imagePosition === 'cover') {
                     css += `
                         .tile${dataTile.id} {
-                            background-image: url('${emptyBase64Image()}');
+                            background-image: url('${imageUrl.startsWith('data:') ? imageUrl : emptyBase64Image()}');
                             background-repeat: ${repeat};
                             background-size: ${size};
                             background-position: ${position};
                         }
                     `;
-                    lazyLoadImage(imageUrl, `.tile${dataTile.id}`, 'style');
+                    if (!imageUrl.startsWith('data:')) {
+                        lazyLoadImage(imageUrl, `.tile${dataTile.id}`, 'style');
+                    }
                 } else {
                     const sel = (dataTile.imagePosition === 'top') ? 'Top' : 'Inline';
                     css += `
