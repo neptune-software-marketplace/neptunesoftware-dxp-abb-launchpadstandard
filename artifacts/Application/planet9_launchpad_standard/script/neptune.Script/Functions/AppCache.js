@@ -1788,7 +1788,7 @@ let AppCache = {
         if (AppCache.loginApp) AppCacheShellUI.setAppWidthLimited(true);
 
         // User Information
-        if (userData) AppCache.userInfo = userData;
+        if (userData) AppCache.userInfo = {..., userData };
         AppCache.setUserInfo();
 
         // show/hide change password in user menu
