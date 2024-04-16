@@ -263,6 +263,9 @@ const AppCacheLogonOIDC = {
     },
 
     _onTokenReady: function (data, resourceToken) {
+        // Store the token in local storage
+        localStorage.setItem('p9oidctoken', JSON.stringify(data));
+        
         if (!AppCache.userInfo) {
             AppCache.userInfo = {};
         }
