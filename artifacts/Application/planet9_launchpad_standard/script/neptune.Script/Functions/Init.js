@@ -108,6 +108,8 @@ sap.ui.getCore().attachInit(function () {
         sap.n.Launchpad.settingsMenuClose();
     });
 
+    AppCacheDiaSettings.setInitialFocus(closeSettings);
+
     toolVerticalMenuFilter.onAfterRendering = function () {
         const input = toolVerticalMenuFilter.getInputElement();
 
@@ -300,6 +302,9 @@ sap.ui.getCore().attachInit(function () {
     }, 100);
 
     setOpenUI5Version();
+
+    // we can wait for translations to load, since launchpad already renders in user's choosen translation
+    setTimeout(fetchTranslations, 100);
     
     setTimeout(disableChpass, 2000);
     setTimeout(setiOSPWAIcons, 2000);

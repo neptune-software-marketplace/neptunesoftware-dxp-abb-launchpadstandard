@@ -15379,6 +15379,10 @@
 																																	"value": "1"
 																																},
 																																{
+																																	"language": "DA",
+																																	"value": "1"
+																																},
+																																{
 																																	"language": "EL",
 																																	"value": "1"
 																																},
@@ -15546,6 +15550,10 @@
 																																	"value": "2"
 																																},
 																																{
+																																	"language": "DA",
+																																	"value": "2"
+																																},
+																																{
 																																	"language": "EL",
 																																	"value": "2"
 																																},
@@ -15710,6 +15718,10 @@
 																																},
 																																{
 																																	"language": "CS",
+																																	"value": "3"
+																																},
+																																{
+																																	"language": "DA",
 																																	"value": "3"
 																																},
 																																{
@@ -15915,6 +15927,10 @@
 																																	"value": "4"
 																																},
 																																{
+																																	"language": "DA",
+																																	"value": "4"
+																																},
+																																{
 																																	"language": "EL",
 																																	"value": "4"
 																																},
@@ -16082,6 +16098,10 @@
 																																	"value": "5"
 																																},
 																																{
+																																	"language": "DA",
+																																	"value": "5"
+																																},
+																																{
 																																	"language": "EL",
 																																	"value": "5"
 																																},
@@ -16246,6 +16266,10 @@
 																																},
 																																{
 																																	"language": "CS",
+																																	"value": "6"
+																																},
+																																{
+																																	"language": "DA",
 																																	"value": "6"
 																																},
 																																{
@@ -16451,6 +16475,10 @@
 																																	"value": "7"
 																																},
 																																{
+																																	"language": "DA",
+																																	"value": "7"
+																																},
+																																{
 																																	"language": "EL",
 																																	"value": "7"
 																																},
@@ -16618,6 +16646,10 @@
 																																	"value": "8"
 																																},
 																																{
+																																	"language": "DA",
+																																	"value": "8"
+																																},
+																																{
 																																	"language": "EL",
 																																	"value": "8"
 																																},
@@ -16782,6 +16814,10 @@
 																																},
 																																{
 																																	"language": "CS",
+																																	"value": "9"
+																																},
+																																{
+																																	"language": "DA",
 																																	"value": "9"
 																																},
 																																{
@@ -17018,6 +17054,10 @@
 																																},
 																																{
 																																	"language": "CS",
+																																	"value": "0"
+																																},
+																																{
+																																	"language": "DA",
 																																	"value": "0"
 																																},
 																																{
@@ -20899,15 +20939,7 @@
 							"customComponent": false,
 							"request": [],
 							"response": [],
-							"attributes": [
-								{
-									"attribute": "visible",
-									"grouping": "Properties",
-									"value": "false",
-									"script": "",
-									"translation": []
-								}
-							],
+							"attributes": [],
 							"data": []
 						},
 						{
@@ -28030,8 +28062,8 @@
 																		{
 																			"attribute": "change",
 																			"grouping": "Events",
-																			"value": "sap.n.Launchpad.updateUserLanguage(inAppCacheFormSettingsLang.getSelectedKey() ?? '');",
-																			"script": "sap.n.Launchpad.updateUserLanguage(inAppCacheFormSettingsLang.getSelectedKey() ?? '');",
+																			"value": "sap.n.Launchpad.setUserLanguage(inAppCacheFormSettingsLang.getSelectedKey() ?? '');",
+																			"script": "sap.n.Launchpad.setUserLanguage(inAppCacheFormSettingsLang.getSelectedKey() ?? '');",
 																			"translation": []
 																		}
 																	],
@@ -40118,12 +40150,36 @@
 													"script": "",
 													"translation": [
 														{
+															"language": "AR",
+															"value": "يغلق"
+														},
+														{
+															"language": "DA",
+															"value": "Tæt"
+														},
+														{
+															"language": "DE",
+															"value": "Schließen"
+														},
+														{
 															"language": "NN",
 															"value": "Lukk"
 														},
 														{
+															"language": "NO",
+															"value": "Lukk"
+														},
+														{
+															"language": "PL",
+															"value": "Zamknąć"
+														},
+														{
 															"language": "SE",
 															"value": "Gulat"
+														},
+														{
+															"language": "SV",
+															"value": "Stänga"
 														}
 													]
 												},
@@ -40220,7 +40276,32 @@
 															"grouping": "Properties",
 															"value": "Session Timed Out",
 															"script": "",
-															"translation": []
+															"translation": [
+																{
+																	"language": "AR",
+																	"value": "انتهت الجلسة"
+																},
+																{
+																	"language": "DA",
+																	"value": "Sessionen udløb"
+																},
+																{
+																	"language": "DE",
+																	"value": "Sitzung abgelaufen"
+																},
+																{
+																	"language": "NO",
+																	"value": "Økten ble tidsavbrutt"
+																},
+																{
+																	"language": "PL",
+																	"value": "Sesja skończyła się"
+																},
+																{
+																	"language": "SV",
+																	"value": "Tidsgräns för sessionen tog slut"
+																}
+															]
 														}
 													],
 													"data": []
@@ -40318,7 +40399,32 @@
 													"grouping": "Properties",
 													"value": "Session timed out - please try again",
 													"script": "",
-													"translation": []
+													"translation": [
+														{
+															"language": "AR",
+															"value": "انتهت مهلة الجلسة - يرجى المحاولة مرة أخرى"
+														},
+														{
+															"language": "DA",
+															"value": "Sessionen fik timeout - prøv venligst igen"
+														},
+														{
+															"language": "DE",
+															"value": "Zeitüberschreitung der Sitzung – bitte versuchen Sie es erneut"
+														},
+														{
+															"language": "NO",
+															"value": "Økten ble tidsavbrutt – prøv igjen"
+														},
+														{
+															"language": "PL",
+															"value": "Upłynął limit czasu sesji — spróbuj ponownie"
+														},
+														{
+															"language": "SV",
+															"value": "Sessionen tog timeout - försök igen"
+														}
+													]
 												}
 											],
 											"data": []
@@ -40371,7 +40477,32 @@
 													"grouping": "Properties",
 													"value": "OK",
 													"script": "",
-													"translation": []
+													"translation": [
+														{
+															"language": "AR",
+															"value": "نعم"
+														},
+														{
+															"language": "DA",
+															"value": "OK"
+														},
+														{
+															"language": "DE",
+															"value": "OK"
+														},
+														{
+															"language": "NO",
+															"value": "OK"
+														},
+														{
+															"language": "PL",
+															"value": "OK"
+														},
+														{
+															"language": "SV",
+															"value": "OK"
+														}
+													]
 												},
 												{
 													"attribute": "press",
@@ -40402,7 +40533,32 @@
 									"grouping": "Properties",
 									"value": "OK",
 									"script": "",
-									"translation": []
+									"translation": [
+										{
+											"language": "AR",
+											"value": "نعم"
+										},
+										{
+											"language": "DA",
+											"value": "OK"
+										},
+										{
+											"language": "DE",
+											"value": "OK"
+										},
+										{
+											"language": "NO",
+											"value": "OK"
+										},
+										{
+											"language": "PL",
+											"value": "OK"
+										},
+										{
+											"language": "SV",
+											"value": "OK"
+										}
+									]
 								},
 								{
 									"attribute": "press",
@@ -40436,7 +40592,32 @@
 									"grouping": "Properties",
 									"value": "Tile Error",
 									"script": "",
-									"translation": []
+									"translation": [
+										{
+											"language": "AR",
+											"value": "خطأ في البلاط"
+										},
+										{
+											"language": "DA",
+											"value": "Flise fejl"
+										},
+										{
+											"language": "DE",
+											"value": "Kachelfehler"
+										},
+										{
+											"language": "NO",
+											"value": "Tile Feil"
+										},
+										{
+											"language": "PL",
+											"value": "Błąd kafelka"
+										},
+										{
+											"language": "SV",
+											"value": "Fel vid kakel"
+										}
+									]
 								},
 								{
 									"attribute": "state",
@@ -40488,7 +40669,32 @@
 													"grouping": "Properties",
 													"value": "Session timed out - please try again",
 													"script": "",
-													"translation": []
+													"translation": [
+														{
+															"language": "AR",
+															"value": "انتهت مهلة الجلسة - يرجى المحاولة مرة أخرى"
+														},
+														{
+															"language": "DA",
+															"value": "Sessionen fik timeout - prøv venligst igen"
+														},
+														{
+															"language": "DE",
+															"value": "Zeitüberschreitung der Sitzung – bitte versuchen Sie es erneut"
+														},
+														{
+															"language": "NO",
+															"value": "Økten ble tidsavbrutt – prøv igjen"
+														},
+														{
+															"language": "PL",
+															"value": "Upłynął limit czasu sesji — spróbuj ponownie"
+														},
+														{
+															"language": "SV",
+															"value": "Sessionen tog timeout - försök igen"
+														}
+													]
 												}
 											],
 											"data": []
@@ -40841,6 +41047,43 @@
 									"grouping": "Events",
 									"value": "cacheLoaded++;",
 									"script": "cacheLoaded++;",
+									"translation": []
+								}
+							],
+							"data": []
+						},
+						{
+							"fieldNo": "fdf838b3-7f25-42e5-bd17-badcda5750e1",
+							"fieldName": "AppCacheTranslations",
+							"fieldParent": "f9c6b141-66b7-4cff-b4c2-9c652c5a0dca",
+							"fieldType": "neptune.model.object",
+							"script": "",
+							"customComponent": false,
+							"bindingValue": "Generic Object",
+							"bindingType": "u",
+							"bindingSource": "P9",
+							"request": [],
+							"response": [],
+							"attributes": [
+								{
+									"attribute": "setCacheType",
+									"grouping": "Model",
+									"value": "IndexedDB",
+									"script": "",
+									"translation": []
+								},
+								{
+									"attribute": "setEnableCache",
+									"grouping": "Model",
+									"value": "true",
+									"script": "",
+									"translation": []
+								},
+								{
+									"attribute": "setInitLoad",
+									"grouping": "Model",
+									"value": "cache",
+									"script": "",
 									"translation": []
 								}
 							],
@@ -51048,7 +51291,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "24.04.09.1608",
+	"ver": "24.05.24.1735",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",
@@ -51073,7 +51316,7 @@
 	"ui5_url": "https://openui5.hana.ondemand.com/1.71.59/resources/sap-ui-core.js",
 	"cus_theme": "",
 	"css": "file:///css.css",
-	"compiledCss": "file://script/undefined/undefined.script",
+	"compiledCss": "file:///compiledCss.css",
 	"header": "file:///header.html",
 	"manifest": "",
 	"globalScript": "",

@@ -493,10 +493,18 @@ function setLaunchpadIcons() {
         if (typeof AppCache.CustomLogo === 'string' && AppCache.CustomLogo.trim().length > 0) {
             href = AppCache.CustomLogo;
         } else {
-            if (rel.includes('shortcut')) {
-                href = '/public/images/favicon.png';
+            if (isP9VersionGreaterThanEqualTo(24)) {
+                if (rel.includes('shortcut')) {
+                    href = '/public/images/connect/favicon.svg';
+                } else {
+                    href = '/public/images/NeptuneIcon192px.png';
+                }
             } else {
-                href = '/public/images/NeptuneIcon192px.png';
+                if (rel.includes('shortcut')) {
+                    href = '/public/images/favicon.png';
+                } else {
+                    href = '/public/images/NeptuneIcon192px.png';
+                }
             }
         }
 
@@ -609,7 +617,14 @@ function setPWACustomLogo() {
 }
 
 function setDefaultLogo() {
-    const path = 'public/images/nsball.png';
+    let path = 'public/images/nsball.png';
+    if (isP9VersionGreaterThanEqualTo(24)) {
+        const svgImage = 'data:image/svg+xml;base64,PHN2ZyBpZD0ibmVwdHVuZS1jb25uZWN0LWxvZ28iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjM2IiB2aWV3Qm94PSIwIDAgOTQwLjY5IDQ0MC41MiI+PHBhdGggc3R5bGU9ImZpbGw6IHJnYigyNTUsIDE1OCwgNTEpOyBzdHJva2Utd2lkdGg6IDBweDsiIGQ9Ik05NDAuNywyMjAuMjZsLTIzMy4wNC4xMi0xMTYuNDcsMjAxLjY2LTExMi43LTE5NS4xOWMtLjQ5LS45My0zLjgxLTYuMjgtMy44MS02LjI4LDAsMC0zLjMxLDUuMzMtMy43Nyw2LjIzLS4wMi4wMS0uMDIuMDItLjAzLjAzbC01OS4wNywxMDIuMjMtLjc3LDEuMzNjLTE5LjA0LDMyLjkxLTQ2LjM1LDYwLjQ1LTc5LjEsNzkuNzVzLTcwLjkyLDMwLjM4LTExMS42OCwzMC4zOEM5OC42Miw0NDAuNTIsMCwzNDEuOSwwLDIyMC4yNlM5OC42MiwwLDIyMC4yNiwwQzMwMS43OSwwLDM3Mi45OCw0NC4zLDQxMS4wNiwxMTAuMTR2LS4wMmw1OS44NCwxMDMuNTdoLjAxYy42MiwxLDMuNzksNi44NiwzLjc5LDYuODYsMCwwLDMuMDktNS43MSwzLjc0LTYuNzkuMDEtLjAxLjAxLS4wMi4wMi0uMDJsMTEyLjczLTE5NS4yN2gyMzNsMTE2LjUxLDIwMS43OVoiLz48L3N2Zz4=';
+        AppCacheShellLogoDesktop.setSrc(svgImage).addStyleClass('nepConnectLogo sapUiTinyMarginEnd');
+        AppCacheShellLogoMobile.setSrc(svgImage).addStyleClass('nepConnectLogo sapUiTinyMarginEnd');
+        return;
+    }
+
     if (isCordova() || location.protocol === 'file:') {
         AppCacheShellLogoDesktop.setSrc(path);
         AppCacheShellLogoMobile.setSrc(path);
@@ -761,28 +776,33 @@ function p9UserLogout(authenticationType = '') {
 }
 
 function externalAuthUserLogoutUsingPopup(url, closePopupAfterSecs=5000) {
-    const logoutPopup = window.open(url, '_blank', 'location=no,width=5,height=5,left=-1000,top=3000');
-    
-    // if pop-ups are blocked signout window.open will return null
-    if (!logoutPopup) return;
-    
-    logoutPopup.blur && logoutPopup.blur();
-
-    if (isCordova()) {
-        logoutPopup.addEventListener('loadstop', () => {
-            logoutPopup.close();
-        });
-    } else {
-        logoutPopup.onload = () => {
-            logoutPopup.close();
-        };
-
+    return new Promise((resolve, reject) => {
+        const logoutPopup = window.open(url, '_blank', 'location=no,width=5,height=5,left=-1000,top=3000');
+        
+        // if pop-ups are blocked signout window.open will return null
+        if (!logoutPopup) return resolve();
+        
         logoutPopup.blur && logoutPopup.blur();
 
-        setTimeout(() => {
-            logoutPopup.close();
-        }, closePopupAfterSecs);
-    }
+        if (isCordova()) {
+            logoutPopup.addEventListener('loadstop', () => {
+                logoutPopup.close();
+                resolve();
+            });
+        } else {
+            logoutPopup.onload = () => {
+                logoutPopup.close();
+                resolve();
+            };
+
+            logoutPopup.blur && logoutPopup.blur();
+
+            setTimeout(() => {
+                logoutPopup.close();
+                resolve();
+            }, closePopupAfterSecs);
+        }
+    });
 }
 
 function createScriptTag(src, attributes = {}) {
@@ -878,7 +898,7 @@ function saveView(viewName, data) {
 }
 
 function sanitizeLanguageString(language) {
-    return language.trim().trim("'").trim('"');
+    return language.trim().trim("'").trim('"').trim();
 }
 
 function setLaunchpadLanguage(language = 'EN') {
@@ -903,9 +923,55 @@ function getLaunchpadLanguage() {
     // use language set for the user profile
     if (AppCache.userInfo.language) {
         setLaunchpadLanguage(AppCache.userInfo.language);
+        return AppCache.userInfo.language;
     }
 
-    return getCacheAppCacheLanguage()?.code ?? 'EN';
+    return 'EN';
+}
+
+function getAppViewName(prefix, postfix) {
+    return `app:${prefix}:${getLaunchpadLanguage()}:${postfix}`.toUpperCase();
+}
+
+function getWebAppViewName(prefix, postfix) {
+    return `webapp:${prefix}:${postfix}`;
+}
+
+function replaceLanguageInAppViewName(viewName, newLanguage) {
+    const parts = viewName.split(':')
+
+    // only app: uses language as part of it's name, webapp: does not have the language in it's name
+    if (parts[0].toLowerCase() !== 'app') {
+        return viewName;
+    }
+
+    parts[parts.length-2] = newLanguage;
+    return parts.join(':');
+}
+
+function isP9VersionGreaterThanEqualTo(version) {
+    return parseInt(AppCache.p9Version.split('.')[0]) >= version;
+}
+
+function isP9VersionLessThan(version) {
+    return parseInt(AppCache.p9Version.split('.')[0]) < version;
+}
+
+// support for inline translations without refresh is only available from 24-LTS onwards
+function supportsInlineTranslations() {
+    return parseInt(AppCache.p9Version.split('.')[0]) >= 24;
+}
+
+function fetchTranslations() {
+    if (!supportsInlineTranslations()) return;
+    if (AppCache.isOffline) return;
+    jsonRequest({
+        type: 'GET',
+        url: `${AppCache.Url}/api/launchpad/${AppCache.launchpadID}/i18n`,
+    }).then(data => {
+        modelAppCacheTranslations.setData(data);
+        setCacheAppCacheTranslations();
+    });
 }
 
 function destroyTopAndSidebarOpenAppButtons() {
@@ -954,4 +1020,47 @@ function startHasUserLoggedOutTimer() {
 
 function isRunningInStandaloneMode() {
     return window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+}
+
+let isInvalidLangSetWithQueryParamVisible = false;
+function isLanguageSetInQueryParam() {
+    // Language set in query string always takes precedence
+    let langSearchParam = new URLSearchParams(location.search).get('lang') ?? false;
+    if (!langSearchParam) {
+        return {
+            exists: false,
+            language: getLaunchpadLanguage(),
+        };
+    }
+
+    if (langSearchParam) {
+        langSearchParam = langSearchParam.trim().toUpperCase();
+    }
+
+    if (!sap.n.Launchpad.isLanguageValid(langSearchParam)) {
+        if (!isInvalidLangSetWithQueryParamVisible) {
+            isInvalidLangSetWithQueryParamVisible = true;
+
+            const supported = masterLanguages.filter(({ ISOCODE }) => AppCache.config.languages.includes(ISOCODE)).map(({ NAME }) => NAME).join(', ');
+            sap.m.MessageBox.show(
+                    `Language ${langSearchParam} is not supported. Only ${supported} is supported.`, {
+                    icon: sap.m.MessageBox.Icon.ERROR,
+                    title: "Unsupported Language",
+                    actions: [sap.m.MessageBox.Action.OK],
+                }
+            );
+            
+            setTimeout(() => isInvalidLangSetWithQueryParamVisible = false, 10000);
+        }
+        
+        return {
+            exists: false,
+            language: getLaunchpadLanguage(),
+        };
+    }
+    
+    return {
+        exists: true,
+        language: langSearchParam,
+    };
 }

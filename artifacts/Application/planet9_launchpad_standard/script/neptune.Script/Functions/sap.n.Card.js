@@ -119,6 +119,7 @@ sap.n.Card = {
         let cardContainer = new sap.m.FlexBox(cardContainerId, {
             width: '100%',
             fitContainer: true,
+            renderType: "Bare"
         }).addStyleClass('nepFCardContainer nepTile' + cardWidth);
 
         cardContainer.addEventDelegate({
@@ -207,7 +208,8 @@ sap.n.Card = {
             height: '100%',
             justifyContent: 'SpaceBetween',
             width: '100%',
-            fitContainer: true
+            fitContainer: true,
+            renderType: "Bare"
         });
         
         // Content Body
@@ -309,7 +311,11 @@ sap.n.Card = {
         }
 
         // Description
-        if (config.dataTile.description) cardBody.addItem(new sap.m.Text({ text: sap.n.Launchpad.translateTile('description', config.dataTile) }).addStyleClass('nepCardDescription'));
+        if (config.dataTile.description) cardBody.addItem(new sap.m.Text({ 
+            text: sap.n.Launchpad.translateTile('description', 
+            config.dataTile),
+            renderType: "Bare"
+        }).addStyleClass('nepCardDescription'));
 
         // Action Panel
         let cardAction = new sap.m.VBox(nepId());
@@ -568,7 +574,9 @@ sap.n.Card = {
         let buttonStyle = '';
         let supportedBrowser = true;
         let openEnabled = true;
-        let cardActionContainer = new sap.m.FlexBox(nepId(), {}).addStyleClass('nepActionContainer nepCardAction sapUiSizeCompact');
+        let cardActionContainer = new sap.m.FlexBox(nepId(), {
+            renderType: "Bare"
+        }).addStyleClass('nepActionContainer nepCardAction sapUiSizeCompact');
 
         // Check Offline Mode -> Disable Open button 
         if (AppCache.isOffline) {
@@ -589,7 +597,7 @@ sap.n.Card = {
                 if (dataTile.openWindow) {
                     openEnabled = false;
                 } else {
-                    let viewName = 'webapp:' + dataTile.actionWebApp + ':' + dataTile.urlApplication;
+                    const viewName = getWebAppViewName(dataTile.actionWebApp, dataTile.urlApplication);
 
                     // Get App from Cache
                     p9GetView(viewName).then(function (viewData) {
@@ -821,7 +829,10 @@ sap.n.Card = {
         }
 
         // without the popover
-        let spacer = new sap.m.HBox(nepId(), { width: '100%' });
+        let spacer = new sap.m.HBox(nepId(), {
+            renderType: "Bare",
+            width: '100%' 
+        });
         container.addItem(spacer);
 
         const resizeIcon = new sap.ui.core.Icon({

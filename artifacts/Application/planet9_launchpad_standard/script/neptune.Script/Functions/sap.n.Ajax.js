@@ -106,15 +106,15 @@ sap.n.Ajax = {
 
         // Application
         if (dataTile.actionApplication) {
-            let viewName = 'app:' + dataTile.actionApplication + ':' + getLaunchpadLanguage() + ':' + dataTile.urlApplication;
-            viewName = viewName.toUpperCase();
+            const { actionApplication, urlApplication } = dataTile;
+            const viewName = getAppViewName(actionApplication, urlApplication);
 
             p9GetView(viewName).then(function (viewData) {
                 if (viewData.length <= 2) {
-                    appCacheLog(`LoadApps: loading ${dataTile.actionApplication}`);
-                    AppCache.Load(dataTile.actionApplication, {
+                    appCacheLog(`LoadApps: loading ${actionApplication}`);
+                    AppCache.Load(actionApplication, {
                         load: 'download',
-                        appPath: dataTile.urlApplication,
+                        appPath: urlApplication,
                         appType: dataTile.urlType,
                         appAuth: dataTile.urlAuth,
                         sapICFNode: dataTile.sapICFNode,
@@ -122,10 +122,10 @@ sap.n.Ajax = {
                 }
             }).catch(function (e) {
                 if (!sapStorageGet(viewName)) {
-                    appCacheLog(`LoadApps: loading ${dataTile.actionApplication}`);
-                    AppCache.Load(dataTile.actionApplication, {
+                    appCacheLog(`LoadApps: loading ${actionApplication}`);
+                    AppCache.Load(actionApplication, {
                         load: 'download',
-                        appPath: dataTile.urlApplication,
+                        appPath: urlApplication,
                         appType: dataTile.urlType,
                         appAuth: dataTile.urlAuth,
                         sapICFNode: dataTile.sapICFNode,
@@ -136,22 +136,18 @@ sap.n.Ajax = {
 
         // Application in Tile
         if (dataTile.type === 'application' && dataTile.tileApplication) {
-            let viewName = 'app:' + dataTile.tileApplication + ':' + getLaunchpadLanguage() + ':' + dataTile.urlApplication;
-            viewName = viewName.toUpperCase();
+            const { tileApplication, urlApplication } = dataTile;
+            const viewName = getAppViewName(tileApplication, urlApplication);
 
             p9GetView(viewName).then(function (viewData) {
                 if (viewData.length <= 2) {
-                    appCacheLog(`LoadApps: loading ${dataTile.tileApplication}`);
-                    AppCache.Load(dataTile.tileApplication, {
-                        load: 'download'
-                    });
+                    appCacheLog(`LoadApps: loading ${tileApplication}`);
+                    AppCache.Load(tileApplication, { load: 'download' });
                 }
             }).catch(function (e) {
                 if (!sapStorageGet(viewName)) {
-                    appCacheLog(`LoadApps: loading ${dataTile.tileApplication}`);
-                    AppCache.Load(dataTile.tileApplication, {
-                        load: 'download'
-                    });
+                    appCacheLog(`LoadApps: loading ${tileApplication}`);
+                    AppCache.Load(tileApplication, { load: 'download' });
                 }
             });
         }

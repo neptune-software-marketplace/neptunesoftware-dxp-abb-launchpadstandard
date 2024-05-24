@@ -111,7 +111,11 @@ const AppCacheLogonOIDC = {
 
     Signout: function () {
         const logon = getAuthSettingsForUser();
-        externalAuthUserLogoutUsingPopup(`${AppCache.Url}/user/logon/openid-connect/${logon.path}/logout`, 5000);
+        externalAuthUserLogoutUsingPopup(`${AppCache.Url}/user/logon/openid-connect/${logon.path}/logout`, 5000)
+            .then(() => {
+                if(!localStorage.p9oidctoken) return;
+                localStorage.removeItem("p9oidctoken");
+            });
     },
 
     GetTokenWithRefreshToken: function (refreshToken, process) {
@@ -263,6 +267,9 @@ const AppCacheLogonOIDC = {
     },
 
     _onTokenReady: function (data, resourceToken) {
+
+        localStorage.setItem('p9oidctoken', JSON.stringify(data));
+
         if (!AppCache.userInfo) {
             AppCache.userInfo = {};
         }

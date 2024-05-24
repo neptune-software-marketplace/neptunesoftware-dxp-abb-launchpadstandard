@@ -98,46 +98,37 @@ sap.n.Adaptive = {
     navigation: function (navigation, appdata, events, id) {
         if (!navigation) return;
 
-        switch (navigation.destinationType) {
-            case "F":
-                sap.n.Adaptive.getConfig(navigation.destinationTargetF).then(function (data) {
-                    var config = data;
-                    config.settings.data = JSON.parse(JSON.stringify(appdata));
-                    config.settings.events = events;
-                    config.settings.navigation = navigation;
+        if (navigation.destinationType === 'F') {
+            sap.n.Adaptive.getConfig(navigation.destinationTargetF).then(function (data) {
+                let config = data;
+                config.settings.data = JSON.parse(JSON.stringify(appdata));
+                config.settings.events = events;
+                config.settings.navigation = navigation;
 
-                    var childPage = sap.n.Adaptive.navigate(data.application, config, navigation, id);
-                    if (navigation.openAs === "P" && events.onNavigatePage) events.onNavigatePage(childPage);
-                    if (navigation.openAs === "D" && events.onNavigateDialog) events.onNavigateDialog(childPage);
-                });
-                break;
-
-            case "A":
-                let config = {
-                    data: JSON.parse(JSON.stringify(appdata)),
-                    events: events,
-                };
-
-                let childPage = sap.n.Adaptive.navigate(navigation.destinationTargetA, config, navigation, id);
+                let childPage = sap.n.Adaptive.navigate(data.application, config, navigation, id);
                 if (navigation.openAs === "P" && events.onNavigatePage) events.onNavigatePage(childPage);
-                if (navigation.openAs === "D") childPage.open();
-                break;
+                if (navigation.openAs === "D" && events.onNavigateDialog) events.onNavigateDialog(childPage);
+            });
+        } else if (navigation.destinationType === 'A') {
+            let config = {
+                data: JSON.parse(JSON.stringify(appdata)),
+                events: events,
+            };
 
-            case "S":
-                $.ajax({
-                    type: "POST",
-                    url: `${AppCache.Url}/api/functions/Adaptive/RunReport?report=${navigation.sourceTargetS}&method=RunScript&scriptid=${navigation.destinationTargetS}`,
-                    contentType: "application/json",
-                    data: JSON.stringify(appdata),
-                    success: function (data) {
-                        if (events.refresh) events.refresh();
-                    },
-                    error: function (result, _status) {},
-                });
-                break;
-
-            default:
-                break;
+            let childPage = sap.n.Adaptive.navigate(navigation.destinationTargetA, config, navigation, id);
+            if (navigation.openAs === "P" && events.onNavigatePage) events.onNavigatePage(childPage);
+            if (navigation.openAs === "D") childPage.open();
+        } else if (navigation.destinationType === 'S') {
+            $.ajax({
+                type: "POST",
+                url: `${AppCache.Url}/api/functions/Adaptive/RunReport?report=${navigation.sourceTargetS}&method=RunScript&scriptid=${navigation.destinationTargetS}`,
+                contentType: "application/json",
+                data: JSON.stringify(appdata),
+                success: function (data) {
+                    if (events.refresh) events.refresh();
+                },
+                error: function (result, _status) {},
+            });
         }
     },
 
@@ -148,135 +139,129 @@ sap.n.Adaptive = {
         pageName = pageName.toUpperCase();
 
         // Open Navigation Destination
-        switch (navigation.openAs) {
-            case "D":
-                var pageID = pageName + "_" + id + "_D";
+        if (navigation.openAs === 'D') {
+            const pageId = `${pageName}_${id}_D`;
+            let title = navigation.dialogTitle || '';
 
-                var title = navigation.dialogTitle || "";
+            if (navigation.dialogTitleFieldText) {
+                if (navigation.dialogTitle) {
+                    title += " " + navigation.dialogTitleFieldText;
+                } else {
+                    title = navigation.dialogTitleFieldText;
+                }
+            }
 
+            if (sap.n.Adaptive.dialogs[pageId] && sap.n.Adaptive.dialogs[pageId].getContent().length) {
+                // Apply Changes to Dialog
+                if (navigation.dialogTitle) sap.n.Adaptive.dialogs[pageId].setTitle(title);
+                if (navigation.dialogIcon) sap.n.Adaptive.dialogs[pageId].setIcon(navigation.dialogIcon);
+                if (navigation.dialogWidth) sap.n.Adaptive.dialogs[pageId].setContentWidth(navigation.dialogWidth);
+                if (navigation.dialogHeight) sap.n.Adaptive.dialogs[pageId].setContentHeight(navigation.dialogHeight);
+
+                if (navigation.dialogResize) {
+                    sap.n.Adaptive.dialogs[pageId].setResizable(navigation.dialogResize);
+                } else {
+                    sap.n.Adaptive.dialogs[pageId].setResizable(false);
+                }
+
+                if (navigation.dialogScrollHorizontal) {
+                    sap.n.Adaptive.dialogs[pageId].addStyleClass("nepScrollContent");
+                } else {
+                    sap.n.Adaptive.dialogs[pageId].removeStyleClass("nepScrollContent");
+                }
+
+                if (navigation.dialogHeader) {
+                    sap.n.Adaptive.dialogs[pageId].setShowHeader(navigation.dialogHeader);
+                } else {
+                    sap.n.Adaptive.dialogs[pageId].setShowHeader(false);
+                }
+
+                sap.n.Adaptive.dialogs[pageId].setStretch(sap.ui.Device.system.phone);
+
+                if (sap.n.Apps[pageId] && sap.n.Apps[pageId].beforeDisplay) {
+                    $.each(sap.n.Apps[pageId].beforeDisplay, function (i, data) {
+                        data(config);
+                    });
+                }
+            } else {
+                sap.n.Adaptive.dialogs[pageId] = new sap.m.Dialog({
+                    contentWidth: navigation.dialogWidth || "1024px",
+                    contentHeight: navigation.dialogHeight || "500px",
+                    stretch: sap.ui.Device.system.phone,
+                    showHeader: navigation.dialogHeader || false,
+                    title: title,
+                    icon: navigation.dialogIcon,
+                    draggable: true,
+                    resizable: navigation.dialogResize || false,
+                    horizontalScrolling: false,
+                    beforeClose: function (oEvent) {
+                        if (sap.n.Adaptive.dialogs[pageId]._oManuallySetSize) {
+                            sap.n.Adaptive.dialogs[pageId].setContentWidth(sap.n.Adaptive.dialogs[pageId]._oManuallySetSize.width + "px");
+                            sap.n.Adaptive.dialogs[pageId].setContentHeight(sap.n.Adaptive.dialogs[pageId]._oManuallySetSize.height + "px");
+                        }
+                    },
+                });
+
+                if (navigation.dialogScrollHorizontal) {
+                    sap.n.Adaptive.dialogs[pageId].addStyleClass("nepScrollContent");
+                } else {
+                    sap.n.Adaptive.dialogs[pageId].removeStyleClass("nepScrollContent");
+                }
+
+                delete sap.n.Apps[pageId];
+
+                AppCache.Load(pageName, {
+                    appGUID: pageId,
+                    parentObject: sap.n.Adaptive.dialogs[pageId],
+                    startParams: config,
+                });
+            }
+
+            return sap.n.Adaptive.dialogs[pageId];
+        } else if (navigation.openAs === 'S') { // S = Sidepanel
+            if (localAppID === "ADAPTIVEDESIGNER") {
+                sap.m.MessageToast.show("Sidepanel can only be displayed in Launchpad");
+            } else {
+                let title = navigation.dialogTitle || '';
                 if (navigation.dialogTitleFieldText) {
                     if (navigation.dialogTitle) {
-                        title += " " + navigation.dialogTitleFieldText;
+                        title += ' ' + navigation.dialogTitleFieldText;
                     } else {
                         title = navigation.dialogTitleFieldText;
                     }
                 }
 
-                if (sap.n.Adaptive.dialogs[pageID] && sap.n.Adaptive.dialogs[pageID].getContent().length) {
-                    // Apply Changes to Dialog
-                    if (navigation.dialogHeight) sap.n.Adaptive.dialogs[pageID].setContentHeight(navigation.dialogHeight);
-                    if (navigation.dialogWidth) sap.n.Adaptive.dialogs[pageID].setContentWidth(navigation.dialogWidth);
-                    if (navigation.dialogTitle) sap.n.Adaptive.dialogs[pageID].setTitle(title);
-                    if (navigation.dialogIcon) sap.n.Adaptive.dialogs[pageID].setIcon(navigation.dialogIcon);
-
-                    if (navigation.dialogResize) {
-                        sap.n.Adaptive.dialogs[pageID].setResizable(navigation.dialogResize);
-                    } else {
-                        sap.n.Adaptive.dialogs[pageID].setResizable(false);
-                    }
-
-                    if (navigation.dialogScrollHorizontal) {
-                        sap.n.Adaptive.dialogs[pageID].addStyleClass("nepScrollContent");
-                    } else {
-                        sap.n.Adaptive.dialogs[pageID].removeStyleClass("nepScrollContent");
-                    }
-
-                    if (navigation.dialogHeader) {
-                        sap.n.Adaptive.dialogs[pageID].setShowHeader(navigation.dialogHeader);
-                    } else {
-                        sap.n.Adaptive.dialogs[pageID].setShowHeader(false);
-                    }
-
-                    sap.n.Adaptive.dialogs[pageID].setStretch(sap.ui.Device.system.phone);
-
-                    if (sap.n.Apps[pageID] && sap.n.Apps[pageID].beforeDisplay) {
-                        $.each(sap.n.Apps[pageID].beforeDisplay, function (i, data) {
-                            data(config);
-                        });
-                    }
-                } else {
-                    sap.n.Adaptive.dialogs[pageID] = new sap.m.Dialog({
-                        contentWidth: navigation.dialogWidth || "1024px",
-                        contentHeight: navigation.dialogHeight || "500px",
-                        stretch: sap.ui.Device.system.phone,
-                        showHeader: navigation.dialogHeader || false,
-                        title: title,
-                        icon: navigation.dialogIcon,
-                        draggable: true,
-                        resizable: navigation.dialogResize || false,
-                        horizontalScrolling: false,
-                        beforeClose: function (oEvent) {
-                            if (sap.n.Adaptive.dialogs[pageID]._oManuallySetSize) {
-                                sap.n.Adaptive.dialogs[pageID].setContentWidth(sap.n.Adaptive.dialogs[pageID]._oManuallySetSize.width + "px");
-                                sap.n.Adaptive.dialogs[pageID].setContentHeight(sap.n.Adaptive.dialogs[pageID]._oManuallySetSize.height + "px");
-                            }
-                        },
-                    });
-
-                    if (navigation.dialogScrollHorizontal) {
-                        sap.n.Adaptive.dialogs[pageID].addStyleClass("nepScrollContent");
-                    } else {
-                        sap.n.Adaptive.dialogs[pageID].removeStyleClass("nepScrollContent");
-                    }
-
-                    delete sap.n.Apps[pageID];
-
-                    AppCache.Load(pageName, {
-                        appGUID: pageID,
-                        parentObject: sap.n.Adaptive.dialogs[pageID],
-                        startParams: config,
+                sap.n.Shell.loadSidepanel(pageName, title, {
+                    icon: navigation.dialogIcon,
+                    additionaltext: navigation.dialogSubTitle,
+                    appGUID: ModelData.genID(),
+                    startParams: config,
+                });
+            }
+            return null;
+        } else {
+            const pageId = `${pageName}_${id}_P`;
+            if (sap.n.Adaptive.pages[pageId]) {
+                if (sap.n.Apps[pageId] && Array.isArray(sap.n.Apps[pageId].beforeDisplay)) {
+                    sap.n.Apps[pageId].beforeDisplay.forEach((beforeDisplayFunc) => {
+                        beforeDisplayFunc(config);
                     });
                 }
+            } else {
+                sap.n.Adaptive.pages[pageId] = new sap.m.Page({
+                    showFooter: false,
+                    showHeader: false,
+                    enableScrolling: false,
+                });
 
-                return sap.n.Adaptive.dialogs[pageID];
+                AppCache.Load(pageName, {
+                    appGUID: pageId,
+                    parentObject: sap.n.Adaptive.pages[pageId],
+                    startParams: config,
+                });
+            }
 
-            case "S":
-                if (localAppID === "ADAPTIVEDESIGNER") {
-                    sap.m.MessageToast.show("Sidepanel can only be displayed in Launchpad");
-                } else {
-                    var title = navigation.dialogTitle || "";
-
-                    if (navigation.dialogTitleFieldText) {
-                        if (navigation.dialogTitle) {
-                            title += " " + navigation.dialogTitleFieldText;
-                        } else {
-                            title = navigation.dialogTitleFieldText;
-                        }
-                    }
-
-                    sap.n.Shell.loadSidepanel(pageName, title, {
-                        icon: navigation.dialogIcon,
-                        additionaltext: navigation.dialogSubTitle,
-                        appGUID: ModelData.genID(),
-                        startParams: config,
-                    });
-                }
-                return null;
-
-            default:
-                var pageID = pageName + "_" + id + "_P";
-
-                if (sap.n.Adaptive.pages[pageID]) {
-                    if (sap.n.Apps[pageID] && sap.n.Apps[pageID].beforeDisplay) {
-                        $.each(sap.n.Apps[pageID].beforeDisplay, function (i, data) {
-                            data(config);
-                        });
-                    }
-                } else {
-                    sap.n.Adaptive.pages[pageID] = new sap.m.Page({
-                        showFooter: false,
-                        showHeader: false,
-                        enableScrolling: false,
-                    });
-
-                    AppCache.Load(pageName, {
-                        appGUID: pageID,
-                        parentObject: sap.n.Adaptive.pages[pageID],
-                        startParams: config,
-                    });
-                }
-
-                return sap.n.Adaptive.pages[pageID];
+            return sap.n.Adaptive.pages[pageId];
         }
     },
 
@@ -875,7 +860,7 @@ sap.n.Adaptive = {
                     ColumnHeader.setFooter(sumField);
                 }
 
-                var HBox = new sap.m.HBox();
+                var HBox = new sap.m.HBox({renderType: "Bare"});
 
                 HBox.addItem(
                     new sap.m.Label({

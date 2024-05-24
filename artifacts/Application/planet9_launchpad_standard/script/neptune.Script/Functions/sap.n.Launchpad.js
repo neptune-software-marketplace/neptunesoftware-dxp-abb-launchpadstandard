@@ -289,6 +289,7 @@ sap.n.Launchpad = {
             const cardContainer = new sap.m.FlexBox(nepId(), {
                 width: '100%',
                 fitContainer: true,
+                renderType: "Bare"
             }).addStyleClass('nepFCardContainer nepNewCard nepTile100 ui-state-disabled');
             
             const btnAddCard = new sap.m.Button();
@@ -320,35 +321,123 @@ sap.n.Launchpad = {
         grid.addStyleClass(c);
     },
 
-    updateUserLanguage(language = '') {
+    setUserLanguage(language = '') {
         setLaunchpadLanguage(language);
+        
+        let newLanguage = 'EN';
+        if (this.isLanguageValid(language)) {
+            newLanguage = language.trim().toUpperCase();
+            AppCache.userInfo.language = newLanguage;
+        }
+        
+        const reloadApps = [];
+        AppCache._loadedApps.forEach((options, value) => {
+            reloadApps.push({ value, options})
+        });
+        AppCache._loadedApps.clear();
+
+        const rebuildViews = [];
+        AppCache._builtViews.forEach((args, id) => {
+            const { viewName, applid, loadOptions } = args;
+            loadOptions.defaultLanguage = newLanguage;
+            rebuildViews.push({
+                id,
+                viewName: replaceLanguageInAppViewName(viewName, newLanguage),
+                applid,
+                loadOptions,
+            });
+        });
+        AppCache._builtViews.clear();
+
+        function loadApps(apps) {
+            apps.forEach(({value, options}) => {
+                AppCache.Load(value, options);
+            });
+        }
+
+        function rebuildAppViews(openAppIds, apps) {
+            const activeApps = apps.filter(({ id }) => openAppIds.some(sId => sId.includes(id)))
+            if (activeApps.length === 0) return;
+
+            // re-open apps that were open
+            activeApps.forEach(({ viewName, applid, loadOptions }) => {
+                AppCache.buildView({ viewName, applid, loadOptions });
+            });
+        }
         
         sap.n.Planet9.function({
             id: dataSet,
             method: 'UpdateUserDetails',
-            data: { language },
-            success: function () {
-                if (AppCache.isMobile) {
-                    AppCache.translate(getLaunchpadLanguage());
-                    sap.n.Launchpad.RebuildTiles();
-                    sap.n.Launchpad.BuildMenuTop();
-                    sap.n.Launchpad.BuildTreeMenu();
-                } else {
+            data: { language: newLanguage },
+            success: () => {
+                if (!supportsInlineTranslations()) {
+                    if (AppCache.isMobile) {
+                        AppCache.translate(newLanguage);
+                        sap.n.Launchpad.RebuildTiles();
+                        sap.n.Launchpad.BuildMenuTop();
+                        sap.n.Launchpad.BuildTreeMenu();
+                        return; 
+                    }
+
+                    // remove ?lang=, otherwise reload will show the language set in ?lang= parameter
+                    if (new URL(location.href).searchParams.has('lang')) {
+                        const newUrl = new URL(location.href);
+                        newUrl.searchParams.delete('lang');
+                        history.pushState({}, document.title, newUrl);
+                        location.reload();
+                        return;
+                    }
+
                     location.reload();
+                    return
                 }
+
+                // support inline translations >= 24-LTS
+                const openAppIds = openApps.getItems().map(item => item.sId);
+                AppCacheNav.getPages().filter(page => page.sId.indexOf('page') > -1).forEach((page)=> {
+                    page.destroyContent();
+                });
+                
+                AppCache.translate(newLanguage);
+
+                sap.n.Launchpad.BuildMenu(false);
+                sap.n.Launchpad.RebuildTiles();
+                sap.n.Launchpad.BuildMenuTop();
+                sap.n.Launchpad.BuildTreeMenu();
+
+                // destroy existing apps that open
+                rebuildViews.forEach(({ id }) => {
+                    sap.n.Shell.closeTile({ id });
+                });
+
+                // load/fetch apps with a different language
+                loadApps(reloadApps);
+
+                const viewIds = rebuildViews.map(({ id }) => id);
+                function ensureViewsAvailabilityBeforeRebuildingActiveViews(viewIds, retryCount, callback) {
+                    // no views asked to be checked, so we assume all views are available
+                    if (!Array.isArray(viewIds) || viewIds.length === 0) return callback(true);
+                    if (retryCount <= 0) return callback(false);
+
+                    if (!viewIds.every(viewId => typeof AppCache.View[viewId] !== 'undefined')) {
+                        setTimeout(() => ensureViewsAvailabilityBeforeRebuildingActiveViews(viewIds, retryCount-1, callback), 5);
+                        return;
+                    }
+
+                    callback(true);
+                }
+
+                // we wait for 5 seconds, before giving up on views being available
+                ensureViewsAvailabilityBeforeRebuildingActiveViews(viewIds, 1000, (available) => {
+                    if (!available) return;
+                    setTimeout(() => rebuildAppViews(openAppIds, rebuildViews), 100);
+                });
             }
         });
     },
 
-    // if language set by user is removed, reset to default language
-    validateActiveLanguageOrRevert() {
-        // supported for user selected language has been removed
-        const { languages } = AppCache.config;
-        const language = getLaunchpadLanguage();
-        if (language !== 'EN' && Array.isArray(languages) && !languages.includes(language)) {
-            // revert to default language
-            this.updateUserLanguage();
-        }
+    isLanguageValid(language) {
+        return masterLanguages.map(({ ISOCODE }) => ISOCODE).includes(language);
     },
 
     applyLanguages: function (languages) {
@@ -446,38 +535,60 @@ sap.n.Launchpad = {
 
     applyUserTheme: function () {
         if (modelAppCacheDiaSettings.oData && modelAppCacheDiaSettings.oData.userTheme) {
-            AppCache.layout.forEach(function (data) {
-                if (data.id === modelAppCacheDiaSettings.oData.userTheme) {
-                    let layout = JSON.parse(JSON.stringify(data));
+            data = AppCache.layout.find(obj=>obj.id === modelAppCacheDiaSettings.oData.userTheme)
+            if (!!data) {
 
-                    // UI5 Theme 
-                    if (layout.ui5Theme) {
-                        if (layout.ui5Theme.indexOf('sap_') === -1) sap.ui.getCore().setThemeRoot(layout.ui5Theme, '/public/ui5theme/' + layout.ui5Theme);
-                        sap.ui.getCore().applyTheme(layout.ui5Theme);
-                    } else {
-                        sap.ui.getCore().applyTheme(AppCache.defaultTheme);
-                    }
+                let layout = JSON.parse(JSON.stringify(data));
+                let cssVariablesLink = ``;
+                const ui5theme = layout.ui5Theme || AppCache.defaultTheme;
 
-                    if (modelAppCacheDiaSettings.oData.userBackImage) {
-                        layout.style = layout.style.replace('</style>', `.nepShell {
-                                background-image: url('${modelAppCacheDiaSettings.oData.userBackImage}') !important;
-                                background-repeat:no-repeat;
-                                background-size:cover;
-                            }
-                            .nepPage {
-                                background:transparent;
-                            }
-                            </style>
-                        `);
-                    }
-                    sap.n.Launchpad.currLayout = '';
-                    sap.n.Launchpad.applyLayout(layout);
+                // UI5 Theme 
+                // if (layout.ui5Theme) {
+                if (ui5theme.indexOf('sap_') === 0) {
+                    cssVariablesLink = `/public/openui5/base/baselib/${ui5theme}/css_variables.css`;
+
+                } else if (ui5theme.indexOf('neptune_horizon_') === 0) {
+                    sap.ui.getCore().setThemeRoot(ui5theme, `/public/themes/${ui5theme}/UI5`);
+                    cssVariablesLink = `/public/themes/${ui5theme}/base/baselib/${ui5theme}/css_variables.css`;
+
+                } else {
+                    sap.ui.getCore().setThemeRoot(ui5theme, '/public/ui5theme/' + ui5theme);
+                    cssVariablesLink = `/public/ui5theme/base/baselib/${ui5theme}/css_variables.css`;
                 }
-            });
+                    // sap.ui.getCore().applyTheme(layout.ui5Theme);
+                // } else {
+                //     sap.ui.getCore().applyTheme(AppCache.defaultTheme);
+                //     cssVariablesLink = `/public/openui5/base/baselib/${AppCache.defaultTheme}/css_variables.css`;
+                // }
+                sap.ui.getCore().applyTheme(ui5theme);
+
+                let link = document.getElementById(`cssvariables`);
+                if (!!link) {
+                    link.href = cssVariablesLink;
+                } else {
+                    console.error("cssvariables not found");
+                }
+
+                if (modelAppCacheDiaSettings.oData.userBackImage) {
+                    layout.style = layout.style.replace('</style>', `.nepShell {
+                            background-image: url('${modelAppCacheDiaSettings.oData.userBackImage}') !important;
+                            background-repeat:no-repeat;
+                            background-size:cover;
+                        }
+                        .nepPage {
+                            background:transparent;
+                        }
+                        </style>
+                    `);
+                }
+
+                sap.n.Launchpad.currLayout = '';
+                sap.n.Launchpad.applyLayout(layout);
+            }
         }
     },
 
-    BuildMenu: function () {
+    BuildMenu: function (navigateToHome=true) {
         // Enable Fav Buttons
         let cat = ModelData.FindFirst(AppCacheCategory, 'inclFav', true);
         if (cat && cat.inclFav) {
@@ -496,11 +607,10 @@ sap.n.Launchpad = {
         if (AppCache.config.enableTopMenu) sap.n.Launchpad.BuildMenuTop();
         sap.n.Launchpad.BuildTreeMenu();
         sap.n.Launchpad.BuildTags();
-        sap.n.Launchpad.SelectHomeMenu();
+        if (navigateToHome) sap.n.Launchpad.SelectHomeMenu();
 
         // Fallback, no startApp or Tiles -> Build empty page 
         if (!AppCache.StartApp && !AppCache.StartWebApp && !modelAppCacheCategory.oData.length) {
-
             let pageCat = new sap.m.Page(nepId(), {
                 showHeader: false,
                 showFooter: false,
@@ -510,7 +620,6 @@ sap.n.Launchpad = {
             pageCat.addStyleClass('nepPage');
             AppCacheNav.addPage(pageCat);
             AppCacheNav.to(pageCat);
-
         }
     },
 
@@ -858,7 +967,9 @@ sap.n.Launchpad = {
     },
 
     GetGroupHeader: function (data, cards) {
-        let header = new sap.m.FlexBox(nepId()).addStyleClass('nepGrid');        
+        let header = new sap.m.FlexBox(nepId(), {
+            renderType: "Bare"
+        }).addStyleClass('nepGrid');        
         sap.n.Launchpad.setInitialGridWidth(header);
 
         // Content Width
@@ -874,7 +985,9 @@ sap.n.Launchpad = {
         if (!data.hideHeader || data.isCustom) {
             // Group Header
             const groupHeader = sap.n.Launchpad.buildGroupHeader(data);
-            const oHeaderCell = new sap.m.VBox(nepId(), {});
+            const oHeaderCell = new sap.m.VBox(nepId(), {
+                renderType: "Bare"
+            });
             oHeaderCell.addStyleClass('nepTileMax');
             oHeaderCell.addItem(groupHeader);
             header.addItem(oHeaderCell);
@@ -892,7 +1005,9 @@ sap.n.Launchpad = {
     },
 
     GetGroupCards: function (data, type, dragDropContext) {
-        const cards = new sap.m.FlexBox(nepId()).addStyleClass('nepGrid');
+        const cards = new sap.m.FlexBox(nepId(), {
+            renderType: "Bare"
+        }).addStyleClass('nepGrid');
         if (data.styleClass) cards.addStyleClass(data.styleClass);
 
         if (!data.inclFav) {
@@ -1014,7 +1129,8 @@ sap.n.Launchpad = {
                 //Grid containerOpenApp
                 let gridContainer = new sap.m.FlexBox(`${sectionPrefix()}${dataCat.id}`, {
                     direction: 'Column',
-                    alignItems: 'Start'
+                    alignItems: 'Start',
+                    renderType: "Bare"
                 }).addStyleClass('nepGridContainer nepGridCards');
                 
                 addCustomData(gridContainer, {
@@ -1054,7 +1170,8 @@ sap.n.Launchpad = {
                     //Grid containerOpenApp
                     let tilegroupContainer = new sap.m.FlexBox(`${sectionPrefix()}${dataCat.id}${dataCatChild.id}`, {
                         direction: 'Column',
-                        alignItems: 'Start'
+                        alignItems: 'Start',
+                        renderType: "Bare"
                     }).addStyleClass('nepGridContainer nepGridCards');
                     
                     addCustomData(tilegroupContainer, {
@@ -1094,7 +1211,8 @@ sap.n.Launchpad = {
                     // add an empty box
                     pageCat.addContent(
                         new sap.m.HBox(nepId(), {
-                            height: '50px'
+                            height: '50px',
+                            renderType: "Bare"
                         })
                     );
                 }
@@ -1170,7 +1288,8 @@ sap.n.Launchpad = {
                     // add an empty box
                     pageCat.addContent(
                         new sap.m.HBox(nepId(), {
-                            height: (window.innerHeight - 270) + 'px'
+                            height: (window.innerHeight - 270) + 'px',
+                            renderType: "Bare"
                         })
                     );
                 }
@@ -1561,8 +1680,8 @@ sap.n.Launchpad = {
             } else {
                 sap.n.Launchpad.handleAppTitle(appTitle);
 
-                let viewName = 'webapp:' + dataTile.actionWebApp + ':' + dataTile.urlApplication;
-                let webApp = ModelData.FindFirst(AppCacheData, ['application', 'appPath'], [dataTile.actionWebApp, dataTile.urlApplication]);
+                const viewName = getWebAppViewName(dataTile.actionWebApp, dataTile.urlApplication);
+                const webApp = ModelData.FindFirst(AppCacheData, ['application', 'appPath'], [dataTile.actionWebApp, dataTile.urlApplication]);
 
                 if (webApp) {
 
@@ -1709,7 +1828,8 @@ sap.n.Launchpad = {
             containerOpenApp = new sap.m.HBox(containerAppId, {
                 width: '100%',
                 justifyContent: 'SpaceBetween',
-                alignItems: 'Center'
+                alignItems: 'Center',
+                            renderType: "Bare"
             }).addStyleClass('nepOpenAppsContainer');
 
             const appTitle = sap.n.Launchpad.translateTile('title', dataTile);
@@ -1754,11 +1874,13 @@ sap.n.Launchpad = {
                 let boxTop = new sap.m.FlexBox(nepId(), {
                     justifyContent: 'Start',
                     alignContent: 'Center',
-                    height: '35px'
+                    height: '35px',
+                    renderType: "Bare"
                 });
 
                 let boxIcon = new sap.m.VBox(nepId(), {
-                    width: '38px'
+                    width: '38px',
+                    renderType: "Bare"
                 }).addStyleClass('nepNavBarBoxIcon');
 
                 if (dataTile.cardImage) {
@@ -1780,7 +1902,8 @@ sap.n.Launchpad = {
                 }
 
                 let boxTitle = new sap.m.VBox(nepId(), {
-                    width: '190px'
+                    width: '190px',
+                    renderType: "Bare"
                 }).addStyleClass('nepNavBarBoxTitle');
 
                 const appTitle = sap.n.Launchpad.translateTile('title', dataTile);
@@ -1797,7 +1920,8 @@ sap.n.Launchpad = {
 
                 let boxActions = new sap.m.VBox(nepId(), {
                     justifyContent: 'Start',
-                    width: '40px'
+                    width: '40px',
+                    renderType: "Bare"
                 });
 
                 const btnClose = new sap.m.Button(nepId(), {
@@ -1891,11 +2015,13 @@ sap.n.Launchpad = {
         let boxTop = new sap.m.FlexBox(nepId(), {
             justifyContent: 'Start',
             alignContent: 'Center',
-            height: '35px'
+            height: '35px',
+            renderType: "Bare"
         });
 
         let boxIcon = new sap.m.VBox(nepId(), {
             width: '38px',
+            renderType: "Bare"
         }).addStyleClass('nepNavBarBoxIcon');
 
         if (dataTile.cardImage) {
@@ -1915,7 +2041,8 @@ sap.n.Launchpad = {
         }
 
         let boxTitle = new sap.m.VBox(nepId(), {
-            width: '190px'
+            width: '190px',
+            renderType: "Bare"
         }).addStyleClass('nepNavBarBoxTitle');
 
         const appTitle = sap.n.Launchpad.translateTile('title', dataTile);
@@ -1932,7 +2059,8 @@ sap.n.Launchpad = {
 
         let boxActions = new sap.m.VBox(nepId(), {
             justifyContent: 'Start',
-            width: '40px'
+            width: '40px',
+            renderType: "Bare"
         });
 
         const btnClose = new sap.m.Button(nepId(), {
@@ -2121,7 +2249,8 @@ sap.n.Launchpad = {
         panel.setHeaderToolbar(headerToolbar);
 
         let vbox = new sap.m.VBox(nepId(), {
-            alignItems: 'Start', //dataCat.titleAlignment || 'Start',
+            alignItems: 'Start',
+            renderType: "Bare"
         }).addStyleClass('nepCatTitleLayout');
         panel.addContent(vbox);
 
@@ -2169,10 +2298,13 @@ sap.n.Launchpad = {
 
         let oBlockContentParent = new sap.m.VBox(nepId(), {
             justifyContent: 'SpaceBetween',
-            height: 'calc(100% - 25px)'
+            height: 'calc(100% - 25px)',
+            renderType: "Bare"
         });
 
-        let oBlockContentTop = new sap.m.VBox(nepId());
+        let oBlockContentTop = new sap.m.VBox(nepId(), {
+            renderType: "Bare"
+        });
 
         oBlockCell.addContent(oBlockContentParent);
         oBlockContentParent.addItem(oBlockContentTop);
@@ -2180,7 +2312,8 @@ sap.n.Launchpad = {
         // SubTitle - Box
         let oBlockContent = new sap.m.HBox(nepId(), {
             width: '100%',
-            justifyContent: 'SpaceBetween'
+            justifyContent: 'SpaceBetween',
+            renderType: "Bare"
         });
 
         // Reverse if title at End
@@ -2493,10 +2626,13 @@ sap.n.Launchpad = {
 
         let oBlockContentParent = new sap.m.VBox(nepId(), {
             justifyContent: 'SpaceBetween',
-            height: 'calc(100% - 25px)'
+            height: 'calc(100% - 25px)',
+            renderType: "Bare"
         });
 
-        let oBlockContentTop = new sap.m.VBox(nepId());
+        let oBlockContentTop = new sap.m.VBox(nepId(), {
+            renderType: "Bare"
+        });
 
         oBlockCell.addContent(oBlockContentParent);
         oBlockContentParent.addItem(oBlockContentTop);
@@ -2504,7 +2640,8 @@ sap.n.Launchpad = {
         // SubTitle - Box
         let oBlockContent = new sap.m.HBox(nepId(), {
             width: '100%',
-            justifyContent: 'SpaceBetween'
+            justifyContent: 'SpaceBetween',
+            renderType: "Bare"
         });
 
         // Reverse if title at End
@@ -2609,7 +2746,9 @@ sap.n.Launchpad = {
         let supportedBrowser = true;
         let openEnabled = true;
 
-        let oBlockContent = new sap.m.HBox(nepId());
+        let oBlockContent = new sap.m.HBox(nepId(),{
+            renderType: "Bare"
+        });
         oBlockContent.addStyleClass('nepTileAction sapUiSizeCompact');
 
         // Check Offline Mode -> Disable Open button 
@@ -2630,7 +2769,7 @@ sap.n.Launchpad = {
                 if (dataTile.openWindow) {
                     openEnabled = false;
                 } else {
-                    let viewName = 'webapp:' + dataTile.actionWebApp + ':' + dataTile.urlApplication;
+                    const viewName = getWebAppViewName(dataTile.actionWebApp, dataTile.urlApplication);
 
                     // Get App from Cache
                     p9GetView(viewName.toUpperCase()).then(function (viewData) {
@@ -2817,7 +2956,8 @@ sap.n.Launchpad = {
             let boxFooter = new sap.m.HBox(nepId(), {
                 width: '100%',
                 justifyContent: 'End',
-                alignContent: 'Center'
+                alignContent: 'Center',
+                renderType: "Bare"
             });
             let footer = new sap.m.Text(nepId(), {
                 text: sap.n.Launchpad.translateTile('footer', dataTile)
@@ -2855,11 +2995,16 @@ sap.n.Launchpad = {
 
         let oBlockContentParent = new sap.m.VBox(nepId(), {
             justifyContent: 'SpaceBetween',
-            height: 'calc(100% - 25px)'
+            height: 'calc(100% - 25px)',
+            renderType: "Bare"
         });
 
-        let oBlockContentTop = new sap.m.VBox(nepId());
-        let oBlockContentAction = new sap.m.VBox(nepId());
+        let oBlockContentTop = new sap.m.VBox(nepId(), {
+            renderType: "Bare"
+        });
+        let oBlockContentAction = new sap.m.VBox(nepId(), {
+            renderType: "Bare"
+        });
 
         oBlockContentAction.addStyleClass('sapUiContentPadding');
 
@@ -2908,10 +3053,13 @@ sap.n.Launchpad = {
 
         let oBlockContentParent = new sap.m.VBox(nepId(), {
             justifyContent: 'SpaceBetween',
-            height: 'calc(100% - 25px)'
+            height: 'calc(100% - 25px)',
+            renderType: "Bare"
         });
 
-        let oBlockContentTop = new sap.m.VBox(nepId());
+        let oBlockContentTop = new sap.m.VBox(nepId(), {
+            renderType: "Bare"
+        });
 
         oBlockCell.addContent(oBlockContentParent);
         oBlockContentParent.addItem(oBlockContentTop);
@@ -2919,7 +3067,8 @@ sap.n.Launchpad = {
         // SubTitle - Box
         let oBlockContent = new sap.m.HBox(nepId(), {
             width: '100%',
-            justifyContent: 'SpaceBetween'
+            justifyContent: 'SpaceBetween',
+            renderType: "Bare"
         });
 
         // Reverse if title at End
@@ -3024,10 +3173,13 @@ sap.n.Launchpad = {
 
         let oBlockContentParent = new sap.m.VBox(nepId(), {
             justifyContent: 'SpaceBetween',
-            height: 'calc(100% - 25px)'
+            height: 'calc(100% - 25px)',
+            renderType: "Bare"
         });
 
-        let oBlockContentTop = new sap.m.VBox(nepId());
+        let oBlockContentTop = new sap.m.VBox(nepId(), {
+            renderType: "Bare"
+        });
 
         oBlockCell.addContent(oBlockContentParent);
         oBlockContentParent.addItem(oBlockContentTop);
@@ -3035,7 +3187,8 @@ sap.n.Launchpad = {
         // SubTitle - Box
         let oBlockContent = new sap.m.HBox(nepId(), {
             width: '100%',
-            justifyContent: 'SpaceBetween'
+            justifyContent: 'SpaceBetween',
+            renderType: "Bare"
         });
 
         // Reverse if title at End

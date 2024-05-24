@@ -93,17 +93,17 @@ let AppCache = {
             return;
         }
 
-        let appData = this.loadQueue[0];
-        if (appData) {
-            this.loadQueue.splice(0, 1);
-            this.Load(appData.APPLID, appData.OPTIONS);
-        }
+        if (this.loadQueue.length === 0) return;
+
+        let { APPLID, OPTIONS } = this.loadQueue[0];
+        this.loadQueue.splice(0, 1);
+        this.Load(APPLID, OPTIONS);
     },
 
     //  AppCache Methods
+    _loadedApps: new Map(),
     Load: function (value, options) {
         appCacheLog(`AppCache.load: APPLID=${value}`);
-
         // Check Queue - Put in queue of working
         if (refreshingAuth) {
             let appData = {
@@ -113,6 +113,8 @@ let AppCache = {
             this.loadQueue.push(appData);
             return;
         }
+
+        this._loadedApps.set(value, Object.assign({}, options));
 
         // Format ID
         let applid = value.replace(/\//g, '');
@@ -168,46 +170,63 @@ let AppCache = {
         const loadOptions = Object.assign({}, AppCache.LoadOptions);
 
         // Get App from Memory
-        if (!AppCache.LoadOptions.dialogShow) {
-            if (AppCache.LoadOptions.appGUID) {
-                if (AppCache.View[AppCache.LoadOptions.appGUID]) {
-                    AppCache.buildView(value, loadOptions);
+        if (!loadOptions.dialogShow) {
+            const viewName = getAppViewName(value, loadOptions.appPath);
+            if (loadOptions.appGUID) {
+                if (AppCache.View[loadOptions.appGUID]) {
+                    AppCache.buildView({ viewName, applid: value, loadOptions });
                     return;
                 }
             } else {
                 if (AppCache.View[applid]) {
-                    AppCache.buildView(value, loadOptions);
+                    AppCache.buildView({ viewName, applid: value, loadOptions });
                     return;
                 }
             }
         }
 
         // Get App from DB/LS if exist in repository
-        let app = ModelData.FindFirst(AppCacheData, ['application', 'language', 'appPath'], [value.toUpperCase(), getLaunchpadLanguage(), loadOptions.appPath]);
-        if (app) {
-            if (AppCache.isOffline || !app.invalid) {
-                let viewName = 'app:' + value + ':' + getLaunchpadLanguage() + ':' + loadOptions.appPath;
-                p9GetView(viewName.toUpperCase()).then(function (viewData) {
-                    if (typeof viewData !== 'undefined' && viewData.length > 2) {
-                        AppCache.initView(value, viewData, loadOptions);
-                    } else {
-                        AppCache.getView(value, loadOptions);
-                    }
-                }).catch((err) => {
-                    appCacheLog('AppCache.Load: catch, while trying to load view from p9GetView', err);
-                    let data = sapStorageGet(viewName.toUpperCase());
-                    if (data) {
-                        AppCache.initView(value, data, loadOptions);
-                    } else {
-                        AppCache.getView(value, loadOptions);
-                    }
-                });
-            } else {
-                AppCache.getView(value, loadOptions);
-            }
-        } else {
+        this.loadView(value, loadOptions);
+    },
+
+    // try to load view from local browser repository or fetch it from backend
+    loadView: function (value, loadOptions) {
+        function fetchView() {
             AppCache.getView(value, loadOptions);
         }
+
+        const app = ModelData.FindFirst(AppCacheData, ['application', 'language', 'appPath'], [value.toUpperCase(), getLaunchpadLanguage(), loadOptions.appPath]);
+        if (!app) {
+            return fetchView();
+        }
+
+        if (app.invalid && !AppCache.isOffline) {
+            return fetchView();
+        }
+
+        let shouldFetchView = true;
+        const viewName = getAppViewName(value, loadOptions.appPath);
+        p9GetView(viewName).then((data) => {
+            if (typeof data !== 'undefined' && data.length > 2) {
+                shouldFetchView = false;
+                AppCache.initView({ viewName, value, data, loadOptions });
+            }
+        }).catch((err) => {
+            appCacheLog('AppCache.Load: catch, while trying to load view from p9GetView', err);
+            const data = sapStorageGet(viewName);
+            if (typeof data !== 'undefined') {
+                shouldFetchView = false;
+                AppCache.initView({ viewName, value, data, loadOptions });
+            }
+        }).finally(() => {
+            if (shouldFetchView) {
+                fetchView();
+            }
+        });
+    },
+
+    setGlobalAppGuidTo: function (guid) {
+        AppCache.LoadOptions.appGUID = guid;
     },
 
     LoadAdaptive: function (id, options) {
@@ -294,8 +313,8 @@ let AppCache = {
         };
 
         let dataCat = {};
-        let viewName = 'webapp:' + value + ':' + dataTile.urlApplication;
-        let webApp = ModelData.FindFirst(AppCacheData, ['application', 'appPath'], [dataTile.actionWebApp, dataTile.urlApplication]);
+        const viewName = getWebAppViewName(value, dataTile.urlApplication);
+        const webApp = ModelData.FindFirst(AppCacheData, ['application', 'appPath'], [dataTile.actionWebApp, dataTile.urlApplication]);
 
         if (webApp) {
             // Get App from Memory
@@ -451,33 +470,51 @@ let AppCache = {
     },
 
     translate: function (language) {
-        // Language set in query string always takes precedence
-        const urlLang = new URLSearchParams(location.search).get('lang');
-        if (urlLang) {
-            language = urlLang;
-        }
         // Handle Languages        
         if (language === 'NB') language = 'NO';
 
-        AppCache.objects && AppCache.objects.forEach(function (object) {
-            let obj = sap.ui.getCore().byId(object.fieldName);
-            if (obj) {
-                object.attributes.forEach(function (attribute) {
-                    const translation = ModelData.FindFirst(attribute.translation, 'language', language);
+        if (Array.isArray(AppCache.objects)) {
+            AppCache.objects.forEach(function (object) {
+                let obj = sap.ui.getCore().byId(object.fieldName);
+                if (obj) {
+                    object.attributes.forEach(function (attribute) {
+                        const translation = ModelData.FindFirst(attribute.translation, 'language', language);
 
-                    const firstLetter = attribute.attribute.charAt(0).toUpperCase();
-                    const restOfAttrStr = attribute.attribute.slice(1);
-                    const arg = translation ? translation.value : attribute.value;
-                    const jsFn = `obj.set${firstLetter}${restOfAttrStr}('${arg}')`;
+                        const firstLetter = attribute.attribute.charAt(0).toUpperCase();
+                        const restOfAttrStr = attribute.attribute.slice(1);
+                        const arg = translation ? translation.value : attribute.value;
+                        const jsFn = `obj.set${firstLetter}${restOfAttrStr}('${arg}')`;
 
-                    try {
-                        eval(jsFn);
-                    } catch (e) {
-                        console.log(e);
-                    }
-                });
-            }
-        });
+                        try {
+                            eval(jsFn);
+                        } catch (e) {
+                            console.log(e);
+                        }
+                    });
+                }
+            });
+        }
+
+        // new method for translations >= 24-LTS
+        const translations = modelAppCacheTranslations.getData();
+        if (typeof translations !== 'undefined' && Object.keys(translations).length > 0) {
+            Object.entries(translations).forEach(([fieldName, attributes]) => {
+                const obj = sap.ui.getCore().byId(fieldName);
+                if (obj) {
+                    Object.entries(attributes).forEach(([attributeName, translationMap]) => {
+                        const translated = translationMap[language];
+                        switch (attributeName) {
+                            case 'text': obj.setText(translated); break;
+                            case 'intro': obj.setIntro(translated); break;
+                            case 'title': obj.setTitle(translated); break;
+                            case 'tooltip': obj.setTooltip(translated); break;
+                            case 'placeholder': obj.setPlaceholder(translated); break;
+                            default: appCacheError(`translation attribute function not set`, attributeName);
+                        }
+                    });
+                }
+            });
+        }
 
         AppCache.coreLanguageHandler.updateResourceBundlesNewLang(language);
     },
@@ -494,6 +531,7 @@ let AppCache = {
             getCacheAppCacheTilesRun(true),
             getCacheAppCacheTilesFav(true),
             getCacheAppCacheCustomization(true),
+            getCacheAppCacheTranslations(true),
         ])
             .catch((err) => {
                 console.error("One or more AppCache loads failed", err);
@@ -834,13 +872,95 @@ let AppCache = {
 
     },
 
-    initView: function (value, data, loadOptions) {
+    // load initView in serial, otherwise multiple initView's loading the same AdaptiveApp might not work
+    //  since report is passed as 'this' reference from Adaptive List view
+    isInitViewRunning: false,
+    initViewQueue: [],
+    _runInitViewSerially: () => {
+        if (this.isInitViewRunning) {
+            setTimeout(() => {
+                this._runInitViewSerially();
+            }, 10);
+            return;
+        }
+
+        if (this.initViewQueue.length === 0) return;
+
+        let { viewName, value, data, loadOptions } = this.initViewQueue[0];
+        this.initViewQueue.splice(0, 1);
+        this.initView({ viewName, value, data, loadOptions });
+    },
+
+    createViewFor_1_56({ viewName, applid, value, loadOptions }) {
+        if (!loadOptions.dialogShow && !loadOptions.parentObject) {
+            try {
+                const view = sap.ui.view({
+                    viewName: value.toUpperCase(),
+                    type: sap.ui.core.mvc.ViewType.JS
+                });
+
+                if (loadOptions.appGUID) {
+                    AppCache.View[loadOptions.appGUID] = view;
+                } else {
+                    AppCache.View[applid] = view;
+                }
+            } catch (err) {
+                AppCache.handleTileError(err);
+                AppCache.showTileErrorMessage(`Init view error in: ${value.toUpperCase()}`)
+            }
+        } else {
+            try {
+                AppCache.diaView = sap.ui.view({
+                    viewName: value.toUpperCase(),
+                    type: sap.ui.core.mvc.ViewType.JS
+                });
+            } catch (err) {
+                AppCache.handleTileError(err);
+                AppCache.showTileErrorMessage(`Init view error in: ${value.toUpperCase()}`);
+            }
+        }
+
+        AppCache.isInitViewRunning = false;
+        AppCache.buildView({ viewName, applid, loadOptions });
+    },
+
+    createView: function({ viewName, applid, value, loadOptions }) {
+        sap.ui.core.mvc.JSView.create({ viewName: value.toUpperCase() }).then(function (view) {
+            if (!loadOptions.dialogShow && !loadOptions.parentObject) {
+                if (loadOptions.appGUID) {
+                    AppCache.View[loadOptions.appGUID] = view;
+                } else {
+                    AppCache.View[applid] = view;
+                }
+            } else {
+                AppCache.diaView = view;
+            }
+
+            AppCache.buildView({ viewName, applid, loadOptions });
+        }).catch(function (err) {
+            AppCache.handleTileError(err);
+            AppCache.showTileErrorMessage(err);
+        }).finally(() => {
+            AppCache.isInitViewRunning = false;
+        });
+    },
+
+    initView: function ({ viewName, value, data, loadOptions }) {
         // Load Option: Download
         if (loadOptions.load === 'download') {
             sap.ui.core.BusyIndicator.hide();
             this._loadQueue();
             return;
         }
+
+        if (this.isInitViewRunning) {
+            this.initViewQueue.push({ viewName, value, data, loadOptions });
+            this._runInitViewSerially();
+            return
+        }
+
+        this.isInitViewRunning = true;
+        this.setGlobalAppGuidTo(loadOptions.appGUID);
 
         // Format ID
         let applid = value.replace(/\//g, '').toUpperCase();
@@ -851,124 +971,73 @@ let AppCache = {
             if (error.message) {
                 sap.m.MessageToast.show(error.message);
             }
+            this.isInitViewRunning = false;
             return;
         }
 
-        // Creating UI5 view 
+        // Creating UI5 view
         let versionParts = sap.ui.version.split(".");
 
         // BlockLayout vs Cards
         if (versionParts[0] >= 1 && versionParts[1] < 56) {
-            let oJSView;
-            if (!loadOptions.dialogShow && !loadOptions.parentObject) {
-                try {
-                    oJSView = sap.ui.view({
-                        viewName: value.toUpperCase(),
-                        type: sap.ui.core.mvc.ViewType.JS
-                    });
-                } catch (err) {
-                    AppCache.handleTileError(err);
-                    AppCache.showTileErrorMessage(`Init view error in: ${value.toUpperCase()}`)
-                }
-
-                if (loadOptions.appGUID) {
-                    AppCache.View[loadOptions.appGUID] = oJSView;
-                } else {
-                    AppCache.View[applid] = oJSView;
-                }
-            } else {
-                try {
-                    AppCache.diaView = sap.ui.view({
-                        viewName: value.toUpperCase(),
-                        type: sap.ui.core.mvc.ViewType.JS
-                    });
-                } catch (err) {
-                    AppCache.handleTileError(err);
-                    AppCache.showTileErrorMessage(`Init view error in: ${value.toUpperCase()}`);
-                }
-            }
-
-            AppCache.buildView(applid, loadOptions);
+            this.createViewFor_1_56({ viewName, applid, value, loadOptions });
         } else {
-            sap.ui.core.mvc.JSView.create({ viewName: value.toUpperCase() }).then(function (oView) {
-                if (!loadOptions.dialogShow && !loadOptions.parentObject) {
-                    if (loadOptions.appGUID) {
-                        AppCache.View[loadOptions.appGUID] = oView;
-                    } else {
-                        AppCache.View[applid] = oView;
-                    }
-                } else {
-                    AppCache.diaView = oView;
-                }
-
-                AppCache.buildView(applid, loadOptions);
-            }).catch(function (err) {
-                AppCache.handleTileError(err);
-                AppCache.showTileErrorMessage(err);
-            });
+            this.createView({ viewName, applid, value, loadOptions });
         }
     },
 
-    buildView: function (value, loadOptions) {
-        // Format ID
-        let applid = value.replace(/\//g, '');
+    _builtViews: new Map(),
+    buildView: function ({ viewName, applid, loadOptions }) {
+        // Format Application ID
+        let formattedAppId = applid.replace(/\//g, '');
         let tempView = sap.n.currentView;
-        let eventId;
+        const { appGUID } = loadOptions;
+        const eventId = typeof appGUID === 'string' && appGUID.length > 0 ? appGUID : formattedAppId;
 
         if (!loadOptions.parentObject && !loadOptions.dialogShow) {
-            if (loadOptions.appGUID) {
-                sap.n.currentView = AppCache.View[loadOptions.appGUID];
-            } else {
-                sap.n.currentView = AppCache.View[applid];
-            }
+            sap.n.currentView = AppCache.View[eventId];
+            this._builtViews.set(eventId, { viewName, applid, loadOptions });
         }
 
         // Turn off debug
         AppCacheShellDebug.setVisible(false);
 
-        if (loadOptions.appGUID) {
-            eventId = loadOptions.appGUID;
-        } else {
-            eventId = applid;
-        }
-
         // Custom init
         if (sap.n.Apps[eventId]) {
             if (sap.n.Apps[eventId].init) {
-                sap.n.Apps[eventId].init.forEach(function (data) {
+                sap.n.Apps[eventId].init.forEach(function (initFunction) {
                     if (loadOptions.startParams) {
                         try {
                             loadOptions.startParams = JSON.parse(loadOptions.startParams);
                         } catch (error) { }
                     }
 
-                    data(loadOptions.startParams);
+                    initFunction(loadOptions.startParams, loadOptions);
                 });
                 sap.n.Apps[eventId].init = null;
             }
 
             // Custom beforeDisplay
             if (sap.n.Apps[eventId] && sap.n.Apps[eventId].beforeDisplay) {
-                sap.n.Apps[eventId].beforeDisplay.forEach(function (data) {
+                sap.n.Apps[eventId].beforeDisplay.forEach(function (beforeDisplayFunc) {
                     if (loadOptions.startParams) {
                         try {
                             loadOptions.startParams = JSON.parse(loadOptions.startParams);
                         } catch (error) { }
                     }
 
-                    data(loadOptions.startParams);
+                    beforeDisplayFunc(loadOptions.startParams, loadOptions);
                 });
             }
 
             // Custom onNavigation
             if (sap.n.Apps[eventId] && sap.n.Apps[eventId].onNavigation) {
-                sap.n.Apps[eventId].onNavigation.forEach(function (data) {
+                sap.n.Apps[eventId].onNavigation.forEach(function (onNavigationFunc) {
                     if (sap.n.HashNavigation.data) sap.n.HashNavigation.data = JSON.parse(sap.n.HashNavigation.data);
-                    data(sap.n.HashNavigation.data);
+                    onNavigationFunc(sap.n.HashNavigation.data, loadOptions);
                     sap.n.HashNavigation.data = '';
                 });
             }
-
         }
 
         // Load Option: Not full load
@@ -1037,7 +1106,7 @@ let AppCache = {
 
         // ParentObject
         if (loadOptions.parentObject) {
-            let view = AppCache.diaView || AppCache.View[applid];
+            let view = AppCache.diaView || AppCache.View[formattedAppId];
 
             if (loadOptions.parentObject.addContent) {
                 loadOptions.parentObject.removeAllContent();
@@ -1077,8 +1146,8 @@ let AppCache = {
             } else {
                 AppCacheShellUI.setAppWidthLimited(true);
             }
-
         }
+
         sap.ui.core.BusyIndicator.hide();
         this._loadQueue();
     },
@@ -1107,6 +1176,9 @@ let AppCache = {
             if (loadOptions.appType === 'SAP') {
                 url = '/proxy/remote/';
                 headers['NeptuneServer'] = loadOptions.appPath;
+
+                // Add sap-language header, to load SAP apps with the same language as Open Edition
+                headers['sap-language'] = getLaunchpadLanguage();
 
                 const prefix = `${loadOptions.appPath}/neptune/`;
                 if (loadOptions.sapICFNode) {
@@ -1156,8 +1228,8 @@ let AppCache = {
                 AppCache.hideGlobalAjaxError = true;
 
                 // Save in DB/LocalStorage
-                const viewName = `app:${value}:${getLaunchpadLanguage()}:${loadOptions.appPath}`;
-                saveView(viewName.toUpperCase(), data);
+                const viewName = getAppViewName(value, loadOptions.appPath);
+                saveView(viewName, data);
 
                 // Set App Initialized
                 AppCache.Initialized = true;
@@ -1227,8 +1299,7 @@ let AppCache = {
                 }
 
                 // Start View
-                AppCache.initView(value, data, loadOptions);
-
+                AppCache.initView({ viewName, value, data, loadOptions });
             },
             error: function (err) {
                 if (err.status === 401) {
@@ -1312,7 +1383,7 @@ let AppCache = {
             headers: headers,
             success: function (data) {
                 // Save in DB/LocalStorage
-                let viewName = 'webapp:' + dataTile.actionWebApp + ':' + dataTile.urlApplication;
+                const viewName = getWebAppViewName(dataTile.actionWebApp, dataTile.urlApplication);
                 saveView(viewName, data);
 
                 let url = '/api/functions/Launchpad/GetAppTimestamp';
@@ -1578,9 +1649,20 @@ let AppCache = {
 
     setUserInfo: function () {
         AppCacheUserActionText.setText(AppCache.userInfo.name || AppCache.userInfo.username);
-        inAppCacheFormSettingsLang.setSelectedKey(getLaunchpadLanguage());
 
-        sap.n.Launchpad.validateActiveLanguageOrRevert();
+        const langQueryParam = isLanguageSetInQueryParam();
+        if (!langQueryParam.exists) {
+            let language = getLaunchpadLanguage();
+            if (language instanceof Promise) {
+                // skipping this exceptional case for language being returned as a Promise type
+            } else if (!sap.n.Launchpad.isLanguageValid(language)) {
+                language = sap.n.Launchpad.isLanguageValid(AppCache.userInfo.language) ? AppCache.userInfo.language : 'EN';
+                
+                setLaunchpadLanguage(language);
+                inAppCacheFormSettingsLang.setSelectedKey(language);
+                sap.n.Launchpad.setUserLanguage(language);
+            }
+        }
 
         // Enhancement
         if (sap.n.Enhancement.setUserInfo) {
@@ -1691,6 +1773,7 @@ let AppCache = {
     },
 
     afterSetUserInfo: function () {
+        
         if (refreshingAuth) {
             setTimeout(() => {
                 this.afterSetUserInfo();
@@ -1726,7 +1809,9 @@ let AppCache = {
 
         // Desktop 
         if (!AppCache.isMobile) {
-            AppCache.translate(getLaunchpadLanguage());
+            if (!isLanguageSetInQueryParam().exists) {
+                AppCache.translate(getLaunchpadLanguage());
+            }
 
             cacheLoaded = 0;
             getCacheAppCacheTiles(true);
@@ -1735,6 +1820,7 @@ let AppCache = {
             getCacheAppCacheTilesRun(true);
             getCacheAppCacheTilesFav(true);
             getCacheAppCacheCustomization(true);
+            getCacheAppCacheTranslations(true);
 
             (function () {
                 function waitForCache() {
@@ -2942,7 +3028,9 @@ let AppCache = {
 
     setSettings: function (skipStartup) {
         if (!modelDataSettings.oData.settings) {
-            if (!skipStartup) AppCache.Startup();
+            if (!skipStartup) {
+                AppCache.Startup();
+            }
             return;
         }
 
@@ -3154,6 +3242,12 @@ let AppCache = {
     Startup: function () {
         startHasUserLoggedOutTimer();
 
+        const langQueryParam = isLanguageSetInQueryParam();
+        if (langQueryParam.exists) {
+            setLaunchpadLanguage(langQueryParam.language);
+            inAppCacheFormSettingsLang.setSelectedKey(langQueryParam.language);
+        }
+
         // Check if CurrentConfig
         if (!AppCache.CurrentConfig) {
             sap.m.MessageToast.show(AppCache_tNoCurrentConfig.getText());
@@ -3195,6 +3289,12 @@ let AppCache = {
         appCacheLog('AppCache.Startup: Loading Apps');
         getCacheAppCacheData();
 
+        if (langQueryParam.exists) {
+            setTimeout(() => {
+                AppCache.translate(langQueryParam.language)
+            }, 1000);
+        }
+
         // Mobile or Desktop 
         if (AppCache.isMobile) {
 
@@ -3203,8 +3303,6 @@ let AppCache = {
             }
 
             appCacheLog('AppCache.Startup: Mobile Client');
-
-            AppCache.translate(getLaunchpadLanguage());
 
             // Status Bar - Fullscreen
             if (typeof StatusBar !== 'undefined') {

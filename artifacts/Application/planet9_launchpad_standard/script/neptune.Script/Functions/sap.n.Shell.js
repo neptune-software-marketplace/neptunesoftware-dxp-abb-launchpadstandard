@@ -49,6 +49,7 @@ sap.n.Shell = {
 
         if (AppCache.LoadOptions.appGUID) applid = AppCache.LoadOptions.appGUID;
         if (!applid) return;
+        
         if (!sap.n.Apps[applid]) sap.n.Apps[applid] = {};
         if (!sap.n.Apps[applid].beforeDisplay) sap.n.Apps[applid].beforeDisplay = new Array();
 
@@ -389,11 +390,11 @@ sap.n.Shell = {
         }
 
         // Close AppCache.Load Apps
-        for (const k in sap.n.Apps) {
-            if (AppCache.View[k]) {
-                AppCache.View[k].destroy();
-                AppCache.View[k] = null;
-                delete sap.n.Apps[k];
+        for (const appId in sap.n.Apps) {
+            if (AppCache.View[appId]) {
+                AppCache.View[appId].destroy();
+                AppCache.View[appId] = null;
+                delete sap.n.Apps[appId];
             }
         }
 
