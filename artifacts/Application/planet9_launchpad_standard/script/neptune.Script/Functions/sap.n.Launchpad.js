@@ -1483,7 +1483,7 @@ sap.n.Launchpad = {
         // Adaptive Framework
         if (dataTile.actionType === 'F') {
 
-            sap.n.Adaptive.getConfig(dataTile.settings.adaptive.id).then(function (config) {
+            neptune.Adaptive.getConfig(dataTile.settings.adaptive.id).then(function (config) {
 
                 // Exists ? 
                 if (!config) {

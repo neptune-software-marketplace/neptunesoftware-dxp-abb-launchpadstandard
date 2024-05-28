@@ -386,7 +386,7 @@ sap.n.Card = {
         this.setCardContentHeight(config, cardContent);
         if (!config.dataTile.settings.adaptive.idTile) return cardContent;
 
-        sap.n.Adaptive.getConfig(config.dataTile.settings.adaptive.idTile).then(function (startParams) {
+        neptune.Adaptive.getConfig(config.dataTile.settings.adaptive.idTile).then(function (startParams) {
             // Exists ? 
             if (!startParams) {
                 sap.m.MessageToast.show(AppCache_tAdaptiveNotFound.getText());

@@ -50910,18 +50910,6 @@
 							"data": []
 						},
 						{
-							"fieldNo": "99502fb7-e080-4f4b-e8eb-04af31d5bbbb",
-							"fieldName": "sap.n.Adaptive",
-							"fieldParent": "00323fe3-7d1a-4da1-a549-5fc51fb40e6a",
-							"fieldType": "neptune.Script",
-							"script": "file://script/neptune.Script/Functions/sap.n.Adaptive.js",
-							"customComponent": false,
-							"request": [],
-							"response": [],
-							"attributes": [],
-							"data": []
-						},
-						{
 							"fieldNo": "0549ca33-0f90-47cf-dd6b-2dbd473b329b",
 							"fieldName": "sap.n.Ajax",
 							"fieldParent": "00323fe3-7d1a-4da1-a549-5fc51fb40e6a",
@@ -51291,7 +51279,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "24.05.24.1735",
+	"ver": "24.05.28.1239",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",

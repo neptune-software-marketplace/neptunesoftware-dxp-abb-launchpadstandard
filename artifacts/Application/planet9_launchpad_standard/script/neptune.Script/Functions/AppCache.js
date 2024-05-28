@@ -243,7 +243,7 @@ let AppCache = {
     LoadAdaptiveApp: function (id, options) {
         if (!options) options = {};
 
-        sap.n.Adaptive.getConfig(id).then(function (config) {
+        neptune.Adaptive.getConfig(id).then(function (config) {
             // Exists ? 
             if (!config) {
                 sap.m.MessageToast.show(AppCache_tAdaptiveNotFound.getText());
@@ -283,7 +283,7 @@ let AppCache = {
 
     LoadAdaptiveSidepanel: function (id, title, options) {
         if (!options) options = {};
-        sap.n.Adaptive.getConfig(id).then(function (config) {
+        neptune.Adaptive.getConfig(id).then(function (config) {
             // Exists ? 
             if (!config) {
                 sap.m.MessageToast.show(AppCache_tAdaptiveNotFound.getText());
@@ -448,9 +448,9 @@ let AppCache = {
         AppCache.disableExternalTools();
 
         // Adaptive
-        sap.n.Adaptive.configurations = {};
-        sap.n.Adaptive.pages = {};
-        sap.n.Adaptive.dialogs = {};
+        neptune.Adaptive.configurations = {};
+        neptune.Adaptive.pages = {};
+        neptune.Adaptive.dialogs = {};
 
         // Enhancement
         if (sap.n.Enhancement.RestrictedEnable) {
@@ -1661,6 +1661,8 @@ let AppCache = {
                 setLaunchpadLanguage(language);
                 inAppCacheFormSettingsLang.setSelectedKey(language);
                 sap.n.Launchpad.setUserLanguage(language);
+            } else {
+                inAppCacheFormSettingsLang.setSelectedKey(langQueryParam.language);
             }
         }
 
