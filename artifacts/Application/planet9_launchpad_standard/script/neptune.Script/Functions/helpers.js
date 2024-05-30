@@ -419,6 +419,7 @@ function downloadLazyLoadImages() {
     //  added to Azure Blob Storage to prevent CORS errors on fetch
     if (src.includes('blob.core.windows.net')) {
         setImageSrc(src, target, type);
+        downloadLazyLoadImages();
         return;
     }
 

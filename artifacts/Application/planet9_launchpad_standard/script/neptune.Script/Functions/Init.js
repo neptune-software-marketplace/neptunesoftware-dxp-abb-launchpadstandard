@@ -108,8 +108,6 @@ sap.ui.getCore().attachInit(function () {
         sap.n.Launchpad.settingsMenuClose();
     });
 
-    AppCacheDiaSettings.setInitialFocus(closeSettings);
-
     toolVerticalMenuFilter.onAfterRendering = function () {
         const input = toolVerticalMenuFilter.getInputElement();
 

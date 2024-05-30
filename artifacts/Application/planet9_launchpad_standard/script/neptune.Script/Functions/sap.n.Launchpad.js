@@ -288,8 +288,7 @@ sap.n.Launchpad = {
         if (!config.isFav && !sap.n.Customization.isDisabled() && sap.n.Customization.isInitialized()) {
             const cardContainer = new sap.m.FlexBox(nepId(), {
                 width: '100%',
-                fitContainer: true,
-                renderType: "Bare"
+                fitContainer: true
             }).addStyleClass('nepFCardContainer nepNewCard nepTile100 ui-state-disabled');
             
             const btnAddCard = new sap.m.Button();
@@ -535,38 +534,16 @@ sap.n.Launchpad = {
 
     applyUserTheme: function () {
         if (modelAppCacheDiaSettings.oData && modelAppCacheDiaSettings.oData.userTheme) {
-            data = AppCache.layout.find(obj=>obj.id === modelAppCacheDiaSettings.oData.userTheme)
+            data = AppCache.layout.find(obj=>obj.id === modelAppCacheDiaSettings.oData.userTheme);
             if (!!data) {
-
                 let layout = JSON.parse(JSON.stringify(data));
-                let cssVariablesLink = ``;
-                const ui5theme = layout.ui5Theme || AppCache.defaultTheme;
-
+                
                 // UI5 Theme 
-                // if (layout.ui5Theme) {
-                if (ui5theme.indexOf('sap_') === 0) {
-                    cssVariablesLink = `/public/openui5/base/baselib/${ui5theme}/css_variables.css`;
-
-                } else if (ui5theme.indexOf('neptune_horizon_') === 0) {
-                    sap.ui.getCore().setThemeRoot(ui5theme, `/public/themes/${ui5theme}/UI5`);
-                    cssVariablesLink = `/public/themes/${ui5theme}/base/baselib/${ui5theme}/css_variables.css`;
-
+                if (layout.ui5Theme) {
+                    if (layout.ui5Theme.indexOf('sap_') === -1) sap.ui.getCore().setThemeRoot(layout.ui5Theme, '/public/ui5theme/' + layout.ui5Theme);
+                    sap.ui.getCore().applyTheme(layout.ui5Theme);
                 } else {
-                    sap.ui.getCore().setThemeRoot(ui5theme, '/public/ui5theme/' + ui5theme);
-                    cssVariablesLink = `/public/ui5theme/base/baselib/${ui5theme}/css_variables.css`;
-                }
-                    // sap.ui.getCore().applyTheme(layout.ui5Theme);
-                // } else {
-                //     sap.ui.getCore().applyTheme(AppCache.defaultTheme);
-                //     cssVariablesLink = `/public/openui5/base/baselib/${AppCache.defaultTheme}/css_variables.css`;
-                // }
-                sap.ui.getCore().applyTheme(ui5theme);
-
-                let link = document.getElementById(`cssvariables`);
-                if (!!link) {
-                    link.href = cssVariablesLink;
-                } else {
-                    console.error("cssvariables not found");
+                    sap.ui.getCore().applyTheme(AppCache.defaultTheme);
                 }
 
                 if (modelAppCacheDiaSettings.oData.userBackImage) {
@@ -967,9 +944,7 @@ sap.n.Launchpad = {
     },
 
     GetGroupHeader: function (data, cards) {
-        let header = new sap.m.FlexBox(nepId(), {
-            renderType: "Bare"
-        }).addStyleClass('nepGrid');        
+        let header = new sap.m.FlexBox(nepId()).addStyleClass('nepGrid');        
         sap.n.Launchpad.setInitialGridWidth(header);
 
         // Content Width
@@ -985,9 +960,7 @@ sap.n.Launchpad = {
         if (!data.hideHeader || data.isCustom) {
             // Group Header
             const groupHeader = sap.n.Launchpad.buildGroupHeader(data);
-            const oHeaderCell = new sap.m.VBox(nepId(), {
-                renderType: "Bare"
-            });
+            const oHeaderCell = new sap.m.VBox(nepId(), {});
             oHeaderCell.addStyleClass('nepTileMax');
             oHeaderCell.addItem(groupHeader);
             header.addItem(oHeaderCell);
@@ -1005,9 +978,7 @@ sap.n.Launchpad = {
     },
 
     GetGroupCards: function (data, type, dragDropContext) {
-        const cards = new sap.m.FlexBox(nepId(), {
-            renderType: "Bare"
-        }).addStyleClass('nepGrid');
+        const cards = new sap.m.FlexBox(nepId()).addStyleClass('nepGrid');
         if (data.styleClass) cards.addStyleClass(data.styleClass);
 
         if (!data.inclFav) {
@@ -1129,8 +1100,7 @@ sap.n.Launchpad = {
                 //Grid containerOpenApp
                 let gridContainer = new sap.m.FlexBox(`${sectionPrefix()}${dataCat.id}`, {
                     direction: 'Column',
-                    alignItems: 'Start',
-                    renderType: "Bare"
+                    alignItems: 'Start'
                 }).addStyleClass('nepGridContainer nepGridCards');
                 
                 addCustomData(gridContainer, {
@@ -1170,8 +1140,7 @@ sap.n.Launchpad = {
                     //Grid containerOpenApp
                     let tilegroupContainer = new sap.m.FlexBox(`${sectionPrefix()}${dataCat.id}${dataCatChild.id}`, {
                         direction: 'Column',
-                        alignItems: 'Start',
-                        renderType: "Bare"
+                        alignItems: 'Start'
                     }).addStyleClass('nepGridContainer nepGridCards');
                     
                     addCustomData(tilegroupContainer, {
@@ -1211,8 +1180,7 @@ sap.n.Launchpad = {
                     // add an empty box
                     pageCat.addContent(
                         new sap.m.HBox(nepId(), {
-                            height: '50px',
-                            renderType: "Bare"
+                            height: '50px'
                         })
                     );
                 }
@@ -1288,8 +1256,7 @@ sap.n.Launchpad = {
                     // add an empty box
                     pageCat.addContent(
                         new sap.m.HBox(nepId(), {
-                            height: (window.innerHeight - 270) + 'px',
-                            renderType: "Bare"
+                            height: (window.innerHeight - 270) + 'px'
                         })
                     );
                 }
@@ -1483,7 +1450,7 @@ sap.n.Launchpad = {
         // Adaptive Framework
         if (dataTile.actionType === 'F') {
 
-            neptune.Adaptive.getConfig(dataTile.settings.adaptive.id).then(function (config) {
+            sap.n.Adaptive.getConfig(dataTile.settings.adaptive.id).then(function (config) {
 
                 // Exists ? 
                 if (!config) {
@@ -1828,8 +1795,7 @@ sap.n.Launchpad = {
             containerOpenApp = new sap.m.HBox(containerAppId, {
                 width: '100%',
                 justifyContent: 'SpaceBetween',
-                alignItems: 'Center',
-                            renderType: "Bare"
+                alignItems: 'Center'
             }).addStyleClass('nepOpenAppsContainer');
 
             const appTitle = sap.n.Launchpad.translateTile('title', dataTile);
@@ -1874,8 +1840,7 @@ sap.n.Launchpad = {
                 let boxTop = new sap.m.FlexBox(nepId(), {
                     justifyContent: 'Start',
                     alignContent: 'Center',
-                    height: '35px',
-                    renderType: "Bare"
+                    height: '35px'
                 });
 
                 let boxIcon = new sap.m.VBox(nepId(), {
@@ -1902,8 +1867,7 @@ sap.n.Launchpad = {
                 }
 
                 let boxTitle = new sap.m.VBox(nepId(), {
-                    width: '190px',
-                    renderType: "Bare"
+                    width: '190px'
                 }).addStyleClass('nepNavBarBoxTitle');
 
                 const appTitle = sap.n.Launchpad.translateTile('title', dataTile);
@@ -1920,8 +1884,7 @@ sap.n.Launchpad = {
 
                 let boxActions = new sap.m.VBox(nepId(), {
                     justifyContent: 'Start',
-                    width: '40px',
-                    renderType: "Bare"
+                    width: '40px'
                 });
 
                 const btnClose = new sap.m.Button(nepId(), {
@@ -2015,13 +1978,11 @@ sap.n.Launchpad = {
         let boxTop = new sap.m.FlexBox(nepId(), {
             justifyContent: 'Start',
             alignContent: 'Center',
-            height: '35px',
-            renderType: "Bare"
+            height: '35px'
         });
 
         let boxIcon = new sap.m.VBox(nepId(), {
-            width: '38px',
-            renderType: "Bare"
+            width: '38px'
         }).addStyleClass('nepNavBarBoxIcon');
 
         if (dataTile.cardImage) {
@@ -2041,8 +2002,7 @@ sap.n.Launchpad = {
         }
 
         let boxTitle = new sap.m.VBox(nepId(), {
-            width: '190px',
-            renderType: "Bare"
+            width: '190px'
         }).addStyleClass('nepNavBarBoxTitle');
 
         const appTitle = sap.n.Launchpad.translateTile('title', dataTile);
@@ -2059,8 +2019,7 @@ sap.n.Launchpad = {
 
         let boxActions = new sap.m.VBox(nepId(), {
             justifyContent: 'Start',
-            width: '40px',
-            renderType: "Bare"
+            width: '40px'
         });
 
         const btnClose = new sap.m.Button(nepId(), {
@@ -2249,8 +2208,7 @@ sap.n.Launchpad = {
         panel.setHeaderToolbar(headerToolbar);
 
         let vbox = new sap.m.VBox(nepId(), {
-            alignItems: 'Start',
-            renderType: "Bare"
+            alignItems: 'Start'
         }).addStyleClass('nepCatTitleLayout');
         panel.addContent(vbox);
 
@@ -2298,13 +2256,10 @@ sap.n.Launchpad = {
 
         let oBlockContentParent = new sap.m.VBox(nepId(), {
             justifyContent: 'SpaceBetween',
-            height: 'calc(100% - 25px)',
-            renderType: "Bare"
+            height: 'calc(100% - 25px)'
         });
 
-        let oBlockContentTop = new sap.m.VBox(nepId(), {
-            renderType: "Bare"
-        });
+        let oBlockContentTop = new sap.m.VBox(nepId());
 
         oBlockCell.addContent(oBlockContentParent);
         oBlockContentParent.addItem(oBlockContentTop);
@@ -2312,8 +2267,7 @@ sap.n.Launchpad = {
         // SubTitle - Box
         let oBlockContent = new sap.m.HBox(nepId(), {
             width: '100%',
-            justifyContent: 'SpaceBetween',
-            renderType: "Bare"
+            justifyContent: 'SpaceBetween'
         });
 
         // Reverse if title at End
@@ -2626,13 +2580,10 @@ sap.n.Launchpad = {
 
         let oBlockContentParent = new sap.m.VBox(nepId(), {
             justifyContent: 'SpaceBetween',
-            height: 'calc(100% - 25px)',
-            renderType: "Bare"
+            height: 'calc(100% - 25px)'
         });
 
-        let oBlockContentTop = new sap.m.VBox(nepId(), {
-            renderType: "Bare"
-        });
+        let oBlockContentTop = new sap.m.VBox(nepId());
 
         oBlockCell.addContent(oBlockContentParent);
         oBlockContentParent.addItem(oBlockContentTop);
@@ -2640,8 +2591,7 @@ sap.n.Launchpad = {
         // SubTitle - Box
         let oBlockContent = new sap.m.HBox(nepId(), {
             width: '100%',
-            justifyContent: 'SpaceBetween',
-            renderType: "Bare"
+            justifyContent: 'SpaceBetween'
         });
 
         // Reverse if title at End
@@ -2746,9 +2696,7 @@ sap.n.Launchpad = {
         let supportedBrowser = true;
         let openEnabled = true;
 
-        let oBlockContent = new sap.m.HBox(nepId(),{
-            renderType: "Bare"
-        });
+        let oBlockContent = new sap.m.HBox(nepId());
         oBlockContent.addStyleClass('nepTileAction sapUiSizeCompact');
 
         // Check Offline Mode -> Disable Open button 
@@ -2956,8 +2904,7 @@ sap.n.Launchpad = {
             let boxFooter = new sap.m.HBox(nepId(), {
                 width: '100%',
                 justifyContent: 'End',
-                alignContent: 'Center',
-                renderType: "Bare"
+                alignContent: 'Center'
             });
             let footer = new sap.m.Text(nepId(), {
                 text: sap.n.Launchpad.translateTile('footer', dataTile)
@@ -2995,16 +2942,11 @@ sap.n.Launchpad = {
 
         let oBlockContentParent = new sap.m.VBox(nepId(), {
             justifyContent: 'SpaceBetween',
-            height: 'calc(100% - 25px)',
-            renderType: "Bare"
+            height: 'calc(100% - 25px)'
         });
 
-        let oBlockContentTop = new sap.m.VBox(nepId(), {
-            renderType: "Bare"
-        });
-        let oBlockContentAction = new sap.m.VBox(nepId(), {
-            renderType: "Bare"
-        });
+        let oBlockContentTop = new sap.m.VBox(nepId());
+        let oBlockContentAction = new sap.m.VBox(nepId());
 
         oBlockContentAction.addStyleClass('sapUiContentPadding');
 
@@ -3053,13 +2995,10 @@ sap.n.Launchpad = {
 
         let oBlockContentParent = new sap.m.VBox(nepId(), {
             justifyContent: 'SpaceBetween',
-            height: 'calc(100% - 25px)',
-            renderType: "Bare"
+            height: 'calc(100% - 25px)'
         });
 
-        let oBlockContentTop = new sap.m.VBox(nepId(), {
-            renderType: "Bare"
-        });
+        let oBlockContentTop = new sap.m.VBox(nepId());
 
         oBlockCell.addContent(oBlockContentParent);
         oBlockContentParent.addItem(oBlockContentTop);
@@ -3067,8 +3006,7 @@ sap.n.Launchpad = {
         // SubTitle - Box
         let oBlockContent = new sap.m.HBox(nepId(), {
             width: '100%',
-            justifyContent: 'SpaceBetween',
-            renderType: "Bare"
+            justifyContent: 'SpaceBetween'
         });
 
         // Reverse if title at End
@@ -3173,13 +3111,10 @@ sap.n.Launchpad = {
 
         let oBlockContentParent = new sap.m.VBox(nepId(), {
             justifyContent: 'SpaceBetween',
-            height: 'calc(100% - 25px)',
-            renderType: "Bare"
+            height: 'calc(100% - 25px)'
         });
 
-        let oBlockContentTop = new sap.m.VBox(nepId(), {
-            renderType: "Bare"
-        });
+        let oBlockContentTop = new sap.m.VBox(nepId());
 
         oBlockCell.addContent(oBlockContentParent);
         oBlockContentParent.addItem(oBlockContentTop);
@@ -3187,8 +3122,7 @@ sap.n.Launchpad = {
         // SubTitle - Box
         let oBlockContent = new sap.m.HBox(nepId(), {
             width: '100%',
-            justifyContent: 'SpaceBetween',
-            renderType: "Bare"
+            justifyContent: 'SpaceBetween'
         });
 
         // Reverse if title at End

@@ -118,8 +118,7 @@ sap.n.Card = {
         const cardContainerId = `${nepId()}_tile${config.dataTile.id}`;
         let cardContainer = new sap.m.FlexBox(cardContainerId, {
             width: '100%',
-            fitContainer: true,
-            renderType: "Bare"
+            fitContainer: true
         }).addStyleClass('nepFCardContainer nepTile' + cardWidth);
 
         cardContainer.addEventDelegate({
@@ -208,8 +207,7 @@ sap.n.Card = {
             height: '100%',
             justifyContent: 'SpaceBetween',
             width: '100%',
-            fitContainer: true,
-            renderType: "Bare"
+            fitContainer: true
         });
         
         // Content Body
@@ -313,8 +311,7 @@ sap.n.Card = {
         // Description
         if (config.dataTile.description) cardBody.addItem(new sap.m.Text({ 
             text: sap.n.Launchpad.translateTile('description', 
-            config.dataTile),
-            renderType: "Bare"
+            config.dataTile)
         }).addStyleClass('nepCardDescription'));
 
         // Action Panel
@@ -386,7 +383,7 @@ sap.n.Card = {
         this.setCardContentHeight(config, cardContent);
         if (!config.dataTile.settings.adaptive.idTile) return cardContent;
 
-        neptune.Adaptive.getConfig(config.dataTile.settings.adaptive.idTile).then(function (startParams) {
+        sap.n.Adaptive.getConfig(config.dataTile.settings.adaptive.idTile).then(function (startParams) {
             // Exists ? 
             if (!startParams) {
                 sap.m.MessageToast.show(AppCache_tAdaptiveNotFound.getText());
@@ -574,9 +571,7 @@ sap.n.Card = {
         let buttonStyle = '';
         let supportedBrowser = true;
         let openEnabled = true;
-        let cardActionContainer = new sap.m.FlexBox(nepId(), {
-            renderType: "Bare"
-        }).addStyleClass('nepActionContainer nepCardAction sapUiSizeCompact');
+        let cardActionContainer = new sap.m.FlexBox(nepId(), {}).addStyleClass('nepActionContainer nepCardAction sapUiSizeCompact');
 
         // Check Offline Mode -> Disable Open button 
         if (AppCache.isOffline) {
@@ -830,7 +825,6 @@ sap.n.Card = {
 
         // without the popover
         let spacer = new sap.m.HBox(nepId(), {
-            renderType: "Bare",
             width: '100%' 
         });
         container.addItem(spacer);

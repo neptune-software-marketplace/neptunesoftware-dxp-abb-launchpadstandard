@@ -243,7 +243,7 @@ let AppCache = {
     LoadAdaptiveApp: function (id, options) {
         if (!options) options = {};
 
-        neptune.Adaptive.getConfig(id).then(function (config) {
+        sap.n.Adaptive.getConfig(id).then(function (config) {
             // Exists ? 
             if (!config) {
                 sap.m.MessageToast.show(AppCache_tAdaptiveNotFound.getText());
@@ -283,7 +283,7 @@ let AppCache = {
 
     LoadAdaptiveSidepanel: function (id, title, options) {
         if (!options) options = {};
-        neptune.Adaptive.getConfig(id).then(function (config) {
+        sap.n.Adaptive.getConfig(id).then(function (config) {
             // Exists ? 
             if (!config) {
                 sap.m.MessageToast.show(AppCache_tAdaptiveNotFound.getText());
@@ -448,9 +448,9 @@ let AppCache = {
         AppCache.disableExternalTools();
 
         // Adaptive
-        neptune.Adaptive.configurations = {};
-        neptune.Adaptive.pages = {};
-        neptune.Adaptive.dialogs = {};
+        sap.n.Adaptive.configurations = {};
+        sap.n.Adaptive.pages = {};
+        sap.n.Adaptive.dialogs = {};
 
         // Enhancement
         if (sap.n.Enhancement.RestrictedEnable) {
@@ -1657,12 +1657,25 @@ let AppCache = {
                 // skipping this exceptional case for language being returned as a Promise type
             } else if (!sap.n.Launchpad.isLanguageValid(language)) {
                 language = sap.n.Launchpad.isLanguageValid(AppCache.userInfo.language) ? AppCache.userInfo.language : 'EN';
-                
+
                 setLaunchpadLanguage(language);
                 inAppCacheFormSettingsLang.setSelectedKey(language);
                 sap.n.Launchpad.setUserLanguage(language);
             } else {
-                inAppCacheFormSettingsLang.setSelectedKey(langQueryParam.language);
+                const { languages } = AppCache.config;
+                if (Array.isArray(languages) && !languages.includes(language)) {
+                    if (languages.includes(AppCache.userInfo.language)) {
+                        language = AppCache.userInfo.language;
+                    } else {
+                        language = 'EN';
+                    }
+
+                    setLaunchpadLanguage(language);
+                    inAppCacheFormSettingsLang.setSelectedKey(language);
+                    sap.n.Launchpad.setUserLanguage(language);
+                } else {
+                    inAppCacheFormSettingsLang.setSelectedKey(langQueryParam.language);
+                }
             }
         }
 
