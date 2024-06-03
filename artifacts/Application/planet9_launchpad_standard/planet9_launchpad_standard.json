@@ -41066,9 +41066,9 @@
 							"response": [],
 							"attributes": [
 								{
-									"attribute": "setCacheType",
+									"attribute": "setInitLoad",
 									"grouping": "Model",
-									"value": "IndexedDB",
+									"value": "cache",
 									"script": "",
 									"translation": []
 								},
@@ -41080,9 +41080,9 @@
 									"translation": []
 								},
 								{
-									"attribute": "setInitLoad",
+									"attribute": "setCacheType",
 									"grouping": "Model",
-									"value": "cache",
+									"value": "IndexedDB",
 									"script": "",
 									"translation": []
 								}
@@ -51291,7 +51291,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "24.05.30.1251",
+	"ver": "24.06.03.1317",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",
@@ -51316,7 +51316,7 @@
 	"ui5_url": "https://openui5.hana.ondemand.com/1.71.59/resources/sap-ui-core.js",
 	"cus_theme": "",
 	"css": "file:///css.css",
-	"compiledCss": "file:///compiledCss.css",
+	"compiledCss": "file://script/undefined/undefined.script",
 	"header": "file:///header.html",
 	"manifest": "",
 	"globalScript": "",

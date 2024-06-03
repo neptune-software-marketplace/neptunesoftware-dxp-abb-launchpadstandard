@@ -1271,6 +1271,8 @@ sap.n.Launchpad = {
 
         sap.n.Launchpad.backApp = pageCat;
         sap.n.Launchpad.setMenuPage(dataCat);
+        
+        setTimeout(downloadLazyLoadImages, 100);
 
         // Navigate
         setTimeout(function () {

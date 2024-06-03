@@ -372,7 +372,6 @@ const _lazyLoadImagesList = [];
 let lazyLoadImagesInProgress = false;
 function lazyLoadImage(src, target, type) {
     _lazyLoadImagesList.push({ src, target, type });
-    if (!lazyLoadImagesInProgress) downloadLazyLoadImages();
 }
 
 function downloadLazyLoadImages() {
