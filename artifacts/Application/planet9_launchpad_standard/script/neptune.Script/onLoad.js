@@ -154,8 +154,6 @@ function onOffline() {
 
     if (AppCache.isMobile && AppCache.isRestricted) return;
 
-    sap.n.Launchpad.RebuildTiles();
-
     if (typeof sap.n.Phonegap.onOfflineCustom === 'function') {
         sap.n.Phonegap.onOfflineCustom();
         return;

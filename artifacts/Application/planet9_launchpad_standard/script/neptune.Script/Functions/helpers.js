@@ -368,6 +368,7 @@ function emptyBase64Image() {
     return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xw8AAoMBgDTD2qgAAAAASUVORK5CYII=';
 }
 
+const _imagesCache = {}
 const _lazyLoadImagesList = [];
 let lazyLoadImagesInProgress = false;
 function lazyLoadImage(src, target, type) {
@@ -400,6 +401,13 @@ function downloadLazyLoadImages() {
 
     const { src, target, type } = _lazyLoadImagesList.shift();
 
+    if (typeof _imagesCache[src] !== 'undefined') {
+        setImageSrc(_imagesCache[src], target, type);
+        lazyLoadImagesInProgress = false;
+        downloadLazyLoadImages();
+        return;
+    }
+
     // for some reason, if src, target is undefined
     if (typeof src === 'undefined' || typeof target === 'undefined') {
         lazyLoadImagesInProgress = false;
@@ -407,7 +415,7 @@ function downloadLazyLoadImages() {
         return;
     }
 
-    if (src.startsWith('data:')) {
+    if (src.startsWith('data:') || src.startsWith('blob:')) {
         setImageSrc(src, target, type);
         lazyLoadImagesInProgress = false;
         downloadLazyLoadImages();
@@ -426,7 +434,8 @@ function downloadLazyLoadImages() {
         if (!res.ok) return;
         return res.blob();
     }).then(res => {
-        setImageSrc(URL.createObjectURL(res), target, type);
+        _imagesCache[src] = URL.createObjectURL(res);
+        setImageSrc(_imagesCache[src], target, type);
         lazyLoadImagesInProgress = false;
         downloadLazyLoadImages();
     }).catch(() => {
