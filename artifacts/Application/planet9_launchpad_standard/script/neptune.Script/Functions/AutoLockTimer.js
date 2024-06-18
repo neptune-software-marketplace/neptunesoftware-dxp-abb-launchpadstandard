@@ -61,7 +61,7 @@ const AutoLockTimer = {
     start: function () {
         if (!isAutoLockTimerEnabled()) return;
 
-        const timeoutId = window.setTimeout(this.onTimeout, getAutoLockTimeoutInMilliSecs());
+        const timeoutId = window.setTimeout(this.onTimeout.bind(this), getAutoLockTimeoutInMilliSecs());
         this.setTimeoutId(timeoutId);
         this.setTimestamp(Date.now());
 
@@ -85,10 +85,20 @@ const AutoLockTimer = {
         this.start();
     },
     onTimeout: function () {
+        this.showTimedOutDialog();
+
         if (AppCache.enablePasscode) {
             AppCache.Lock();
         } else {
             AppCache.Logout();
+        }
+    },
+    showTimedOutDialog: function () {
+        if (!diaAutolocked.isOpen()) {
+            setTimeout(() => {
+                // open with a delay since navigating back to lock screen hides the dialog
+                diaAutolocked.open()
+            }, 3000);
         }
     },
 };
@@ -109,6 +119,7 @@ sap.n.Phonegap.onResumeCustom = function () {
     // in P9 AppCache.Initialized might not excist. Just use if (AppCache)
     if (AppCache.Initialized) {
         if (AutoLockTimer.hasElapsed()) {
+            AutoLockTimer.showTimedOutDialog();
             AppCache.Lock();
             AutoLockTimer.stop();
         } else {

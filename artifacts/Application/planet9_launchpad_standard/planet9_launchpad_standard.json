@@ -40519,6 +40519,296 @@
 							]
 						},
 						{
+							"fieldNo": "721df9c2-248a-4e9d-fbbc-7cba39a13821",
+							"fieldName": "diaAutolocked",
+							"fieldParent": "2af20b8c-2c59-4dc5-e76a-6871398cb8b1",
+							"fieldType": "sap.m.Dialog",
+							"script": "",
+							"customComponent": false,
+							"request": [],
+							"response": [],
+							"attributes": [
+								{
+									"attribute": "state",
+									"grouping": "Properties",
+									"value": "Information",
+									"script": "",
+									"translation": []
+								}
+							],
+							"data": [
+								{
+									"fieldNo": "f3beb96a-4b1c-412c-832b-4e27df590d90",
+									"fieldName": "diaAutolockedHeader",
+									"fieldParent": "721df9c2-248a-4e9d-fbbc-7cba39a13821",
+									"fieldType": "sap.m.Bar",
+									"script": "",
+									"customComponent": false,
+									"request": [],
+									"response": [],
+									"attributes": [
+										{
+											"attribute": "position",
+											"grouping": "Parent",
+											"value": "setCustomHeader",
+											"script": "",
+											"translation": []
+										}
+									],
+									"data": [
+										{
+											"fieldNo": "0e84861d-ee0b-46c7-a3b0-07637d934499",
+											"fieldName": "diaAutolockedHeaderLeft",
+											"fieldParent": "f3beb96a-4b1c-412c-832b-4e27df590d90",
+											"fieldType": "neptune.BarContent",
+											"script": "",
+											"customComponent": false,
+											"request": [],
+											"response": [],
+											"attributes": [
+												{
+													"attribute": "position",
+													"grouping": "Parent",
+													"value": "ContentLeft",
+													"script": "",
+													"translation": []
+												}
+											],
+											"data": [
+												{
+													"fieldNo": "3e907076-3ada-438e-ccc4-67424567c959",
+													"fieldName": "diaAutolockedHeaderTitle",
+													"fieldParent": "0e84861d-ee0b-46c7-a3b0-07637d934499",
+													"fieldType": "sap.m.Title",
+													"script": "",
+													"customComponent": false,
+													"request": [],
+													"response": [],
+													"attributes": [
+														{
+															"attribute": "text",
+															"grouping": "Properties",
+															"value": "Auto Locked",
+															"script": "",
+															"translation": [
+																{
+																	"language": "AR",
+																	"value": "مغلق تلقائيًا"
+																},
+																{
+																	"language": "DE",
+																	"value": "Automatisch gesperrt"
+																},
+																{
+																	"language": "NO",
+																	"value": "Autolåst"
+																},
+																{
+																	"language": "SV",
+																	"value": "Autolåst"
+																}
+															]
+														}
+													],
+													"data": []
+												}
+											]
+										},
+										{
+											"fieldNo": "b4a376c0-2b2c-4b8f-dfd5-d6b5a37d9f41",
+											"fieldName": "diaAutolockedHeaderRight",
+											"fieldParent": "f3beb96a-4b1c-412c-832b-4e27df590d90",
+											"fieldType": "neptune.BarContent",
+											"script": "",
+											"customComponent": false,
+											"request": [],
+											"response": [],
+											"attributes": [
+												{
+													"attribute": "position",
+													"grouping": "Parent",
+													"value": "ContentRight",
+													"script": "",
+													"translation": []
+												}
+											],
+											"data": [
+												{
+													"fieldNo": "ec6a3373-6ca6-4e22-fd54-7f3b9dbfc59c",
+													"fieldName": "diaAutolockedHeaderCloseBtn",
+													"fieldParent": "b4a376c0-2b2c-4b8f-dfd5-d6b5a37d9f41",
+													"fieldType": "sap.m.Button",
+													"script": "",
+													"customComponent": false,
+													"request": [],
+													"response": [],
+													"attributes": [
+														{
+															"attribute": "styleClass",
+															"grouping": "Properties",
+															"value": "nepCloseBtn",
+															"script": "",
+															"translation": []
+														},
+														{
+															"attribute": "icon",
+															"grouping": "Properties",
+															"value": "sap-icon://decline",
+															"script": "",
+															"translation": []
+														},
+														{
+															"attribute": "press",
+															"grouping": "Events",
+															"value": "diaAutolocked.close();",
+															"script": "diaAutolocked.close();",
+															"translation": []
+														}
+													],
+													"data": []
+												}
+											]
+										}
+									]
+								},
+								{
+									"fieldNo": "6e5e5a6b-ebe7-46a9-dee1-d978cfcacc84",
+									"fieldName": "diaAutolockedFlexBox",
+									"fieldParent": "721df9c2-248a-4e9d-fbbc-7cba39a13821",
+									"fieldType": "sap.m.FlexBox",
+									"script": "",
+									"customComponent": false,
+									"request": [],
+									"response": [],
+									"attributes": [
+										{
+											"attribute": "styleClassMargin",
+											"grouping": "Properties",
+											"value": "sapUiSmallMargin",
+											"script": "",
+											"translation": []
+										}
+									],
+									"data": [
+										{
+											"fieldNo": "515b88cc-b634-48de-fe80-7f4f6ec85b1b",
+											"fieldName": "diaAutolockedContent",
+											"fieldParent": "6e5e5a6b-ebe7-46a9-dee1-d978cfcacc84",
+											"fieldType": "sap.m.Text",
+											"script": "",
+											"customComponent": false,
+											"request": [],
+											"response": [],
+											"attributes": [
+												{
+													"attribute": "text",
+													"grouping": "Properties",
+													"value": "Due to inactivity, your session has been locked.",
+													"script": "",
+													"translation": [
+														{
+															"language": "AR",
+															"value": "بسبب عدم النشاط، تم قفل جلستك."
+														},
+														{
+															"language": "DE",
+															"value": "Aufgrund von Inaktivität wurde Ihre Sitzung gesperrt."
+														},
+														{
+															"language": "NO",
+															"value": "På grunn av inaktivitet har økten din blitt låst."
+														},
+														{
+															"language": "SV",
+															"value": "På grund av inaktivitet har din session låsts."
+														}
+													]
+												}
+											],
+											"data": []
+										}
+									]
+								},
+								{
+									"fieldNo": "8df9455e-049d-4475-bddd-4ddb2171cfe2",
+									"fieldName": "diaAutolockedFooter",
+									"fieldParent": "721df9c2-248a-4e9d-fbbc-7cba39a13821",
+									"fieldType": "sap.m.Toolbar",
+									"script": "",
+									"customComponent": false,
+									"request": [],
+									"response": [],
+									"attributes": [
+										{
+											"attribute": "position",
+											"grouping": "Parent",
+											"value": "InfoToolbar",
+											"script": "",
+											"translation": []
+										}
+									],
+									"data": [
+										{
+											"fieldNo": "0b5bbd00-009b-4584-8a34-3f6a3a81c600",
+											"fieldName": "diaAutolockedFooterSpacer",
+											"fieldParent": "8df9455e-049d-4475-bddd-4ddb2171cfe2",
+											"fieldType": "sap.m.ToolbarSpacer",
+											"script": "",
+											"customComponent": false,
+											"request": [],
+											"response": [],
+											"attributes": [],
+											"data": []
+										},
+										{
+											"fieldNo": "61002414-69ed-47a2-9997-cac3f1cec24e",
+											"fieldName": "diaAutolockedFooterOkButton",
+											"fieldParent": "8df9455e-049d-4475-bddd-4ddb2171cfe2",
+											"fieldType": "sap.m.Button",
+											"script": "",
+											"customComponent": false,
+											"request": [],
+											"response": [],
+											"attributes": [
+												{
+													"attribute": "text",
+													"grouping": "Properties",
+													"value": "OK",
+													"script": "",
+													"translation": [
+														{
+															"language": "AR",
+															"value": "نعم"
+														},
+														{
+															"language": "DE",
+															"value": "OK"
+														},
+														{
+															"language": "NO",
+															"value": "OK"
+														},
+														{
+															"language": "SV",
+															"value": "OK"
+														}
+													]
+												},
+												{
+													"attribute": "press",
+													"grouping": "Events",
+													"value": "diaAutolocked.close();",
+													"script": "diaAutolocked.close();",
+													"translation": []
+												}
+											],
+											"data": []
+										}
+									]
+								}
+							]
+						},
+						{
 							"fieldNo": "8a53e564-4c12-4eae-aaf0-2ae70b567646",
 							"fieldName": "diaTileErrorOkButton",
 							"fieldParent": "2af20b8c-2c59-4dc5-e76a-6871398cb8b1",
@@ -51291,7 +51581,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "24.06.06.1325",
+	"ver": "24.06.18.1201",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",
