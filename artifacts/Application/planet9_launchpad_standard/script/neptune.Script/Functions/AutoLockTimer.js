@@ -66,6 +66,7 @@ const AutoLockTimer = {
         this.setTimestamp(Date.now());
 
         this.addEventListeners();
+        document.addEventListener('visibilitychange', this.onVisibilityChange.bind(this));
     },
     stop: function () {
         if (!isAutoLockTimerEnabled()) return;
@@ -83,6 +84,11 @@ const AutoLockTimer = {
     reset: function () {
         this.stop();
         this.start();
+    },
+    onVisibilityChange: function () {
+        if (this.hasElapsed()) {
+            this.onTimeout();
+        }
     },
     onTimeout: function () {
         this.showTimedOutDialog();
