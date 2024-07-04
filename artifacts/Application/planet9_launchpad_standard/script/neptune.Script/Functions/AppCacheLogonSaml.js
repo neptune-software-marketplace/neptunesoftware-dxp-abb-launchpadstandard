@@ -63,14 +63,12 @@ let AppCacheLogonSaml = {
         // SAML Logout
         const logon = getAuthSettingsForUser();
         if (logon && logon.logoutUrl) {
-            request({
-                type: "GET",
-                contentType: "application/json",
-                url: logon.logoutUrl,
+            externalAuthUserLogoutUsingPopup(logon.logoutUrl).then(() => {
+                p9UserLogout('SAML');
             });
+        } else {
+            p9UserLogout('SAML');
         }
-
-        p9UserLogout('SAML');
     },
 
     Init: function () {},

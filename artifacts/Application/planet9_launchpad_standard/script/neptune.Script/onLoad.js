@@ -172,6 +172,10 @@ function onOnline() {
 
     if (!AppCache.isOffline) {
         fetchAppUpdates();
+
+        if (AutoLockTimer.hasElapsed()) {
+            AutoLockTimer.onTimeout();
+        }
     }
     
     AppCacheShellNetwork.setVisible(false);

@@ -1707,6 +1707,10 @@ sap.n.Launchpad = {
                 let url = `/app/${dataTile.actionApplication}`;
                 if (dataTile.isPublic) url = `/public/app/${dataTile.actionApplication}`;
 
+                if (dataTile.urlType === 'SAP') {
+                    url = `/neptune/webapp/${dataTile.actionApplication}`;
+                }
+
                 if (dataTile.urlApplication) url = `${dataTile.urlApplication}${url}`;
                 else url = `${AppCache.Url}${url}`;
 

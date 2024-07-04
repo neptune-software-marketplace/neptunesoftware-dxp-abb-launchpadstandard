@@ -1601,6 +1601,8 @@ let AppCache = {
             } else if (authType === 'openid-connect') {
                 AppCacheLogonOIDC.Signout();
                 p9UserLogout('OpenID Connect');
+            } else if (authType === 'saml') {
+                AppCacheLogonSaml.Logoff();
             } else if (authType === 'ldap') {
                 AppCacheLogonLdap.Logoff();
             } else {
@@ -3076,7 +3078,10 @@ let AppCache = {
         data.logonTypes.sort(sort_by('description', false));
 
         AppCache_loginTypes.removeAllItems();
-        if (!data.settingsLaunchpad.config.hideLoginLocal || data.logonTypes.length > 0) {
+        if (
+            (data.settingsLaunchpad && data.settingsLaunchpad.config && !data.settingsLaunchpad.config.hideLoginLocal) || 
+            data.logonTypes.length > 0
+        ) {
             AppCache_loginTypes.addItem(new sap.ui.core.Item({
                 key: 'local',
                 text: 'Local'
