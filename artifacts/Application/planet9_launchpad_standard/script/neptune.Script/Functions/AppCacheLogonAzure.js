@@ -191,8 +191,11 @@ let AppCacheLogonAzure = {
         if (this.options.azureSilentSignout) {
             let signoutFrame = document.getElementById('azureSignout');
             if (signoutFrame) signoutFrame.setAttribute('src', 'https://login.microsoftonline.com/common/oauth2/logout');
+            setTimeout(()=> p9UserLogout('Azure'), 1000);
         } else {
-            externalAuthUserLogoutUsingPopup('https://login.microsoftonline.com/common/oauth2/logout', 1000);
+            externalAuthUserLogoutUsingPopup('https://login.microsoftonline.com/common/oauth2/logout', 1000).then(() => {
+                p9UserLogout('Azure');
+            });
         }
 
         localStorage.removeItem('p9azuretoken');

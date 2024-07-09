@@ -1597,10 +1597,8 @@ let AppCache = {
         } else {
             if (authType === 'azure-bearer') {
                 AppCacheLogonAzure.Signout();
-                p9UserLogout('Azure');
             } else if (authType === 'openid-connect') {
                 AppCacheLogonOIDC.Signout();
-                p9UserLogout('OpenID Connect');
             } else if (authType === 'saml') {
                 AppCacheLogonSaml.Logoff();
             } else if (authType === 'ldap') {
@@ -2307,6 +2305,10 @@ let AppCache = {
             sap.n.Customization.initOffline().then(() => {
                 if (!AppCache.StartApp && !AppCache.StartWebApp) {
                     sap.n.Launchpad.BuildMenu();
+                }
+                
+                if (AppCache.StartApp) {
+                    AppCache.Load(AppCache.StartApp);
                 }
 
                 sap.n.Customization.Popover.init();

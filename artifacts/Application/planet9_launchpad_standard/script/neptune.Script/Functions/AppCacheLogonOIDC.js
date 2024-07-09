@@ -111,10 +111,13 @@ const AppCacheLogonOIDC = {
 
     Signout: function () {
         const logon = getAuthSettingsForUser();
-        externalAuthUserLogoutUsingPopup(`${AppCache.Url}/user/logon/openid-connect/${logon.path}/logout`, 5000)
+        externalAuthUserLogoutUsingPopup(`${AppCache.Url}/user/logon/openid-connect/${logon.path}/logout`, 1500)
             .then(() => {
                 if(!localStorage.p9oidctoken) return;
                 localStorage.removeItem("p9oidctoken");
+            })
+            .finally(() => {
+                p9UserLogout("OpenID Connect");
             });
     },
 
