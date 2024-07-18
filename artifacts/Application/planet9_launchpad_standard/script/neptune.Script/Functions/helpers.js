@@ -654,6 +654,15 @@ function disableChpass() {
     }
 }
 
+function isExternalLogoutEnabled() {
+    // defaults to true, as before we added it under configuration
+    if (typeof AppCache.SystemConfig.logoutLaunchpadExternal === 'undefined') {
+        return true;
+    }
+
+    return AppCache.SystemConfig.logoutLaunchpadExternal;
+}
+
 function getOpenUI5BootstrapPath() {
     const src = document.getElementById('sap-ui-bootstrap').getAttribute('src');
     if (src.includes('openui5.hana.ondemand.com') || src.includes('sapui5.hana.ondemand.com')) {

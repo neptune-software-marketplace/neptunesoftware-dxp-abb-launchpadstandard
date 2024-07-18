@@ -1585,24 +1585,32 @@ let AppCache = {
 
             if (AppCache.enableAutoLogin) AppCacheLogonLocal.AutoLoginRemove();
 
-            if (authType === 'azure-bearer') {
-                AppCacheLogonAzure.Logoff();
-            } else if (authType === 'openid-connect') {
-                AppCacheLogonOIDC.Logoff();
-            } else if (authType === 'ldap') {
-                AppCacheLogonLdap.Logoff();
+            if (isExternalLogoutEnabled()) {
+                if (authType === 'azure-bearer') {
+                    AppCacheLogonAzure.Logoff();
+                } else if (authType === 'openid-connect') {
+                    AppCacheLogonOIDC.Logoff();
+                } else if (authType === 'ldap') {
+                    AppCacheLogonLdap.Logoff();
+                } else {
+                    AppCacheLogonLocal.Logoff();
+                }
             } else {
                 AppCacheLogonLocal.Logoff();
             }
         } else {
-            if (authType === 'azure-bearer') {
-                AppCacheLogonAzure.Signout();
-            } else if (authType === 'openid-connect') {
-                AppCacheLogonOIDC.Signout();
-            } else if (authType === 'saml') {
-                AppCacheLogonSaml.Logoff();
-            } else if (authType === 'ldap') {
-                AppCacheLogonLdap.Logoff();
+            if (isExternalLogoutEnabled()) {
+                if (authType === 'azure-bearer') {
+                    AppCacheLogonAzure.Signout();
+                } else if (authType === 'openid-connect') {
+                    AppCacheLogonOIDC.Signout();
+                } else if (authType === 'saml') {
+                    AppCacheLogonSaml.Logoff();
+                } else if (authType === 'ldap') {
+                    AppCacheLogonLdap.Logoff();
+                } else {
+                    AppCacheLogonLocal.Logoff();
+                }
             } else {
                 AppCacheLogonLocal.Logoff();
             }
