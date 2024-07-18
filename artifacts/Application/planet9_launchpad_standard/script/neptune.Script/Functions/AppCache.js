@@ -1988,15 +1988,6 @@ let AppCache = {
         setCacheAppCacheUsers();
         modelAppCacheUsers.refresh();
 
-        const { type: authType } = getAuthSettingsForUser();
-        if (isPWAEnabled()) {
-            if (authType === 'azure-bearer') {
-                AppCacheLogonAzure.Signout();
-            } else if (authType === 'openid-connect') {
-                AppCacheLogonOIDC.Signout();
-            }
-        }
-
         // Store passcode to OS SAMKeychain library or Android SecureStorage
         if (isCordova() && !window.navigator.simulator && AppCache.biometricAuthentication) {
 
