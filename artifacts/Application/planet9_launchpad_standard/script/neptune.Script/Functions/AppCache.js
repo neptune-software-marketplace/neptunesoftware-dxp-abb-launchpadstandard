@@ -1814,12 +1814,6 @@ let AppCache = {
                 if (AppCache.userInfo.oidcToken) userData.oidcToken = AppCache.userInfo.oidcToken;
                 if (AppCache.userInfo.oidcUser) userData.oidcUser = AppCache.userInfo.oidcUser;
             }
-
-            if (isPWAEnabled()) {
-                const { type: authType } = getAuthSettingsForUser();
-                if (authType === 'azure-bearer') AppCacheLogonAzure.Signout();
-                if (authType === 'openid-connect') AppCacheLogonOIDC.Signout();
-            }
         }
 
         // Set Layout
