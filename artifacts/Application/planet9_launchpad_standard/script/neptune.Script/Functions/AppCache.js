@@ -637,7 +637,14 @@ let AppCache = {
 
         // Version check
         const currentVersion = AppCache.AppVersion.replace(/\D/g, '')
-        const activeVersion = AppCache.AppVersionActive.replace(/\D/g, '')
+        let activeVersion = 0;
+        if (typeof AppCache.AppVersionActive === 'string') {
+            activeVersion = AppCache.AppVersionActive.replace(/\D/g, '');
+        } else if (Array.isArray(AppCache.AppVersionActive) && AppCache.AppVersionActive.length > 0) {
+            activeVersion = AppCache.AppVersionActive[0].replace(/\D/g, '');
+        } else {
+            console.error('Unable to check active version', AppCache.AppVersionActive);
+        }
 
         if (currentVersion < activeVersion) {
             let n = `${AppCache.Url}/mobileClients/${AppCache.mobileClient}/build/${AppCache.AppVersionActiveID}/`;
