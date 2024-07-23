@@ -627,36 +627,29 @@ let AppCache = {
         AppCache.updateUserLoginTime();
     },
 
+    GetActiveAppVersion: function () {
+        if (typeof AppCache.AppVersionActive === 'string') {
+            return AppCache.AppVersionActive.replace(/\D/g, '');
+        } else if (Array.isArray(AppCache.AppVersionActive) && AppCache.AppVersionActive.length > 0) {
+            return AppCache.AppVersionActive[0].replace(/\D/g, '');
+        }
+
+        // we were unable to find the active app version
+        console.error('Unable to check active version', AppCache.AppVersionActive);
+        return -1;
+    },
+
     AutoUpdateMobileApp: function () {
         // Update App - device check
-        const deviceName = sap.ui.Device.os.name;
-        if (!['win', 'Android', 'iOS'].includes(deviceName)) return;
-
-        if (!isCordova()) return;
-        if (AppCache.isOffline) return;
+        if (!isMobileAppUpdateSupported() || !isCordova() || AppCache.isOffline) return;
 
         // Version check
         const currentVersion = AppCache.AppVersion.replace(/\D/g, '')
-        let activeVersion = 0;
-        if (typeof AppCache.AppVersionActive === 'string') {
-            activeVersion = AppCache.AppVersionActive.replace(/\D/g, '');
-        } else if (Array.isArray(AppCache.AppVersionActive) && AppCache.AppVersionActive.length > 0) {
-            activeVersion = AppCache.AppVersionActive[0].replace(/\D/g, '');
-        } else {
-            console.error('Unable to check active version', AppCache.AppVersionActive);
-        }
-
+        const activeVersion = AppCache.GetActiveAppVersion();
+        
         if (currentVersion < activeVersion) {
-            let n = `${AppCache.Url}/mobileClients/${AppCache.mobileClient}/build/${AppCache.AppVersionActiveID}/`;
-
-            if (deviceName === 'win') n += 'Windows';
-            else if (deviceName === 'Android') n += 'Android';
-            else if (deviceName === 'iOS') {
-                n = 'itms-services://?action=download-manifest&url=' + encodeURIComponent(`${n}Ios.plist`);
-                console.log(n);
-            }
-
-            AppCache.UpdateMobileApp(n, AppCache.AppVersionActive);
+            const url = getMobileAppUpdateUrlForOS(`${AppCache.Url}/mobileClients/${AppCache.mobileClient}/build/${AppCache.AppVersionActiveID}/`)
+            AppCache.UpdateMobileApp(url, activeVersion);
         }
     },
 

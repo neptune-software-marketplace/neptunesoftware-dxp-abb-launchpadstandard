@@ -1082,3 +1082,19 @@ function isLanguageSetInQueryParam() {
         language: langSearchParam,
     };
 }
+
+function isMobileAppUpdateSupported() {
+    return sap.ui.Device.os.windows || sap.ui.Device.os.android || sap.ui.Device.os.ios;
+}
+
+function getMobileAppUpdateUrlForOS(url) {
+    if (sap.ui.Device.os.windows) {
+        return url + 'Windows';
+    } else if (sap.ui.Device.os.android) {
+        return url + 'Android';
+    } else if (sap.ui.Device.os.ios) {
+        return 'itms-services://?action=download-manifest&url=' + encodeURIComponent(`${url}Ios.plist`);
+    }
+
+    return '';
+}
