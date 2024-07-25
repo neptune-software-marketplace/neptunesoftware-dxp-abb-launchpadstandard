@@ -629,9 +629,9 @@ let AppCache = {
 
     GetActiveAppVersion: function () {
         if (typeof AppCache.AppVersionActive === 'string') {
-            return AppCache.AppVersionActive.replace(/\D/g, '');
+            return AppCache.AppVersionActive;
         } else if (Array.isArray(AppCache.AppVersionActive) && AppCache.AppVersionActive.length > 0) {
-            return AppCache.AppVersionActive[0].replace(/\D/g, '');
+            return AppCache.AppVersionActive[0];
         }
 
         // we were unable to find the active app version
@@ -645,11 +645,11 @@ let AppCache = {
 
         // Version check
         const currentVersion = AppCache.AppVersion.replace(/\D/g, '')
-        const activeVersion = AppCache.GetActiveAppVersion();
+        const activeVersion = AppCache.GetActiveAppVersion().replace(/\D/g, '');
         
-        if (currentVersion < activeVersion) {
+        if (activeVersion > currentVersion) {
             const url = getMobileAppUpdateUrlForOS(`${AppCache.Url}/mobileClients/${AppCache.mobileClient}/build/${AppCache.AppVersionActiveID}/`)
-            AppCache.UpdateMobileApp(url, activeVersion);
+            AppCache.UpdateMobileApp(url, AppCache.GetActiveAppVersion());
         }
     },
 
