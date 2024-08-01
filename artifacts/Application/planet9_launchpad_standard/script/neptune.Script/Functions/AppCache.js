@@ -2393,6 +2393,12 @@ let AppCache = {
         modelAppCacheCategory.setData(data.category);
         modelAppCacheCategoryChild.setData(data.categoryChilds);
 
+        setTimeout(() => {
+            if (isSemanticObjectActionPathInHashNavigation()) {
+                openTileFromSemanticObjectActionPath(getSemanticObjectActionPathFromHashNavigation());
+            }
+        }, 500);
+
         if (data.fav && data.fav.tiles) {
             modelAppCacheTilesFav.setData(data.fav.tiles);
         } else {

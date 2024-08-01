@@ -1098,3 +1098,66 @@ function getMobileAppUpdateUrlForOS(url) {
 
     return '';
 }
+
+function getSemanticObjectActionPathFromHashNavigation() {
+    let hashPath = window.location.hash;
+    if (hashPath.length > 0) hashPath = hashPath.substring(1);
+
+    const navPath = hashPath.includes('-') ? hashPath.split('-') : [];
+    return navPath.join('-').toLowerCase().trim();
+}
+
+function isSemanticObjectActionPathInHashNavigation() {
+    const semanticPath = getSemanticObjectActionPathFromHashNavigation();
+    if (semanticPath.length === 0) return false;
+
+    // validate semantic object action path against tiles if they are available
+    const tiles = modelAppCacheTiles.getData();
+    if (tiles.length > 0) {
+        const paths = tiles.map(({ navObject, navAction }) => {
+            return navObject && navAction ? `${navObject}-${navAction}`.toLowerCase() : '';
+        });
+        return paths.includes(semanticPath);
+    }
+
+    // no tiles are present as of now, so assuming the semantic object path holds
+    return true;
+}
+
+function openTileFromSemanticObjectActionPath(semanticPath) {
+    if (semanticPath.length === 0) return;
+
+    const tiles = modelAppCacheTiles.getData();
+    if (!Array.isArray(tiles) || tiles.length === 0) return;
+
+    // find tile to open, if the application is not already open or not already loaded
+    // TODO check if app is already open, the activate it
+    const filtered = tiles.filter(({ navObject, navAction }) => {
+        return navObject && navAction && `${navObject}-${navAction}`.toLowerCase().trim() === semanticPath;
+    });
+    if (filtered.length === 0) return;
+
+    const tile = filtered[0];
+
+    function isTileInCategory(category) {
+        return Array.isArray(category.tiles) && category.tiles.map(({ id }) => id).includes(tile.id);
+    }
+
+    const categories = modelAppCacheCategory.getData();
+    if (Array.isArray(categories) && categories.length > 0) {
+        const category = categories.find(isTileInCategory);
+        if (typeof category !== 'undefined') {
+            sap.n.Launchpad._HandleTilePress(tile, category);
+            return;
+        }
+    }
+
+    const categoryChilds = modelAppCacheCategoryChild.getData();
+    if (Array.isArray(categoryChilds) && categoryChilds.length > 0) {
+        const category = categoryChilds.find(isTileInCategory);
+        if (typeof category !== 'undefined') {
+            sap.n.Launchpad._HandleTilePress(tile, category);
+            return;
+        }
+    }
+}

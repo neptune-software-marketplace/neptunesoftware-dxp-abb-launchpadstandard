@@ -82,7 +82,12 @@ sap.n.Ajax = {
 
         // Rebuild 
         if (rebuild) {
-            location.hash = '';
+            if (isSemanticObjectActionPathInHashNavigation()) {
+                openTileFromSemanticObjectActionPath(getSemanticObjectActionPathFromHashNavigation());
+            } else {
+                location.hash = '';
+            }
+
             sap.n.Launchpad.BuildMenu();
             sap.n.Launchpad.RebuildTiles();
         }

@@ -584,7 +584,7 @@ sap.n.Launchpad = {
         if (AppCache.config.enableTopMenu) sap.n.Launchpad.BuildMenuTop();
         sap.n.Launchpad.BuildTreeMenu();
         sap.n.Launchpad.BuildTags();
-        if (navigateToHome) sap.n.Launchpad.SelectHomeMenu();
+        if (!isSemanticObjectActionPathInHashNavigation() && navigateToHome) sap.n.Launchpad.SelectHomeMenu();
 
         // Fallback, no startApp or Tiles -> Build empty page 
         if (!AppCache.StartApp && !AppCache.StartWebApp && !modelAppCacheCategory.oData.length) {
@@ -596,7 +596,12 @@ sap.n.Launchpad = {
 
             pageCat.addStyleClass('nepPage');
             AppCacheNav.addPage(pageCat);
-            AppCacheNav.to(pageCat);
+            
+            if (isSemanticObjectActionPathInHashNavigation()) {
+                openTileFromSemanticObjectActionPath(getSemanticObjectActionPathFromHashNavigation());
+            } else {
+                AppCacheNav.to(pageCat);
+            }
         }
     },
 
