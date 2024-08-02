@@ -242,7 +242,7 @@ let AppCacheLogonAzure = {
     },
 
     _authUrl: function (endPoint) {
-        return 'https://login.microsoftonline.com/' + this.options.tenantId + '/oauth2/v2.0/' + endPoint + '?';
+        return 'https://login.microsoftonline.com/' + this.options.tenantId + '/oauth2/v2.0/' + endPoint;
     },
 
     _loginUrl: function (loginHint) {
@@ -260,7 +260,7 @@ let AppCacheLogonAzure = {
             data.login_hint = loginHint;
         }
 
-        return this._authUrl('authorize') + serializeDataForQueryString(data);
+        return this._authUrl('authorize') + '?' + serializeDataForQueryString(data);
     },
 
     _logoutUrl: function () {
@@ -268,7 +268,7 @@ let AppCacheLogonAzure = {
             post_logout_redirect_uri: this.getFullUri() + this.redirectUri
         };
 
-        return this._authUrl('logout') + serializeDataForQueryString(data);
+        return this._authUrl('logout') + '?' + serializeDataForQueryString(data);
     },
 
     _onTokenReadyMsal: function (data, resourceToken) {
