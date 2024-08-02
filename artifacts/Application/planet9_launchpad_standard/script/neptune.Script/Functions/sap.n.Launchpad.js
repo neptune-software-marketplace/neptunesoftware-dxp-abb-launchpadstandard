@@ -165,6 +165,7 @@ sap.n.Launchpad = {
         }
 
         setTimeout(() => {
+            sap.n.Layout.setHeaderPadding(true);
             sap.n.Launchpad.setLaunchpadContentWidth();
         }, 100);
     },
