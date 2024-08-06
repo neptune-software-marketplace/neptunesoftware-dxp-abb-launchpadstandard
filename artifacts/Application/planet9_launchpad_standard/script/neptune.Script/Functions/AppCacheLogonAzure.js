@@ -485,7 +485,9 @@ let AppCacheLogonAzure = {
                     });
                 } else {
                     this._onTokenReady(data);
-                    this._loginP9(data.id_token, process);
+                    if (AppCache.enablePasscode && process === 'pin') {
+                        this._loginP9(data.id_token, process);
+                    }
                 }
             },
             error: (result, status) => {
