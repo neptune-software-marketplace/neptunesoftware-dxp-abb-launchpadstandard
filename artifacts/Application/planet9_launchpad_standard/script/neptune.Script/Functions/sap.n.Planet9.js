@@ -1,3 +1,13 @@
+function includeIsMobileQueryParam() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    if (urlParams.has('isMobile') && urlParams.get('isMobile') === 'true') {
+        return true;
+    }
+
+    return isCordova();
+}
+
 sap.n.Planet9 = {
     function: function (opts) {
         let { id, query, method } = opts;
@@ -5,10 +15,10 @@ sap.n.Planet9 = {
 
         let q = '';
         if (query) {
-            let params = AppCache.isMobile ? `${query}&isMobile=true` : query;
+            let params = includeIsMobileQueryParam() ? `${query}&isMobile=true` : query;
             q = `?${encodeURIComponent(params)}`;
         } else {
-            q = AppCache.isMobile ? '?isMobile=true' : '';
+            q = includeIsMobileQueryParam() ? '?isMobile=true' : '';
         }
 
         // Public
