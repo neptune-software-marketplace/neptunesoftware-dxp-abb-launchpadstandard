@@ -1885,6 +1885,10 @@ let AppCache = {
             setCacheAppCacheUsers();
         }
 
+        if (typeof userData.logonData === 'undefined') {
+            userData.logonData = getAuthSettingsFromLoginType();
+        }
+
         sap.ui.core.BusyIndicator.hide();
         AppCache_inPassword.setValue();
 
