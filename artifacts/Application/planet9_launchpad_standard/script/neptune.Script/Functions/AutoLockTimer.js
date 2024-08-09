@@ -91,18 +91,17 @@ const AutoLockTimer = {
         }
     },
     onTimeout: function () {
-        this.showTimedOutDialog();
-
         if (AppCache.enablePasscode) {
             AppCache.Lock();
         } else {
+            this.showTimedOutDialog();
             AppCache.Logout();
         }
     },
     showTimedOutDialog: function () {
         if (!diaAutolocked.isOpen()) {
+            // open with a delay since navigating back to lock screen hides the dialog
             setTimeout(() => {
-                // open with a delay since navigating back to lock screen hides the dialog
                 diaAutolocked.open()
             }, 3000);
         }
