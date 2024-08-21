@@ -258,6 +258,7 @@ sap.ui.getCore().attachInit(function () {
                 if (modelAppCacheDiaSettings.oData && modelAppCacheDiaSettings.oData.userTheme) {
                     sap.n.Launchpad.applyUserTheme();
                 } else {
+                    if (AppCache.defaultTheme) sap.ui.getCore().applyTheme(AppCache.defaultTheme);
                     sap.n.Launchpad.applyLayout(AppCache.layout[0]);
                 }
             }
