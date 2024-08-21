@@ -2314,6 +2314,11 @@ let AppCache = {
             return Promise.resolve();
         }
 
+        // pre-build menu and tiles before we fetch GetTiles
+        if (!AppCache.StartApp && !AppCache.StartWebApp) {
+            sap.n.Launchpad.BuildMenu();
+        }
+
         const _tiles = await fakePromise(
             getCacheAppCacheTiles(false),
             modelAppCacheTiles,
