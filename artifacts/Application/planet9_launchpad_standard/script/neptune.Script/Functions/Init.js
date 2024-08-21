@@ -143,6 +143,10 @@ sap.ui.getCore().attachInit(function () {
     });
 
     applyWCAGFixes();
+
+    if (!sap.n.Customization.isDisabled()) {
+        sap.n.Customization.addCustomizableClass();
+    }
     
     setTimeout(function () {
         // Browser Title 
