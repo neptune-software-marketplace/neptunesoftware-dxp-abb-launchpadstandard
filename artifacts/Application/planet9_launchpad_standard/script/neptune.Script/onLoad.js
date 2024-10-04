@@ -53,6 +53,12 @@ function onDeviceReady() {
     document.addEventListener('resume', onResume, false);
     document.addEventListener('backbutton', onBackButton, false);
 
+    document.addEventListener('beforeunload', () => {
+        if (isAutoLockTimerEnabled()) {
+            AutoLockTimer.stop();
+        }
+    });
+
     if (navigator.app) {
         try {
             navigator.app.overrideButton('menubutton', true);
@@ -160,13 +166,7 @@ function onOffline() {
     }
 }
 
-function onOnline() {
-    if (isCordova()) {
-        AppCache.isOffline = navigator.connection.type === Connection.NONE;
-    } else {
-        AppCache.isOffline = false;
-    }
-
+function afterOnOnline() {
     const { type: authType } = getAuthSettingsForUser();
     AppCacheUserActionChangePassword.setVisible(!AppCache.isOffline && authType === 'local' && !isChpassDisabled());
 
@@ -188,6 +188,26 @@ function onOnline() {
     if (typeof sap.n.Phonegap.onOnlineCustom === 'function') {
         sap.n.Phonegap.onOnlineCustom();
         return;
+    }
+}
+
+function onOnline() {
+    if (isCordova()) {
+        AppCache.isOffline = navigator.connection.type === Connection.NONE;
+    } else {
+        AppCache.isOffline = false;
+    }
+
+    const { type: authType } = getAuthSettingsForUser();
+    AppCacheUserActionChangePassword.setVisible(!AppCache.isOffline && authType === 'local' && !isChpassDisabled());
+
+    // user might get logged out if pincode is enabled and they are logged in, but their server session has timed out
+    if (AppCache.enablePasscode && !AutoLockTimer.hasElapsed()) {
+        AutoLockTimer.reset();
+        genericAuthRelogin(authType, AppCache.userInfo.authDecrypted);
+        setTimeout(afterOnOnline, 3000);
+    } else {
+        afterOnOnline();
     }
 }
 

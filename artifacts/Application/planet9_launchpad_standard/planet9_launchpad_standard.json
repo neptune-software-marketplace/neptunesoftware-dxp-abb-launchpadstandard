@@ -19575,7 +19575,7 @@
 																{
 																	"attribute": "title",
 																	"grouping": "Properties",
-																	"value": "Change password",
+																	"value": "Change Password",
 																	"script": "",
 																	"translation": [
 																		{
@@ -51581,7 +51581,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "24.08.21.1438",
+	"ver": "24.10.04.1249",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",

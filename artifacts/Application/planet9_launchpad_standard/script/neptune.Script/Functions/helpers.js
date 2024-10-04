@@ -1161,3 +1161,21 @@ function openTileFromSemanticObjectActionPath(semanticPath) {
         }
     }
 }
+
+function genericAuthRelogin(authType, auth) {
+    const reloginFuncs = {
+        'saml': AppCacheLogonSaml.Relog,
+        'openid-connect': AppCacheLogonOIDC.Relog,
+        'azure-bearer': AppCacheLogonAzure.Relog,
+        'local': AppCacheLogonLocal.Relog,
+        'ldap': AppCacheLogonLdap.Relog,
+        'sap': AppCacheLogonSap.Relog,
+    };
+    
+    const func = reloginFuncs[authType];
+    if (func) {
+        return func(auth);
+    }
+    
+    return Promise.reject(new Error(`Unsupported auth type: ${auth.type}`, auth));
+}

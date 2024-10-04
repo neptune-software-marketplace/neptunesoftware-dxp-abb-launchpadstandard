@@ -49,12 +49,17 @@ const AutoLockTimer = {
     },
     hasElapsed: function () {
         let timestamp = this.getTimestamp();
+
+        // timer lock is enabled, but we don't have any timestamp
+        if (isAutoLockTimerEnabled() && !timestamp) {
+            return true;
+        }
+
         if (!timestamp) {
             return false;
         }
 
-        timestamp = parseInt(timestamp);
-        let elapsed = parseInt(Date.now() - timestamp);
+        const elapsed = Date.now() - parseInt(timestamp);
         return elapsed >= getAutoLockTimeoutInMilliSecs();
     },
 
