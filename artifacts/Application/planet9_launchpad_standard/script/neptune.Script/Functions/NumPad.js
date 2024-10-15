@@ -231,6 +231,7 @@ const NumPad = {
         appCacheLog('NumPad.Logon: PIN Code OK');
 
         AppCache.userInfo.authDecrypted = auth;
+        AppCache.updateUserLoginTime();
         sap.ui.core.BusyIndicator.show(0);
 
         sap.n.Launchpad.handleAppTitle(AppCache.launchpadTitle);

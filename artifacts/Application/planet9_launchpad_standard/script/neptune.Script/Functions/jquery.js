@@ -168,7 +168,13 @@ function request(opts) {
         isCordova() &&
         cordova.plugin &&
         cordova.plugin.http
-    ) return cordovaRequest(opts);
+    ) {
+        if (typeof AppCache.clientRequestTimeout === 'number' && AppCache.clientRequestTimeout > 0) {
+            cordova.plugin.http.setRequestTimeout(AppCache.clientRequestTimeout);
+        }
+
+        return cordovaRequest(opts);
+    }
 
     return jQuery.ajax(Object.assign({}, opts));
 }

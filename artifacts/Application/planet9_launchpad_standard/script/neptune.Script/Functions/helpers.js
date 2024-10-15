@@ -328,6 +328,63 @@ const _pwaResources = {};
 function setCachablePwaResources() {
     _pwaResources[launchpadUrl()] = { url: launchpadUrl(), method: 'GET', cacheName: determineCacheNameFromUrl(launchpadUrl()) };
 
+    // commonly used libraries
+    const sapVersion = sap.ui.version.split('.').slice(0, 2).join('.')
+    const libs = [
+        'jquery.sap.storage.js',
+        'sap/m/MessageBox.js',
+        'sap/m/MessageToast.js',
+        'sap/ui/thirdparty/jqueryui/jquery-ui-core.js',
+        'sap/ui/thirdparty/jqueryui/jquery-ui-sortable.js',
+        'sap/ui/core/format/DateFormat.js',
+        'sap/ui/core/format/NumberFormat.js',
+        'sap/ui/core/format/FileSizeFormat.js',
+    ]
+    for (const lib of libs) {
+        const url = `/public/openui5/${sapVersion}/${lib}`
+        _pwaResources[url] = { url, method: 'GET', cacheName: determineCacheNameFromUrl(url) };
+    }
+
+    // language files
+    const supportedLanguages = {
+        '1.71': [
+            'en_NZ', 'fr_CH', 'pt', 'ar', 'en_PG', 'fr_LU', 'pt_PT', 'ar_EG', 'en_SG', 'he', 'ro', 
+            'ar_SA', 'en_ZA', 'hi', 'ru', 'bg', 'es', 'hr', 'ru_UA', 'ca', 'es_AR', 'hu', 'sk', 'cs', 
+            'es_BO', 'id', 'sl', 'da', 'es_CL', 'it', 'sr', 'de', 'es_CO', 'it_CH', 'sr_Latn', 
+            'de_AT', 'es_MX', 'ja', 'sv', 'de_CH', 'es_PE', 'kk', 'th', 'el', 'es_UY', 'ko', 
+            'tr', 'el_CY', 'es_VE', 'lt', 'uk', 'en', 'et', 'lv', 'vi', 'en_AU', 'fa', 'ms',
+            'zh_CN', 'en_GB', 'fi', 'nb', 'zh_HK', 'en_HK', 'fr', 'nl', 'zh_SG', 'en_IE', 
+            'fr_BE', 'nl_BE', 'zh_TW', 'en_IN', 'fr_CA', 'pl'
+        ],
+        '1.108': [
+            'ar', 'da', 'en_AU', 'en_SG', 'es_MX', 'fr', 'hr', 'ko', 'pl', 'sl', 'vi', 'ar_EG',
+            'de', 'en_GB', 'en_ZA', 'es_PE', 'fr_BE', 'hu', 'lt', 'pt', 'sr', 'zh_CN', 'ar_SA',
+            'de_AT', 'en_HK', 'es', 'es_UY', 'fr_CA', 'id', 'lv', 'pt_PT', 'sr_Latn', 'zh_HK',
+            'bg', 'de_CH', 'en_IE', 'es_AR', 'es_VE', 'fr_CH', 'it', 'ms', 'ro', 'sv', 'zh_SG',
+            'ca', 'el', 'en_IN', 'es_BO', 'et', 'fr_LU', 'it_CH', 'nb', 'ru', 'th', 'zh_TW',
+            'cs', 'el_CY', 'en_NZ', 'es_CL', 'fa', 'he', 'ja', 'nl', 'ru_UA', 'tr', 'cy',
+            'en', 'en_PG', 'es_CO', 'fi', 'hi', 'kk', 'nl_BE', 'sk', 'uk'
+        ]
+    }
+    const browserLanguage = navigator.language.replace('-', '_');
+    const languages = ['en'];
+    if (supportedLanguages[sapVersion] && supportedLanguages[sapVersion].includes(browserLanguage)) {
+        languages.push(browserLanguage);
+    }
+
+    if (Array.isArray(AppCache.config.languages)) {
+        for (const lang of AppCache.config.languages) {
+            if (supportedLanguages[sapVersion] && supportedLanguages[sapVersion].includes(lang.toLowerCase())) {
+                languages.push(lang.toLowerCase());
+            }
+        }
+    }
+
+    for (const lang of languages) {
+        const url = `/public/openui5/${sapVersion}//sap/ui/core/cldr/${lang}.json`
+        _pwaResources[url] = { url, method: 'GET', cacheName: determineCacheNameFromUrl(url) };
+    }
+
     if (window && window.performance && window.performance.getEntriesByType) {
         const resources = window.performance.getEntriesByType("resource").map(r => r.name);
         const allowedExts = [

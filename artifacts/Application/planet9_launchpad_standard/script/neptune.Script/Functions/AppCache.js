@@ -3028,6 +3028,8 @@ let AppCache = {
     },
 
     getSettings: function () {
+        if (isOffline()) return;
+
         appCacheLog('Getting settings from P9 server');
 
         let url = AppCache.Url + '/user/logon/types?launchpad=' + AppCache.launchpadID;

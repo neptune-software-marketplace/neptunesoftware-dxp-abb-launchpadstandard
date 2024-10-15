@@ -365,75 +365,77 @@ sap.n.Launchpad = {
             });
         }
         
-        sap.n.Planet9.function({
-            id: dataSet,
-            method: 'UpdateUserDetails',
-            data: { language: newLanguage },
-            success: () => {
-                if (!supportsInlineTranslations()) {
-                    if (AppCache.isMobile) {
-                        AppCache.translate(newLanguage);
-                        sap.n.Launchpad.RebuildTiles();
-                        sap.n.Launchpad.BuildMenuTop();
-                        sap.n.Launchpad.BuildTreeMenu();
-                        return; 
-                    }
+        if (!isOffline()) {
+            sap.n.Planet9.function({
+                id: dataSet,
+                method: 'UpdateUserDetails',
+                data: { language: newLanguage },
+                success: () => {
+                    if (!supportsInlineTranslations()) {
+                        if (AppCache.isMobile) {
+                            AppCache.translate(newLanguage);
+                            sap.n.Launchpad.RebuildTiles();
+                            sap.n.Launchpad.BuildMenuTop();
+                            sap.n.Launchpad.BuildTreeMenu();
+                            return; 
+                        }
 
-                    // remove ?lang=, otherwise reload will show the language set in ?lang= parameter
-                    if (new URL(location.href).searchParams.has('lang')) {
-                        const newUrl = new URL(location.href);
-                        newUrl.searchParams.delete('lang');
-                        history.pushState({}, document.title, newUrl);
+                        // remove ?lang=, otherwise reload will show the language set in ?lang= parameter
+                        if (new URL(location.href).searchParams.has('lang')) {
+                            const newUrl = new URL(location.href);
+                            newUrl.searchParams.delete('lang');
+                            history.pushState({}, document.title, newUrl);
+                            location.reload();
+                            return;
+                        }
+
                         location.reload();
-                        return;
+                        return
                     }
 
-                    location.reload();
-                    return
-                }
+                    // support inline translations >= 24-LTS
+                    const openAppIds = openApps.getItems().map(item => item.sId);
+                    AppCacheNav.getPages().filter(page => page.sId.indexOf('page') > -1).forEach((page)=> {
+                        page.destroyContent();
+                    });
+                    
+                    AppCache.translate(newLanguage);
 
-                // support inline translations >= 24-LTS
-                const openAppIds = openApps.getItems().map(item => item.sId);
-                AppCacheNav.getPages().filter(page => page.sId.indexOf('page') > -1).forEach((page)=> {
-                    page.destroyContent();
-                });
-                
-                AppCache.translate(newLanguage);
+                    sap.n.Launchpad.BuildMenu(false);
+                    sap.n.Launchpad.RebuildTiles();
+                    sap.n.Launchpad.BuildMenuTop();
+                    sap.n.Launchpad.BuildTreeMenu();
 
-                sap.n.Launchpad.BuildMenu(false);
-                sap.n.Launchpad.RebuildTiles();
-                sap.n.Launchpad.BuildMenuTop();
-                sap.n.Launchpad.BuildTreeMenu();
+                    // destroy existing apps that open
+                    rebuildViews.forEach(({ id }) => {
+                        sap.n.Shell.closeTile({ id });
+                    });
 
-                // destroy existing apps that open
-                rebuildViews.forEach(({ id }) => {
-                    sap.n.Shell.closeTile({ id });
-                });
+                    // load/fetch apps with a different language
+                    loadApps(reloadApps);
 
-                // load/fetch apps with a different language
-                loadApps(reloadApps);
+                    const viewIds = rebuildViews.map(({ id }) => id);
+                    function ensureViewsAvailabilityBeforeRebuildingActiveViews(viewIds, retryCount, callback) {
+                        // no views asked to be checked, so we assume all views are available
+                        if (!Array.isArray(viewIds) || viewIds.length === 0) return callback(true);
+                        if (retryCount <= 0) return callback(false);
 
-                const viewIds = rebuildViews.map(({ id }) => id);
-                function ensureViewsAvailabilityBeforeRebuildingActiveViews(viewIds, retryCount, callback) {
-                    // no views asked to be checked, so we assume all views are available
-                    if (!Array.isArray(viewIds) || viewIds.length === 0) return callback(true);
-                    if (retryCount <= 0) return callback(false);
+                        if (!viewIds.every(viewId => typeof AppCache.View[viewId] !== 'undefined')) {
+                            setTimeout(() => ensureViewsAvailabilityBeforeRebuildingActiveViews(viewIds, retryCount-1, callback), 5);
+                            return;
+                        }
 
-                    if (!viewIds.every(viewId => typeof AppCache.View[viewId] !== 'undefined')) {
-                        setTimeout(() => ensureViewsAvailabilityBeforeRebuildingActiveViews(viewIds, retryCount-1, callback), 5);
-                        return;
+                        callback(true);
                     }
 
-                    callback(true);
+                    // we wait for 5 seconds, before giving up on views being available
+                    ensureViewsAvailabilityBeforeRebuildingActiveViews(viewIds, 1000, (available) => {
+                        if (!available) return;
+                        setTimeout(() => rebuildAppViews(openAppIds, rebuildViews), 100);
+                    });
                 }
-
-                // we wait for 5 seconds, before giving up on views being available
-                ensureViewsAvailabilityBeforeRebuildingActiveViews(viewIds, 1000, (available) => {
-                    if (!available) return;
-                    setTimeout(() => rebuildAppViews(openAppIds, rebuildViews), 100);
-                });
-            }
-        });
+            });
+        }
     },
 
     isLanguageValid(language) {

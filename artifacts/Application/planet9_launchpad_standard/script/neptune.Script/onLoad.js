@@ -204,6 +204,7 @@ function onOnline() {
     // user might get logged out if pincode is enabled and they are logged in, but their server session has timed out
     if (AppCache.enablePasscode && !AutoLockTimer.hasElapsed()) {
         AutoLockTimer.reset();
+        AppCache.updateUserLoginTime();
         genericAuthRelogin(authType, AppCache.userInfo.authDecrypted);
         setTimeout(afterOnOnline, 3000);
     } else {
