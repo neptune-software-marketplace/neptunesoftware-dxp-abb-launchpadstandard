@@ -1686,8 +1686,8 @@ function setCachablePwaResources() {
             'ca', 'el', 'en_IN', 'es_BO', 'et', 'fr_LU', 'it_CH', 'nb', 'ru', 'th', 'zh_TW',
             'cs', 'el_CY', 'en_NZ', 'es_CL', 'fa', 'he', 'ja', 'nl', 'ru_UA', 'tr', 'cy',
             'en', 'en_PG', 'es_CO', 'fi', 'hi', 'kk', 'nl_BE', 'sk', 'uk'
-        ]
-    }
+        ],
+    };
 
     const browserLanguage = navigator.language.replace('-', '_');
     const languages = ['en'];
@@ -1756,18 +1756,29 @@ function setCachablePwaResources() {
     }
 }
 
+let _cachingPWAInProgress = false;
 function ensurePWACache() {
     if (!isPWAEnabled()) return;
 
+    if (_cachingPWAInProgress) {
+        setTimeout(ensurePWACache, 5000);
+        return;
+    }
+    _cachingPWAInProgress = true;
+
     appCacheLog('ensure these pwa resources are available in cache', Object.keys(_pwaResources));
 
-    Object.values(_pwaResources).forEach(async ({ url, method, cacheName }) => {
+    for (const resource of _pwaResources) {
+        const { url, method, cacheName } = resource;
+        
         if (await isUrlInCache({ url, cacheName })) {
             appCacheLog(url, 'already exists in cache');
         } else {
             addUrlToCache({ url, method, cacheName });
         }
-    });
+    }
+    
+    _cachingPWAInProgress = false;
 }
 
 function emptyBase64Image() {

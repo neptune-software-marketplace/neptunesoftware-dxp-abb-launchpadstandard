@@ -39,6 +39,13 @@ sap.ui.core.IconPool.registerFont({
 
 // Wrapper for OnInit Event
 sap.ui.getCore().attachInit(function () {
+    if ('serviceWorker' in navigator) {
+        setTimeout(() => {
+            setCachablePwaResources();
+            ensurePWACache();
+        }, 2000);
+    }
+
     sap.ui.core.BusyIndicator.hide();
 
     // Enhancement
