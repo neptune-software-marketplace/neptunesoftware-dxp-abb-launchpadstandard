@@ -51176,6 +51176,18 @@
 							"data": []
 						},
 						{
+							"fieldNo": "c3fe4e1f-6ff8-436f-9a00-4587454fb186",
+							"fieldName": "Javascript",
+							"fieldParent": "00323fe3-7d1a-4da1-a549-5fc51fb40e6a",
+							"fieldType": "neptune.Script",
+							"script": "file://script/neptune.Script/Functions/Javascript.js",
+							"customComponent": false,
+							"request": [],
+							"response": [],
+							"attributes": [],
+							"data": []
+						},
+						{
 							"fieldNo": "0c3ad877-e6c0-42b8-af73-e02048d621fc",
 							"fieldName": "AutoLockTimer",
 							"fieldParent": "00323fe3-7d1a-4da1-a549-5fc51fb40e6a",
@@ -51581,7 +51593,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "24.10.15.1223",
+	"ver": "24.10.16.1223",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",
