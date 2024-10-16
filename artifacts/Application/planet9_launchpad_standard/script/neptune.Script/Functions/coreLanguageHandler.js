@@ -3,20 +3,24 @@ AppCache.coreLanguageHandler = {
     cldrBundle: {},
 
     updateResourceBundlesNewLang: function (bundleLanguage) {
-        let loadedLibraries = sap.ui.getCore().getLoadedLibraries();
-        Object.entries(loadedLibraries).forEach(function ([_, library]) {
-            if (this.excludedLibraries.includes(library.name)) return true;
+        try {
+            let loadedLibraries = sap.ui.getCore().getLoadedLibraries();
+            Object.entries(loadedLibraries).forEach(function ([_, library]) {
+                if (this.excludedLibraries.includes(library.name)) return true;
 
-            let currrentResourceBundle = sap.ui.getCore().getLibraryResourceBundle(library.name);
-            if (currrentResourceBundle && currrentResourceBundle.sLocale !== bundleLanguage) {
-                this.getResourceBundle(library.name, bundleLanguage)
-                    .then(function (newResourceBundle) {
-                        if (newResourceBundle && newResourceBundle.aPropertyFiles.length) {
-                            currrentResourceBundle.aPropertyFiles = newResourceBundle.aPropertyFiles;
-                        }
-                    });
-            }
-        }.bind(this));
+                let currrentResourceBundle = sap.ui.getCore().getLibraryResourceBundle(library.name);
+                if (currrentResourceBundle && currrentResourceBundle.sLocale !== bundleLanguage) {
+                    this.getResourceBundle(library.name, bundleLanguage)
+                        .then(function (newResourceBundle) {
+                            if (newResourceBundle && newResourceBundle.aPropertyFiles.length) {
+                                currrentResourceBundle.aPropertyFiles = newResourceBundle.aPropertyFiles;
+                            }
+                        });
+                }
+            }.bind(this));
+        } catch (err) {
+            console.error('unable to updateResourceBundlesNewLang', bundleLanguage, 'error', err);
+        }
     },
 
     getResourceBundle: function (ui5Lib, bundleLanguage) {
