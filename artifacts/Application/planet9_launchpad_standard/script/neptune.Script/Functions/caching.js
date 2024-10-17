@@ -1756,29 +1756,19 @@ function setCachablePwaResources() {
     }
 }
 
-let _cachingPWAInProgress = false;
 function ensurePWACache() {
     if (!isPWAEnabled()) return;
 
-    if (_cachingPWAInProgress) {
-        setTimeout(ensurePWACache, 5000);
-        return;
-    }
-    _cachingPWAInProgress = true;
-
     appCacheLog('ensure these pwa resources are available in cache', Object.keys(_pwaResources));
 
-    for (const resource of _pwaResources) {
-        const { url, method, cacheName } = resource;
-        
-        if (await isUrlInCache({ url, cacheName })) {
+    Object.values(_pwaResources).forEach(async ({ url, method, cacheName }) => {
+        const params = { url, cacheName };
+        if (await isUrlInCache(params)) {
             appCacheLog(url, 'already exists in cache');
         } else {
-            addUrlToCache({ url, method, cacheName });
+            await addUrlToCache({ url, method, cacheName });
         }
-    }
-    
-    _cachingPWAInProgress = false;
+    });
 }
 
 function emptyBase64Image() {

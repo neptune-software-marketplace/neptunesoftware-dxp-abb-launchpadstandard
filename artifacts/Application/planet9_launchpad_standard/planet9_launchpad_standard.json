@@ -51593,7 +51593,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "24.10.16.1829",
+	"ver": "24.10.17.1136",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",
@@ -51629,7 +51629,7 @@
 	"ui5_bootstrap": false,
 	"ui5_ionic": false,
 	"useV2AppHandler": false,
-	"compilerTarget": 2,
+	"compilerTarget": 6,
 	"tabWidth": null,
 	"printWidth": null,
 	"generateVersionOnActivation": false,
