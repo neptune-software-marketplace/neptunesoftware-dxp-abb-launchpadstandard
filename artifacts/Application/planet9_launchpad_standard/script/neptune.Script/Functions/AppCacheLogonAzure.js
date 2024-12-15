@@ -39,7 +39,7 @@ let AppCacheLogonAzure = {
 
     popupWin: null,
     tryToOpenPopup(loginHint) {
-        if (this.popupWin && !this.popupWin.closed && typeof this.popupWin.close === 'function') {
+        if (this.popupWin && typeof this.popupWin.close === 'function') {
             this.popupWin.close();
         }
 
@@ -47,7 +47,7 @@ let AppCacheLogonAzure = {
 
         // if we are unable to open the popup
         if (!this.popupWin) {
-            MessageBox.show('Unable to create the popup window for Azure login.', {
+            sap.m.MessageBox.show('Unable to create the popup window for Azure login.', {
                 icon: MessageBox.Icon.INFORMATION,
                 title: "Azure Login",
             });
@@ -130,7 +130,11 @@ let AppCacheLogonAzure = {
     },
 
     LogonDesktop: function(loginHint) {
-        this.popupWin.addEventListener('unload', this.onLogonPopupClose);
+        try {
+            this.popupWin.addEventListener('unload', this.onLogonPopupClose);
+        } catch (err) {
+            console.error('LogonDesktop, unable to monitor unload event', err);
+        }
 
         if (location.protocol === 'file:') {
             sap.m.MessageToast.show('Testing Microsoft Entra ID from file is not allowed due to CSRF issues. Please test in mobile app');

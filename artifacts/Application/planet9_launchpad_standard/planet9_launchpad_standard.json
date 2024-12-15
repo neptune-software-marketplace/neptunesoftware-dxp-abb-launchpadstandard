@@ -51593,7 +51593,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "24.10.17.1136",
+	"ver": "24.12.13.1230",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",
@@ -51618,7 +51618,7 @@
 	"ui5_url": "https://openui5.hana.ondemand.com/1.71.59/resources/sap-ui-core.js",
 	"cus_theme": "",
 	"css": "file:///css.css",
-	"compiledCss": "file://script/undefined/undefined.script",
+	"compiledCss": "file:///compiledCss.css",
 	"header": "file:///header.html",
 	"manifest": "",
 	"globalScript": "",

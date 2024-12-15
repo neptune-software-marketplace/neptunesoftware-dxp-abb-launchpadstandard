@@ -63,6 +63,7 @@ const AutoLockTimer = {
         return elapsed >= getAutoLockTimeoutInMilliSecs();
     },
 
+    visibilityChangeEnabled: false,
     start: function () {
         if (!isAutoLockTimerEnabled()) return;
 
@@ -71,7 +72,10 @@ const AutoLockTimer = {
         this.setTimestamp(Date.now());
 
         this.addEventListeners();
-        document.addEventListener('visibilitychange', this.onVisibilityChange.bind(this));
+        if (!this.visibilityChangeEnabled) {
+            document.addEventListener('visibilitychange', this.onVisibilityChange.bind(this));
+            this.visibilityChangeEnabled = true;
+        }
     },
     stop: function () {
         if (!isAutoLockTimerEnabled()) return;

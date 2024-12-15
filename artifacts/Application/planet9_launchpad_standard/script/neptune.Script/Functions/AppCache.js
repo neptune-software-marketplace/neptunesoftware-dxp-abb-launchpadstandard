@@ -205,10 +205,12 @@ let AppCache = {
         }
 
         let shouldFetchView = true;
+        const startParams = JSON.parse(JSON.stringify(loadOptions.startParams));
         const viewName = getAppViewName(value, loadOptions.appPath);
         p9GetView(viewName).then((data) => {
             if (typeof data !== 'undefined' && data.length > 2) {
                 shouldFetchView = false;
+                loadOptions.startParams = startParams;
                 AppCache.initView({ viewName, value, data, loadOptions });
             }
         }).catch((err) => {
@@ -216,6 +218,7 @@ let AppCache = {
             const data = sapStorageGet(viewName);
             if (typeof data !== 'undefined') {
                 shouldFetchView = false;
+                loadOptions.startParams = startParams;
                 AppCache.initView({ viewName, value, data, loadOptions });
             }
         }).finally(() => {

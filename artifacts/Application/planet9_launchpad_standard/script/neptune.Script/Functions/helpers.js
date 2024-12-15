@@ -656,7 +656,10 @@ function watchPopupState(popupWin, finalState=[], logState=[], callbackFn) {
             url = ''; // otherwise it would error out on accessing string functions
 
             if (err.name === 'SecurityError') {
-                // we are unable to read location.href
+                appCacheLog('we are unable to read location.href', popupWin, 'error', err);
+                clearInterval(intervalId);
+                popupWin.close();
+                return callbackFn();
             } else {
                 appCacheLog('watchPopupState popupWin', popupWin, 'error', err);
             }
@@ -674,7 +677,7 @@ function watchPopupState(popupWin, finalState=[], logState=[], callbackFn) {
             appCacheLog(`watchPopupState final state reached - ${url}`);
             clearInterval(intervalId);
             popupWin.close();
-            callbackFn(url);
+            return callbackFn(url);
         }
     }, 100);
 }
