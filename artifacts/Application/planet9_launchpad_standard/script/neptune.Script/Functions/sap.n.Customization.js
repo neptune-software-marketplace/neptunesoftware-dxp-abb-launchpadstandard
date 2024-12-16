@@ -240,7 +240,7 @@ sap.n.Customization = {
 
         // view standard screens
         const { disableScreenChanges } = modelAppCacheDiaSettings.getData();
-        if (disableScreenChanges) return true;
+        if (disableScreenChanges) return true; 
 
         return false;
     },
@@ -1001,8 +1001,8 @@ sap.n.Customization.Popover = {
                 if (sap.n.Customization.isJiggling()) return;
                 if (e.button < 2) return;
 
-                const { disableScreenChanges } = modelAppCacheDiaSettings.getData();
-                if (disableScreenChanges) return true;
+                const { disableScreenChanges, lockScreenChanges } = modelAppCacheDiaSettings.getData();
+                if (disableScreenChanges || lockScreenChanges) return true;
 
                 const elm = elById(config.elmId);
                 if (!elm) return;
