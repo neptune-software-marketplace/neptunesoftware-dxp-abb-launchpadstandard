@@ -1026,10 +1026,11 @@ let AppCache = {
                     if (loadOptions.startParams) {
                         try {
                             loadOptions.startParams = JSON.parse(loadOptions.startParams);
-                        } catch (error) { }
+                            beforeDisplayFunc(loadOptions.startParams, loadOptions);
+                        } catch (err) {
+                            appCacheError(`beforeDisplay ${err}`);
+                        }
                     }
-
-                    beforeDisplayFunc(loadOptions.startParams, loadOptions);
                 });
             }
 
