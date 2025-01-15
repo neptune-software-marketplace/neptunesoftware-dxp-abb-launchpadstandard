@@ -48,7 +48,7 @@ let AppCacheLogonAzure = {
         // if we are unable to open the popup
         if (!this.popupWin) {
             sap.m.MessageBox.show('Unable to create the popup window for Azure login.', {
-                icon: MessageBox.Icon.INFORMATION,
+                icon: sap.m.MessageBox.Icon.INFORMATION,
                 title: "Azure Login",
             });
             return false;
