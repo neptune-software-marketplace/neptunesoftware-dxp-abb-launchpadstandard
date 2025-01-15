@@ -658,7 +658,7 @@ function watchPopupState(popupWin, finalState=[], logState=[], callbackFn) {
             if (err.name === 'SecurityError') {
                 appCacheLog('we are unable to read location.href', popupWin, 'error', err);
                 clearInterval(intervalId);
-                popupWin.close();
+                // popupWin.close();
                 return callbackFn();
             } else {
                 appCacheLog('watchPopupState popupWin', popupWin, 'error', err);
