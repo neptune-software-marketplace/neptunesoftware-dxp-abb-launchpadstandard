@@ -980,3 +980,12 @@ function genericAuthRelogin(authType, auth) {
     
     return Promise.reject(new Error(`Unsupported auth type: ${auth.type}`, auth));
 }
+
+function setSettingsDialogScreenChangesUIState() {
+    const disabled = AppCache.isOffline || sap.n.Customization.isDisabled();
+    
+    msDisableScreenChanges.setVisible(disabled);
+    chkAppCacheLockScreenChanges.setEnabled(!disabled);
+    chkAppCacheDisableScreenChanges.setEnabled(!disabled);
+    btnClearCustomizations.setEnabled(!disabled);
+}

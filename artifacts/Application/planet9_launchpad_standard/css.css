@@ -4459,3 +4459,9 @@ html[dir=rtl] body.resizing {
 #diaPWAInstallFooter, #diaCookieFooter, #diaSessionTimeoutFooter, #diaAutolockedFooter {
     border-top: 1px solid #d3d7d9;
 }
+
+#msDisableScreenChanges-content .sapMText {
+    padding-top: 0;
+    padding-bottom: 0;
+    min-height: auto;
+}

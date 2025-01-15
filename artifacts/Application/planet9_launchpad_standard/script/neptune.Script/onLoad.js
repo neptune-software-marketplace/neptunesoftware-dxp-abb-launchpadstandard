@@ -158,6 +158,8 @@ function onOffline() {
     AppCache_butNewUser.setEnabled(false);
     AppCacheUserActionChangePassword.setVisible(false);
 
+    setSettingsDialogScreenChangesUIState();
+
     if (AppCache.isMobile && AppCache.isRestricted) return;
 
     if (typeof sap.n.Phonegap.onOfflineCustom === 'function') {
@@ -171,6 +173,7 @@ function afterOnOnline() {
     AppCacheUserActionChangePassword.setVisible(!AppCache.isOffline && authType === 'local' && !isChpassDisabled());
 
     if (!AppCache.isOffline) {
+        setSettingsDialogScreenChangesUIState();
         fetchAppUpdates();
 
         if (AutoLockTimer.hasElapsed()) {

@@ -323,6 +323,11 @@ sap.n.Launchpad = {
 
     setUserLanguage(language = '') {
         setLaunchpadLanguage(language);
+
+        // user language is already set to the language we are aiming to update it to
+        if (AppCache.userInfo.language === language) {
+            return;
+        }
         
         let newLanguage = 'EN';
         if (this.isLanguageValid(language)) {

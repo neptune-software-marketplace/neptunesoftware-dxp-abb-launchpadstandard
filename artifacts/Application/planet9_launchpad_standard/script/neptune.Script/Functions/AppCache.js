@@ -1328,7 +1328,7 @@ let AppCache = {
         });
     },
 
-    handleTileError: function (err, loadOptions) {
+    handleTileError: function (err, loadOptions = {}) {
         sap.n.currentView = '';
         sap.n.Shell.closeTile({ id: loadOptions.appGUID });
         sap.n.Shell.closeSidepanel();

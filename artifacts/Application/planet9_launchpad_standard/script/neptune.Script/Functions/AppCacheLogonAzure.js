@@ -39,7 +39,7 @@ let AppCacheLogonAzure = {
 
     popupWin: null,
     tryToOpenPopup(loginHint) {
-        if (this.popupWin && typeof this.popupWin.close === 'function') {
+        if (this.popupWin && !this.popupWin.closed && typeof this.popupWin.close === 'function') {
             this.popupWin.close();
         }
 
@@ -389,7 +389,11 @@ let AppCacheLogonAzure = {
         appCacheLog('Azure: Refresh token MSAL');
 
         refreshingAuth = true;
-        const account = this.msalObj.getAccountByUsername(AppCache.userInfo.username);
+        const { username, email } = AppCache.userInfo;
+        let account = this.msalObj.getAccountByUsername(username);
+        if (!account && email) {
+            account = this.msalObj.getAccountByUsername(email);
+        }
 
         this.GetTokenPopup({ scopes: this.loginScopes, account }).then((azureToken) => {
             refreshingAuth = false;
@@ -559,6 +563,12 @@ let AppCacheLogonAzure = {
                 if (result.responseJSON && result.responseJSON.status) errorText = result.responseJSON.status;
                 appCacheLog(errorText);
                 if (result.status === 0) onOffline();
+
+                if (errorText.startsWith("nonce mismatch") && !AppCache.isOffline) {
+                    setTimeout(() => {
+                        AppCache.Update();
+                    }, 100);
+                }
             }
         });
     },

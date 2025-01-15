@@ -33139,6 +33139,66 @@
 																	"data": []
 																},
 																{
+																	"fieldNo": "712c08e5-37ea-4332-be82-d19e66106bb9",
+																	"fieldName": "lblDisableScreenChanges",
+																	"fieldParent": "fe121fb3-fed8-4e24-c4b7-9dbecc6bd4d8",
+																	"fieldType": "sap.m.Label",
+																	"script": "",
+																	"customComponent": false,
+																	"request": [],
+																	"response": [],
+																	"attributes": [],
+																	"data": []
+																},
+																{
+																	"fieldNo": "1e8fc12d-4eb5-4af8-993b-320be575f4c8",
+																	"fieldName": "msDisableScreenChanges",
+																	"fieldParent": "fe121fb3-fed8-4e24-c4b7-9dbecc6bd4d8",
+																	"fieldType": "sap.m.MessageStrip",
+																	"script": "",
+																	"customComponent": false,
+																	"request": [],
+																	"response": [],
+																	"attributes": [
+																		{
+																			"attribute": "visible",
+																			"grouping": "Properties",
+																			"value": "false",
+																			"script": "",
+																			"translation": []
+																		},
+																		{
+																			"attribute": "type",
+																			"grouping": "Properties",
+																			"value": "Warning",
+																			"script": "",
+																			"translation": []
+																		},
+																		{
+																			"attribute": "text",
+																			"grouping": "Properties",
+																			"value": "Screen changes are unavailable in offline mode",
+																			"script": "",
+																			"translation": []
+																		},
+																		{
+																			"attribute": "styleClassMargin",
+																			"grouping": "Properties",
+																			"value": "sapUiNoMargin",
+																			"script": "",
+																			"translation": []
+																		},
+																		{
+																			"attribute": "showIcon",
+																			"grouping": "Properties",
+																			"value": "true",
+																			"script": "",
+																			"translation": []
+																		}
+																	],
+																	"data": []
+																},
+																{
 																	"fieldNo": "b0f7318f-d4a5-46c4-cec6-142e1c3b5275",
 																	"fieldName": "lblAppCacheLockScreenChanges",
 																	"fieldParent": "fe121fb3-fed8-4e24-c4b7-9dbecc6bd4d8",
@@ -51593,7 +51653,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "24.12.16.1132",
+	"ver": "25.01.14.1606",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",

@@ -1,3 +1,8 @@
+if (AppCache.isOffline) {
+    // user should never be able to remove customizations while in offline mode, otherwise refresh will cause an empty launchpad
+    return;
+}
+
 sap.m.MessageBox.warning('Are you are sure, you want to clear all your customizations?', {
     title: 'Clear Customizations',
     actions: [sap.m.MessageBox.Action.YES, sap.m.MessageBox.Action.CANCEL],
