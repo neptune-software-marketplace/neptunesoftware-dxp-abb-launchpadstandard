@@ -119,15 +119,21 @@ sap.m.Dialog.extend('sap.n.Dialog', {
 
     // trigger BeforeClose event before closing
     close: function () {
-        if (this.getContent()[0].sViewName) {
-            const applid = this.getContent()[0].sViewName.replace(/\//g, ''); // Format ID
-            if (applid) { // trigger custom beforeClose
-                if (sap.n.Apps[applid] && sap.n.Apps[applid].beforeClose) {
-                    sap.n.Apps[applid].beforeClose.forEach(function (data) {
-                        data();
-                    });
+        try {
+            const views = this.getContent();
+            if (views.length > 0) {
+                const currentView = views[0];
+                const applid = currentView.sViewName.replace(/\//g, ''); // Format ID
+                if (applid) { // trigger custom beforeClose
+                    if (sap.n.Apps[applid] && sap.n.Apps[applid].beforeClose) {
+                        sap.n.Apps[applid].beforeClose.forEach(function (beforeCloseFn) {
+                            beforeCloseFn();
+                        });
+                    }
                 }
             }
+        } catch (err) {
+            appCacheError('sap.n.Dialog', err);
         }
 
         sap.m.Dialog.prototype.close.call(this);
