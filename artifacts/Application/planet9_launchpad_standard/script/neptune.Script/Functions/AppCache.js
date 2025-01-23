@@ -1162,8 +1162,15 @@ let AppCache = {
     },
 
     getView: function (value, loadOptions) {
-        let url = '';
         const params = new URLSearchParams();
+        
+        if (AppCache.isMobile) params.append('isMobile', 'true');
+        params.append('lang', getLaunchpadLanguage());
+
+        const winParams = new URLSearchParams(window.location.search);
+        if (winParams.has('debug')) params.append('debug', true);
+
+        let url = '';
 
         // Get View from Server
         if (loadOptions.rootDir) {
@@ -1173,9 +1180,6 @@ let AppCache = {
         } else {
             url = AppCache.isPublic ? `/public/app/${value}.js` : `/app/${value}.js`;
         }
-
-        // Detect Mobile 
-        if (AppCache.isMobile) params.append('isMobile', 'true');
 
         const headers = { 'X-Requested-With': 'XMLHttpRequest' };
 
@@ -1195,13 +1199,22 @@ let AppCache = {
                 } else {
                     url += encodeURIComponent(prefix + `${value}.view.js`);
                 }
-                url += `/${loadOptions.appAuth}`
 
+                if (params.size > 0) {
+                    url += encodeURIComponent(`?${params.toString()}`);
+                }
+                
+                url += `/${loadOptions.appAuth}`
                 AppCache.hideGlobalAjaxError = true;
             } else {
                 params.append('p9Server', loadOptions.appPath);
+                
+                const remoteAppPath = [loadOptions.appPath, url];
+                if (params.size > 0) {
+                    remoteAppPath.push(`?${params.toString()}`);
+                }
 
-                const p = encodeURIComponent(loadOptions.appPath + url);
+                const p = encodeURIComponent(remoteAppPath.join(''));
                 if (loadOptions.appAuth) url = `/proxy/remote/${p}/${loadOptions.appAuth}`;
                 else url = `/proxy/${p}`;
             }
@@ -1212,11 +1225,6 @@ let AppCache = {
 
         url = AppCache.Url + url;
 
-        params.append('lang', getLaunchpadLanguage());
-
-        const winParams = new URLSearchParams(window.location.search);
-        if (winParams.has('debug')) params.append('debug', true);
-
         // Enhancement
         if (sap.n.Enhancement.RemoteSystemAuth) {
             try {
@@ -1225,8 +1233,6 @@ let AppCache = {
                 appCacheError('Enhancement RemoteSystemAuth ' + e);
             }
         }
-
-        if (params.size > 0) url += `?${params.toString()}`;
 
         request({
             datatype: 'HTML',
