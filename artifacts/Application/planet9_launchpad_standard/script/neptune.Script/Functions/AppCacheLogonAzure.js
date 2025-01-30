@@ -70,7 +70,7 @@ let AppCacheLogonAzure = {
             return;
         }
 
-        if (isCordova()) {
+        if (isCordova() || isElectron()) {
             return this.LogonCordova();
         }
         

@@ -199,9 +199,9 @@ function sapLoadLanguage(lang) {
 }
 
 function sapStorageGet(k) {
-    return jQuery.sap.storage(jQuery.sap.storage.Type.local).get(k);
+    return jQuery.sap.storage(jQuery.sap.storage.Type.session).get(k);
 }
 
 function sapStoragePut(k, v) {
-    return jQuery.sap.storage(jQuery.sap.storage.Type.local).put(k, v);
+    return jQuery.sap.storage(jQuery.sap.storage.Type.session).put(k, v);
 }

@@ -197,6 +197,8 @@ function afterOnOnline() {
 function onOnline() {
     if (isCordova()) {
         AppCache.isOffline = navigator.connection.type === Connection.NONE;
+    } else if (isElectron()) {
+        AppCache.isOffline = navigator.onLine;
     } else {
         AppCache.isOffline = false;
     }
