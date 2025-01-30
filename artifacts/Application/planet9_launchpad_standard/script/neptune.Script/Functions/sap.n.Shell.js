@@ -11,14 +11,20 @@ sap.n.Shell = {
 
     // Event - attachInit
     attachInit: function (func) {
-        let applid = AppCache.CurrentApp.replace(/\//g, '').toUpperCase();
+        const currentAppId = AppCache.CurrentApp.replace(/\//g, '').toUpperCase();
+        const { appGUID } = AppCache.LoadOptions;
 
-        if (AppCache.LoadOptions.appGUID) applid = AppCache.LoadOptions.appGUID;
-        if (!applid) return;
-        if (!sap.n.Apps[applid]) sap.n.Apps[applid] = {};
-        if (!sap.n.Apps[applid].init) sap.n.Apps[applid].init = new Array();
+        const appId = appGUID ? appGUID : currentAppId;
+        if (!appId) {
+            console.error('Event - attachInit AppID is empty', 'CurrentApp=', AppCache.CurrentApp, 'appGUID=', appGUID);
+            console.error('LoadOptions=', AppCache.LoadOptions)
+            return;
+        }
 
-        sap.n.Apps[applid].init.push(func);
+        if (!sap.n.Apps[appId]) sap.n.Apps[appId] = {};
+        if (!sap.n.Apps[appId].init) sap.n.Apps[appId].init = new Array();
+
+        sap.n.Apps[appId].init.push(func);
     },
 
     attachBeforeSuspend: function (func) {
