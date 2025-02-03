@@ -8,6 +8,12 @@ function includeIsMobileQueryParam() {
     return isCordova();
 }
 
+function includeDebug() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    return urlParams.has('debug') && urlParams.get('debug') === 'true';
+}
+
 sap.n.Planet9 = {
     function: function (opts) {
         let { id, query, method } = opts;
@@ -16,9 +22,15 @@ sap.n.Planet9 = {
         let q = '';
         if (query) {
             let params = includeIsMobileQueryParam() ? `${query}&isMobile=true` : query;
+            if (includeDebug()) {
+                params = `${params}&debug=true`;
+            }
             q = `?${encodeURIComponent(params)}`;
         } else {
             q = includeIsMobileQueryParam() ? '?isMobile=true' : '';
+            if (includeDebug()) {
+                q = q.includes('?') ? `${q}&debug=true` : '?debug=true';
+            }
         }
 
         // Public
