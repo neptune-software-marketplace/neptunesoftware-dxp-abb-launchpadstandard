@@ -967,6 +967,7 @@ let AppCache = {
 
         // Format ID
         let applid = value.replace(/\//g, '').toUpperCase();
+        AppCache.CurrentApp = applid;
 
         try {
             eval(data);
@@ -1734,19 +1735,16 @@ let AppCache = {
                 } catch (e) { }
             }
         } else if (authType === 'openid-connect') {
-            let tokenDataOIDC = localStorage.getItem('p9oidctoken');
+            const token = localStorage.getItem('p9oidctoken');
+            let tokenDataOIDC = token; //token.startsWith('{') ? token : decryptAES(token, generateKeyForLoginToken());
             if (tokenDataOIDC) {
                 try {
-                    AppCache.userInfo.oidcToken = JSON.parse(tokenData);
+                    AppCache.userInfo.oidcToken = JSON.parse(tokenDataOIDC);
                     AppCache.userInfo.oidcUser = parseJsonWebToken(AppCache.userInfo.azureToken.id_token);
                     AppCache.userInfo.authDecrypted = AppCache.userInfo.oidcToken.refresh_token;
                 } catch (e) { }
             }
         }
-
-        // localStorage.removeItem('p9azuretoken');
-        // localStorage.removeItem('p9azuretokenv2');
-        // localStorage.removeItem('p9oidctoken');
     },
 
     getUserInfo: function () {
@@ -1979,7 +1977,7 @@ let AppCache = {
         setTimeout(AppCache.clearPasscodeInputs, 1000);
 
         // Store Authentication
-        const key = generatePBKDF2Key(AppCache.Passcode, AppCache.deviceID)
+        const key = generatePBKDF2Key(AppCache.Passcode, AppCache.deviceID);
         const encrypted = encryptAES(AppCache.Auth, key.toString());
         AppCache.Encrypted = encrypted.toString();
 

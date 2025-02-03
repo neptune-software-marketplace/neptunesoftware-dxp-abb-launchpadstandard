@@ -270,7 +270,7 @@ const AppCacheLogonOIDC = {
     },
 
     _onTokenReady: function (data, resourceToken) {
-
+        // localStorage.setItem('p9oidctoken', encryptAES(JSON.stringify(data), generateKeyForLoginToken()));
         localStorage.setItem('p9oidctoken', JSON.stringify(data));
 
         if (!AppCache.userInfo) {
