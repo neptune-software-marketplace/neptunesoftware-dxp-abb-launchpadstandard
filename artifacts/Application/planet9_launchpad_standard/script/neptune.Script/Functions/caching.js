@@ -1650,6 +1650,13 @@ const _pwaResources = {};
 function setCachablePwaResources() {
     _pwaResources[launchpadUrl()] = { url: launchpadUrl(), method: 'GET', cacheName: determineCacheNameFromUrl(launchpadUrl()) };
 
+    const pwaJson = `${AppCache.Url}/public/launchpad/${AppCache.launchpadID}/pwa.json`;
+    _pwaResources[url] = {
+        method: 'GET',
+        cacheName: 'p9pwa-launchpad',
+        url: pwaJson,
+    };
+
     // commonly used libraries
     const sapVersion = sap.ui.version.split('.').slice(0, 2).join('.')
     const libs = [
