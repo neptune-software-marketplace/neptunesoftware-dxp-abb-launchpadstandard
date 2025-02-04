@@ -1658,6 +1658,7 @@ function setCachablePwaResources() {
         'sap/m/MessageToast.js',
         'sap/ui/thirdparty/jqueryui/jquery-ui-core.js',
         'sap/ui/thirdparty/jqueryui/jquery-ui-sortable.js',
+        'sap/ui/thirdparty/jqueryui/jquery-ui-widget.js',
         'sap/ui/core/format/DateFormat.js',
         'sap/ui/core/format/NumberFormat.js',
         'sap/ui/core/format/FileSizeFormat.js',
@@ -1690,7 +1691,7 @@ function setCachablePwaResources() {
     };
 
     const browserLanguage = navigator.language.replace('-', '_');
-    const languages = ['en'];
+    const languages = ['en', 'en_GB'];
     if (supportedLanguages[sapVersion] && supportedLanguages[sapVersion].includes(browserLanguage)) {
         languages.push(browserLanguage);
     }
