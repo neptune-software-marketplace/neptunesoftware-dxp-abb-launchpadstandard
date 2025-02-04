@@ -63,6 +63,7 @@ sap.ui.getCore().attachInit(function () {
             'sap.m.MessageBox',
             'sap.ui.thirdparty.jqueryui.jquery-ui-core',
             'sap.ui.thirdparty.jqueryui.jquery-ui-sortable',
+            'sap.ui.thirdparty.jqueryui.jquery-ui-widget',
         ].forEach(function (name) {
             jQuery.sap.require(name);
         });
