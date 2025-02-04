@@ -1225,6 +1225,9 @@ let AppCache = {
         }
 
         url = AppCache.Url + url;
+        if (includeDebug()) {
+            url = url.includes('?') ? `${url}&debug=true` : `${url}?debug=true`;
+        }
 
         // Enhancement
         if (sap.n.Enhancement.RemoteSystemAuth) {
@@ -1390,6 +1393,10 @@ let AppCache = {
             } catch (e) {
                 appCacheError('Enhancement RemoteSystemAuth ' + e);
             }
+        }
+
+        if (includeDebug()) {
+            url = url.includes('?') ? `${url}&debug=true` : `${url}?debug=true`;
         }
 
         request({
