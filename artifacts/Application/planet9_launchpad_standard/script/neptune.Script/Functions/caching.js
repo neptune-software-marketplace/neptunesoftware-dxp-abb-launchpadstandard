@@ -1650,11 +1650,11 @@ const _pwaResources = {};
 function setCachablePwaResources() {
     _pwaResources[launchpadUrl()] = { url: launchpadUrl(), method: 'GET', cacheName: determineCacheNameFromUrl(launchpadUrl()) };
 
-    const pwaJson = `${AppCache.Url}/public/launchpad/${AppCache.launchpadID}/pwa.json`;
-    _pwaResources[url] = {
+    const pwaJsonUrl = `${AppCache.Url}/public/launchpad/${AppCache.launchpadID}/pwa.json`;
+    _pwaResources[pwaJsonUrl] = {
         method: 'GET',
         cacheName: 'p9pwa-launchpad',
-        url: pwaJson,
+        url: pwaJsonUrl,
     };
 
     // commonly used libraries
