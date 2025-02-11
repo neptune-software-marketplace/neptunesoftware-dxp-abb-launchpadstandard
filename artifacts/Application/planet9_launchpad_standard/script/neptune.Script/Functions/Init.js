@@ -67,7 +67,9 @@ sap.ui.getCore().attachInit(function () {
         ].forEach(function (name) {
             jQuery.sap.require(name);
         });
-    } catch (e) { }
+    } catch (e) {
+        console.error('error loading library', e);
+    }
 
     // Hash Navigation - Clear topmenu/sections
     if (isSection(location.hash)) location.hash = '';

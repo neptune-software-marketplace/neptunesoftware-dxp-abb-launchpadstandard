@@ -1577,14 +1577,18 @@ async function isUrlInCache({ url, cacheName }) {
     return await cache.match(url)
 }
 
-async function addUrlToCache({ url, method, cacheName }) {
+async function addUrlToCache({ url, cacheName }) {
     if (typeof caches === 'undefined') return;
-    
-    const response = await fetch(url, { method });
-    if (response.ok) {
-        const cache = await caches.open(cacheName);
-        cache.put(url, response);
-        appCacheLog(`added to cache ${cacheName}`, url);
+
+    try {
+        const response = await fetch(url);
+        if (response.ok) {
+            const cache = await caches.open(cacheName);
+            await cache.put(url, response);
+            appCacheLog(`added to cache ${cacheName}`, url);
+        }
+    } catch (err) {
+        appCacheError(`unable to addUrlToCache ${url}`);
     }
 }
 
@@ -1648,11 +1652,10 @@ function determineCacheNameFromUrl(url) {
 // e.g. random login images or other requests which might be part 
 const _pwaResources = {};
 function setCachablePwaResources() {
-    _pwaResources[launchpadUrl()] = { url: launchpadUrl(), method: 'GET', cacheName: determineCacheNameFromUrl(launchpadUrl()) };
+    _pwaResources[launchpadUrl()] = { url: launchpadUrl(), cacheName: determineCacheNameFromUrl(launchpadUrl()) };
 
     const pwaJsonUrl = `${AppCache.Url}/public/launchpad/${AppCache.launchpadID}/pwa.json`;
     _pwaResources[pwaJsonUrl] = {
-        method: 'GET',
         cacheName: 'p9pwa-launchpad',
         url: pwaJsonUrl,
     };
@@ -1672,7 +1675,20 @@ function setCachablePwaResources() {
     ];
     for (const lib of libs) {
         const url = `/public/openui5/${sapVersion}/${lib}`
-        _pwaResources[url] = { url, method: 'GET', cacheName: determineCacheNameFromUrl(url) };
+        _pwaResources[url] = { url, cacheName: determineCacheNameFromUrl(url) };
+    }
+
+    const neptuneLibs = [
+        '/socket.io/socket.io.js',
+        '/public/neptune/external/bundle.js',
+        '/public/neptune/external/bundle-dbg.js',
+        '/public/neptune/p9library.js',
+        '/public/neptune/p9library-dbg.js',
+        '/public/neptune/aes.js',
+        '/public/application/planet9_launchpad_standard/app.css'
+    ];
+    for (const url of neptuneLibs) {
+        _pwaResources[url] = { url, cacheName: determineCacheNameFromUrl(url) };
     }
 
     // language files
@@ -1713,15 +1729,15 @@ function setCachablePwaResources() {
 
     if (sapVersion == '1.71') {
         const localdataUrl = `/public/openui5/${sapVersion}/sap/ui/core/LocaleData.js`;
-        _pwaResources[localdataUrl] = { url: localdataUrl, method: 'GET', cacheName: determineCacheNameFromUrl(localdataUrl) };    
+        _pwaResources[localdataUrl] = { url: localdataUrl, cacheName: determineCacheNameFromUrl(localdataUrl) };    
         
         const libraryPreloadUrl = `/public/openui5/${sapVersion}/sap/ui/core/library-preload.js`;
-        _pwaResources[libraryPreloadUrl] = { url: libraryPreloadUrl, method: 'GET', cacheName: determineCacheNameFromUrl(libraryPreloadUrl) };    
+        _pwaResources[libraryPreloadUrl] = { url: libraryPreloadUrl, cacheName: determineCacheNameFromUrl(libraryPreloadUrl) };    
     }
 
     for (const lang of languages) {
         const cldrUrl = `/public/openui5/${sapVersion}/sap/ui/core/cldr/${lang}.json`;
-        _pwaResources[cldrUrl] = { url: cldrUrl, method: 'GET', cacheName: determineCacheNameFromUrl(cldrUrl) };
+        _pwaResources[cldrUrl] = { url: cldrUrl, cacheName: determineCacheNameFromUrl(cldrUrl) };
 
         const messageProps = availableMessageProps[sapVersion] ?? [];
         for (const file of messageProps) {
@@ -1729,7 +1745,7 @@ function setCachablePwaResources() {
             const fileName = parts[parts.length-1];
             if (fileName === 'messagebundle' || fileName.includes(`_${lang}`)) {
                 const url = `/public/openui5/${sapVersion}/sap/${file}.properties`;
-                _pwaResources[url] = { url, method: 'GET', cacheName: determineCacheNameFromUrl(url) };
+                _pwaResources[url] = { url, cacheName: determineCacheNameFromUrl(url) };
             }
         }
 
@@ -1737,7 +1753,7 @@ function setCachablePwaResources() {
         for (const file of thirdParty) {
             if (file.startsWith(`${lang}-`)) {
                 const url = `/public/openui5/${sapVersion}/sap/ui/integration/thirdparty/webcomponents/${file}`
-                _pwaResources[url] = { url, method: 'GET', cacheName: determineCacheNameFromUrl(url) };
+                _pwaResources[url] = { url, cacheName: determineCacheNameFromUrl(url) };
             }
         }
     }
@@ -1753,14 +1769,14 @@ function setCachablePwaResources() {
         ];
         resources
             .filter(url => endsWith(url, allowedExts))
-            .forEach(url => (_pwaResources[url] = { url, method: 'GET', cacheName: determineCacheNameFromUrl(url) }));
+            .forEach(url => (_pwaResources[url] = { url, cacheName: determineCacheNameFromUrl(url) }));
 
         const allowedApi = [
             '/user/logon/types',
         ];
         resources
             .filter(url => endsWith(url, allowedApi))
-            .forEach(url => (_pwaResources[url] = { url, method: 'GET', cacheName: determineCacheNameFromUrl(url) }));
+            .forEach(url => (_pwaResources[url] = { url, cacheName: determineCacheNameFromUrl(url) }));
     }
 }
 
@@ -1769,12 +1785,12 @@ function ensurePWACache() {
 
     appCacheLog('ensure these pwa resources are available in cache', Object.keys(_pwaResources));
 
-    Object.values(_pwaResources).forEach(async ({ url, method, cacheName }) => {
+    Object.values(_pwaResources).forEach(async ({ url, cacheName }) => {
         const params = { url, cacheName };
         if (await isUrlInCache(params)) {
             appCacheLog(url, 'already exists in cache');
         } else {
-            await addUrlToCache({ url, method, cacheName });
+            await addUrlToCache({ url, cacheName });
         }
     });
 }

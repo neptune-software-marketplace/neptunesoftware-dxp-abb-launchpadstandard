@@ -18,7 +18,7 @@ async function getKeyIndexedDB() {
     const db = await openDatabase();
     return new Promise((resolve, reject) => {
         const transaction = db.transaction("keys", "readonly");
-        const getRequest = transaction.objectStore("keys").get("encryptionKey");
+        const getRequest = transaction.objectStore("keys").get("k");
         getRequest.onsuccess = () => resolve(getRequest.result?.value || null);
         getRequest.onerror = reject;
     });

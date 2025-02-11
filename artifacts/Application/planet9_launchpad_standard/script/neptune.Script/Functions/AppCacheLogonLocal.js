@@ -87,9 +87,9 @@ let AppCacheLogonLocal = {
     Relog: function (auth, process) {
         refreshingAuth = true;
         return new Promise(function (resolve, reject) {
-            let rec = Base64.decode(auth);
-
+            let rec;
             try {
+                rec = Base64.decode(auth);
                 rec = JSON.parse(rec);
             } catch (e) {
                 appCacheError(e);
