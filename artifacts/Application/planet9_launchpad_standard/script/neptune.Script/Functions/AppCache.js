@@ -1194,7 +1194,13 @@ let AppCache = {
                 // Add sap-language header, to load SAP apps with the same language as Open Edition
                 headers['sap-language'] = getLaunchpadLanguage();
 
-                const prefix = `${loadOptions.appPath}/neptune/`;
+                let prefix = '';
+                if (typeof loadOptions.appPath === 'object' && typeof loadOptions.appPath.endpoint === 'string') {
+                    prefix = `${loadOptions.appPath.endpoint}/neptune/`;
+                } else {
+                    prefix = `${loadOptions.appPath}/neptune/`;
+                }
+                
                 if (loadOptions.sapICFNode) {
                     url += encodeURIComponent(prefix + loadOptions.sapICFNode + `/${value}.view.js`);
                 } else {
