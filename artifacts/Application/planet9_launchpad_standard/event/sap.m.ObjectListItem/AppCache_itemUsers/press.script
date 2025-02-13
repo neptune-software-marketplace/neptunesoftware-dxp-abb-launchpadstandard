@@ -4,12 +4,7 @@ const data = ctx.getObject();
 AppCache.userInfo = data;
 
 // PWA - Webauthn
-if (
-    isPWAEnabled() && 
-    AppCache.enablePasscode && 
-    AppCache.userInfo.webauthid && 
-    (window.PublicKeyCredential !== undefined || typeof window.PublicKeyCredential === 'function')
-) {
+if (AppCache.userInfo.biometric) {
     sap.n.Webauthn.login(AppCache.userInfo.webauthid)
         .then(function (res) {
             // check if response is an error

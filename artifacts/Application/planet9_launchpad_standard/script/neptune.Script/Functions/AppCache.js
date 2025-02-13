@@ -205,7 +205,22 @@ let AppCache = {
         }
 
         let shouldFetchView = true;
-        const startParams = JSON.parse(JSON.stringify(loadOptions.startParams));
+        const functionPrefix = '__FUNCTION__:'
+        const startParams = JSON.parse(
+            JSON.stringify(loadOptions.startParams, function (key, value) {
+                if (typeof value === 'function') {
+                    return `${functionPrefix}${value.toString()}`;
+                }
+                return value;
+            }),
+            function (key, value) {
+                if (typeof value === 'string' && value.startsWith(functionPrefix)) {
+                    return new Function(`return (${value.slice(functionPrefix.length)})`)();
+                }
+                return value;
+            }
+        );
+
         const viewName = getAppViewName(value, loadOptions.appPath);
         p9GetView(viewName).then((data) => {
             if (typeof data !== 'undefined' && data.length > 2) {
@@ -2871,34 +2886,45 @@ let AppCache = {
 
         // PWA - Webauthn
         if (isPWAEnabled() && AppCache.enablePasscode && AppCache.config.enableWebAuth && (window.PublicKeyCredential !== undefined || typeof window.PublicKeyCredential === 'function')) {
-
+            // we continue authenticating with biometic authentication for user, unless they reject the process
+            // biometric authentication is set per user object
             AppCache.userInfo.biometric = true;
-            if (modelAppCacheUsers.oData.length > 1) AppCache.userInfo.biometric = false;
-            if (modelAppCacheUsers.oData.length === 1 && modelAppCacheUsers.oData[0].username !== AppCache.userInfo.username) AppCache.userInfo.biometric = false;
 
             if (AppCache.userInfo.biometric) {
+                sap.n.Webauthn.register(AppCache.userInfo).then(function (credential) {
+                    if (credential === 'ERROR') {
+                        AppCache.userInfo.biometric = false;
+                        ModelData.Update( AppCacheUsers, "username", AppCache.userInfo.username, AppCache.userInfo);
+                        setCacheAppCacheUsers();
 
-                sap.n.Webauthn.register(AppCache.userInfo).then(function (userid) {
-                    if (userid === 'ERROR') {
                         AppCacheNav.to('AppCache_boxPasscode', 'show');
                     } else {
                         // Store Authentication
-                        const key = generatePBKDF2Key(userid, AppCache.deviceID)
+                        const key = generatePBKDF2Key(credential, AppCache.deviceID)
                         const encrypted = encryptAES(AppCache.Auth, key.toString());
                         AppCache.Encrypted = encrypted.toString();
                         AppCache.userInfo.auth = encrypted.toString();
+                        AppCache.enableAppCacheShellUser(true);
 
-                        modelAppCacheUsers.oData[0].webauthid = userid;
+                        AppCache.userInfo.webauthid = credential;
+                        ModelData.Update(AppCacheUsers, "username", AppCache.userInfo.username, AppCache.userInfo);
                         setCacheAppCacheUsers();
+
                         AppCache.Update();
                     }
                 })
-
             } else {
+                AppCache.userInfo.biometric = false;
+                ModelData.Update( AppCacheUsers, "username", AppCache.userInfo.username, AppCache.userInfo);
+                setCacheAppCacheUsers();
+
                 AppCacheNav.to('AppCache_boxPasscode', 'show');
             }
-
         } else {
+            AppCache.userInfo.biometric = false;
+            ModelData.Update( AppCacheUsers, "username", AppCache.userInfo.username, AppCache.userInfo);
+            setCacheAppCacheUsers();
+
             AppCacheNav.to('AppCache_boxPasscode', 'show');
         }
     },
