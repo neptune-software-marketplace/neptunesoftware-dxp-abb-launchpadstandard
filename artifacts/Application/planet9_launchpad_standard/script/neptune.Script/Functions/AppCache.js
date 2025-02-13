@@ -2904,7 +2904,7 @@ let AppCache = {
                         const encrypted = encryptAES(AppCache.Auth, key.toString());
                         AppCache.Encrypted = encrypted.toString();
                         AppCache.userInfo.auth = encrypted.toString();
-                        AppCache.enableAppCacheShellUser(true);
+                        AppCacheShellUser.setEnabled(true);
 
                         AppCache.userInfo.webauthid = credential;
                         ModelData.Update(AppCacheUsers, "username", AppCache.userInfo.username, AppCache.userInfo);
