@@ -126,6 +126,7 @@ sap.n.Launchpad = {
                 dataCat = sap.n.Customization.getCategory(data.id);
                 if (!dataCat) dataCat = ModelData.FindFirst(AppCacheCategoryChild, 'id', data.id);
                 sap.n.Launchpad.handleAppTitle(AppCache.launchpadTitle);
+                console.log('updating location.hash for handleTreeNavigation category', dataCat.id);
                 location.hash = 'neptopmenu&' + dataCat.id;
                 sap.n.currentView = '';
                 break;
@@ -634,6 +635,7 @@ sap.n.Launchpad = {
                 text: menuText,
                 type: 'Transparent',
                 press: function (oEvent) {
+                    console.log('updating location.hash for BuildMenuTop', dataCat.id);
                     location.hash = `neptopmenu&${dataCat.id}`;
                     if (popSubMenu) popSubMenu.close();
                 }
@@ -936,7 +938,10 @@ sap.n.Launchpad = {
             sap.n.HashNavigation._handler();
         } else {
             const category = sap.n.Customization.getCategories()[0];
-            if (category) location.hash = 'neptopmenu&' + category.id;
+            if (category) {
+                console.log('updating location.hash for SelectHomeMenu category', category.id);
+                location.hash = 'neptopmenu&' + category.id;
+            }
         }
     },
 

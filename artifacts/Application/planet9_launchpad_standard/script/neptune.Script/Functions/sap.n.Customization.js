@@ -926,6 +926,7 @@ sap.n.Customization = {
             customizations.categories.length
         );
         sap.n.Launchpad.BuildMenuTop();
+        console.log('updating location.hash for addPage', id);
         location.hash = `neptopmenu&${id}`;
 
         // activate edit screen, on creating a new screen

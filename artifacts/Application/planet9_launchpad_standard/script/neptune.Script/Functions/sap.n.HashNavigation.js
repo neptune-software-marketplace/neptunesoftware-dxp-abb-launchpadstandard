@@ -32,7 +32,8 @@ sap.n.HashNavigation = {
                 sap.n.Launchpad.BuildTiles(category);
             } else {
                 const url = window.location.href;
-                window.location = url.substr(0, url.indexOf('#'));
+                console.log('updating window.location to', url.substring(0, url.indexOf('#')), 'using url', url)
+                window.location = url.substring(0, url.indexOf('#'));
             }
             return;
         }
