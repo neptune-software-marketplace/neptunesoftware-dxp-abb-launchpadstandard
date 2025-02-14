@@ -93,9 +93,7 @@ sap.n.HashNavigation = {
                 }
             } else {
                 sap.n.HashNavigation.lateNav = location.hash;
-                location.hash = '';
             }
-
         } else {
             location.hash = '';
             sap.n.Launchpad.SelectHomeMenu();
