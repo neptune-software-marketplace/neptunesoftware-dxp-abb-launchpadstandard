@@ -1298,7 +1298,8 @@ sap.n.Adaptive = {
     getConfig: function (id) {
         return new Promise(function (resolve) {
             if (localAppID !== "ADAPTIVEDESIGNER") {
-                if (sap.n.Adaptive.configurations[id]) return resolve(sap.n.Adaptive.configurations[id]);
+                // Return copy so we don't get issues with object references when multiple views load the same app.
+                if (sap.n.Adaptive.configurations[id]) return resolve(JSON.parse(JSON.stringify(sap.n.Adaptive.configurations[id])));
             }
 
             $.ajax({

@@ -205,27 +205,10 @@ let AppCache = {
         }
 
         let shouldFetchView = true;
-        const functionPrefix = '__FUNCTION__:'
-        const startParams = JSON.parse(
-            JSON.stringify(loadOptions.startParams, function (key, value) {
-                if (typeof value === 'function') {
-                    return `${functionPrefix}${value.toString()}`;
-                }
-                return value;
-            }),
-            function (key, value) {
-                if (typeof value === 'string' && value.startsWith(functionPrefix)) {
-                    return new Function(`return (${value.slice(functionPrefix.length)})`)();
-                }
-                return value;
-            }
-        );
-
         const viewName = getAppViewName(value, loadOptions.appPath);
         p9GetView(viewName).then((data) => {
             if (typeof data !== 'undefined' && data.length > 2) {
                 shouldFetchView = false;
-                loadOptions.startParams = startParams;
                 AppCache.initView({ viewName, value, data, loadOptions });
             }
         }).catch((err) => {
@@ -233,7 +216,6 @@ let AppCache = {
             const data = sapStorageGet(viewName);
             if (typeof data !== 'undefined') {
                 shouldFetchView = false;
-                loadOptions.startParams = startParams;
                 AppCache.initView({ viewName, value, data, loadOptions });
             }
         }).finally(() => {
@@ -985,6 +967,7 @@ let AppCache = {
         AppCache.CurrentApp = applid;
 
         try {
+            sap.n.Shell.setLoadingAppID(loadOptions.appGUID || applid);
             eval(data);
         } catch (error) {
             if (error.message) {

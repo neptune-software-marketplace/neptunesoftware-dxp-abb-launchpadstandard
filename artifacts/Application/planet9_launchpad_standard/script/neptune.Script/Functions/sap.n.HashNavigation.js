@@ -32,8 +32,8 @@ sap.n.HashNavigation = {
                 sap.n.Launchpad.BuildTiles(category);
             } else {
                 const url = window.location.href;
-                console.log('updating window.location to', url.substring(0, url.indexOf('#')), 'using url', url)
-                window.location = url.substring(0, url.indexOf('#'));
+                appCacheLog('updating window.location to', url.substring(0, url.indexOf('#')), 'using url', url);
+                window.location = url.substr(0, url.indexOf('#'));
             }
             return;
         }
@@ -93,6 +93,12 @@ sap.n.HashNavigation = {
                 }
             } else {
                 sap.n.HashNavigation.lateNav = location.hash;
+
+                // redirect only if we have tiles loaded, because sap.n.HashNavigation.lateNav is later 
+                // used to reset hash in url after tiles are reloaded, so we only force redirect if tiles have already been loaded
+                if (modelAppCacheTiles.oData.length > 0) {
+                    location.hash = '';
+                }
             }
         } else {
             location.hash = '';

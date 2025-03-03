@@ -9,12 +9,15 @@ sap.n.Shell = {
     sidepanelCloseEvents: {},
     sidepanelHelpFunction: null,
 
+    loadingAppID: null,
+
+    setLoadingAppID: function(id) {
+        this.loadingAppID = id;
+    },
+
     // Event - attachInit
     attachInit: function (func) {
-        const currentAppId = AppCache.CurrentApp.replace(/\//g, '').toUpperCase();
-        const { appGUID } = AppCache.LoadOptions;
-
-        const appId = appGUID ? appGUID : currentAppId;
+        const appId = this.loadingAppID;
         if (!appId) {
             console.error('Event - attachInit AppID is empty', 'CurrentApp=', AppCache.CurrentApp, 'appGUID=', appGUID);
             console.error('LoadOptions=', AppCache.LoadOptions)
@@ -51,9 +54,8 @@ sap.n.Shell = {
 
     // Event - attachBeforeDisplay
     attachBeforeDisplay: function (func) {
-        let applid = AppCache.CurrentApp.replace(/\//g, '').toUpperCase();
 
-        if (AppCache.LoadOptions.appGUID) applid = AppCache.LoadOptions.appGUID;
+        const applid = this.loadingAppID;
         if (!applid) return;
         
         if (!sap.n.Apps[applid]) sap.n.Apps[applid] = {};
