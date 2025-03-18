@@ -9,7 +9,7 @@ const AppCacheLogonOIDC = {
     Logon: function () {
         this.options = getAuthSettingsForUser();
 
-        if (isCordova() || isElectron()) {
+        if (isCordova()) {
             return this.LogonCordova();
         }
 

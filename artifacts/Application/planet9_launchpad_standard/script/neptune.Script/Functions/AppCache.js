@@ -1904,7 +1904,12 @@ let AppCache = {
             userData = modelAppCacheUsers.oData[0];
         } else if (data) {
             userData = data[0];
-            userData.logonData = getAuthSettingsFromLoginType(); // setting authentication settings on user object
+            if (userData.idpSource === 'local') {
+                userData.logonData = { type: 'local' };
+            } else {
+                userData.logonData = getAuthSettingsFromLoginType(); // setting authentication settings on user object
+            }
+            
             ModelData.Update(AppCacheUsers, 'username', data[0].username, userData);
             setCacheAppCacheUsers();
         }

@@ -43,18 +43,26 @@ let AppCacheLogonAzure = {
             this.popupWin.close();
         }
 
-        this.popupWin = createPopupWindow(this._loginUrl(loginHint), 'neptune-azure-login-popup', 438, 600);
-
-        // if we are unable to open the popup
-        if (!this.popupWin) {
-            sap.m.MessageBox.show('Unable to create the popup window for Azure login.', {
-                icon: sap.m.MessageBox.Icon.INFORMATION,
-                title: "Azure Login",
+        if (isElectron()) {
+            let popupTargetUrl = this._loginUrl(loginHint);
+            return new Promise(async (resolve, reject) => {
+                let popWindow = await window.desktop.openBrowser(popupTargetUrl);
+                resolve(popWindow);
             });
-            return false;
-        }
+        } else {
+            this.popupWin = createPopupWindow(this._loginUrl(loginHint), 'neptune-azure-login-popup', 438, 600);
 
-        return true;
+            // if we are unable to open the popup
+            if (!this.popupWin) {
+                sap.m.MessageBox.show('Unable to create the popup window for Azure login.', {
+                    icon: sap.m.MessageBox.Icon.INFORMATION,
+                    title: "Azure Login",
+                });
+                return false;
+            }
+
+            return true;
+        }
     },
 
     Logon: function (loginHint) {
@@ -65,20 +73,33 @@ let AppCacheLogonAzure = {
         }
 
         this.state = Date.now();
-        if (!this.tryToOpenPopup(loginHint)) {
-            appCacheError(`Logon Azure > unable to open popup window to login - ${loginHint}`)
-            return;
-        }
 
-        if (isCordova() || isElectron()) {
-            return this.LogonCordova();
+        if (isElectron()) {
+            this.tryToOpenPopup(loginHint).then((logElectron) => {
+                return this.LogonElectron(logElectron);
+            });
+        } else {
+            if (!this.tryToOpenPopup(loginHint)) {
+                appCacheError(`Logon Azure > unable to open popup window to login - ${loginHint}`)
+                return;
+            }
+
+            if (isCordova()) {
+                return this.LogonCordova();
+            }
+            
+            this.LogonDesktop();
         }
-        
-        this.LogonDesktop();
     },
 
     onLogonPopupClose: function () {
         appCacheLog(`Azure/Logon popup has been closed`);
+    },
+
+    LogonElectron: function (d) {
+        const authResponse = getHashParamsFromUrl(d);
+        console.log(authResponse);
+        this._getToken(authResponse);
     },
 
     LogonCordova: function() {

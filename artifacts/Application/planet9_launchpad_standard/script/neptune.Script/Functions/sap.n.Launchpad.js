@@ -660,6 +660,11 @@ sap.n.Launchpad = {
                     if (!dataCatChild) return;
                     if (dataCatChild.hideFromMenu) return;
 
+                    const { tiles, tilegroups } = dataCatChild;
+                    if (sap.n.Customization.isDisabled() && tilegroups.length === 0 && tiles.length === 0) {
+                        return;
+                    }
+
                     const navBtn = new sap.m.StandardListItem(nepId(), {
                         title: sap.n.Launchpad.translateTile('title', dataCatChild),
                         type: 'Active',
@@ -871,6 +876,11 @@ sap.n.Launchpad = {
                 if (!dataCatChild) return;
                 if (dataCatChild.hideFromMenu) return;
 
+                const { tilegroups, tiles } = dataCatChild;
+                if (sap.n.Customization.isDisabled() && tilegroups.length === 0 && tiles.length === 0) {
+                    return;
+                }
+
                 treeData.push({
                     id: dataCatChild.id,
                     parent: dataCat.id,
@@ -1055,7 +1065,7 @@ sap.n.Launchpad = {
         const tiles = sap.n.Customization.getTiles(dataCat.id, isFav);
         const tileGroups = sap.n.Customization.getTileGroups(dataCat.id, isFav);
         if (tiles.length === 0 && tileGroups.length === 0) return;
-
+        
         sap.n.Launchpad.currentTileGroupPage = pageCatID;
         sap.n.currentView = '';
 
@@ -1120,7 +1130,7 @@ sap.n.Launchpad = {
                     direction: 'Column',
                     alignItems: 'Start'
                 }).addStyleClass('nepGridContainer nepGridCards');
-                
+
                 addCustomData(gridContainer, {
                     type: 'category',
                     context: 'category-tiles',
@@ -1154,6 +1164,11 @@ sap.n.Launchpad = {
 
                     if (!dataCatChild) dataCatChild = sap.n.Customization.getTileGroup(data.id);
                     if (!dataCatChild) return;
+
+                    const { tiles, tilegroups } = dataCatChild;
+                    if (sap.n.Customization.isDisabled() && tilegroups.length === 0 && tiles.length === 0) {
+                        return;
+                    }
 
                     //Grid containerOpenApp
                     let tilegroupContainer = new sap.m.FlexBox(`${sectionPrefix()}${dataCat.id}${dataCatChild.id}`, {
@@ -2134,7 +2149,7 @@ sap.n.Launchpad = {
         const categoryId = current.sId.split('page')[1];
 
         const category = sap.n.Customization.getCategory(categoryId);
-        
+
         this.destroyPage(current);
         if (category) sap.n.Launchpad.BuildTiles(category);
     },
