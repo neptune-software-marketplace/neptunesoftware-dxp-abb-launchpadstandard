@@ -2432,6 +2432,7 @@ let AppCache = {
         modelAppCacheCategoryChild.setData(data.categoryChilds);
 
         setTimeout(() => {
+            fetchAppUpdates();
             if (isSemanticObjectActionPathInHashNavigation()) {
                 openTileFromSemanticObjectActionPath(getSemanticObjectActionPathFromHashNavigation());
             }
@@ -3495,7 +3496,7 @@ let AppCache = {
         setTimeout(function () {
             if (isRunningInStandaloneMode()) return;
 
-            if (AppCache.enablePwa) {
+            if (AppCache.enablePwa && !sap.ui.Device.os.ios) {
                 AppCacheInstallPWASettings.setVisible(true);
 
                 if (modeldiaPWAInstall && modeldiaPWAInstall.oData) {

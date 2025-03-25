@@ -357,7 +357,12 @@ function downloadApp(tile) {
 }
 
 function fetchAppUpdates() {
-    appCacheLog(`FetchAppUpdates`);
+    if (AppCache.isOffline) {
+        appCacheLog('Unable to fetchAppUpdates, user is offline');
+        return
+    }
+
+    appCacheLog('FetchAppUpdates');
     Array.isArray(modelAppCacheTiles.oData) && modelAppCacheTiles.oData.forEach(function (tile) {
         downloadApp(tile);
     });

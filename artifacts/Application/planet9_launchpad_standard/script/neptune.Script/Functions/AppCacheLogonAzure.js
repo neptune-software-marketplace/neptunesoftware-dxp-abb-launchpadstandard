@@ -432,7 +432,7 @@ let AppCacheLogonAzure = {
             }
         }).catch((error) => {
             refreshingAuth = false;
-            let errorText = 'Error getting refreshToken from Microsoft Entra ID';
+            let errorText = 'Error getting refreshToken (msal) from Microsoft Entra ID';
             let errorCode = '';
 
             if (error && error.message && error.message.indexOf('AADSTS700082') > -1) {
