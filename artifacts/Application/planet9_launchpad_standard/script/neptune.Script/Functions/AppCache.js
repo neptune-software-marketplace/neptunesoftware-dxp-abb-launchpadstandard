@@ -200,6 +200,10 @@ let AppCache = {
             return fetchView();
         }
 
+        if (loadOptions.load === 'download' && !AppCache.isOffline) {
+            return fetchView();
+        }
+
         if (app.invalid && !AppCache.isOffline) {
             return fetchView();
         }
