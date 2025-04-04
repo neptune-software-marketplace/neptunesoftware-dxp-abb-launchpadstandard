@@ -85,6 +85,7 @@ let AppCache = {
         });
     },
 
+    isLoadAppQueueRunning: false,
     _loadQueue: function () {
         if (refreshingAuth) {
             setTimeout(() => {
@@ -93,7 +94,10 @@ let AppCache = {
             return;
         }
 
-        if (this.loadQueue.length === 0) return;
+        if (this.loadQueue.length === 0) {
+            this.isLoadAppQueueRunning = false;
+            return;
+        }
 
         let { APPLID, OPTIONS } = this.loadQueue[0];
         this.loadQueue.splice(0, 1);
@@ -111,6 +115,12 @@ let AppCache = {
                 'OPTIONS': options || {}
             };
             this.loadQueue.push(appData);
+
+            if (!this.isLoadAppQueueRunning) {
+                this.isLoadAppQueueRunning = true;
+                this._loadQueue();
+            }
+
             return;
         }
 
