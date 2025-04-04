@@ -991,3 +991,13 @@ function setSettingsDialogScreenChangesUIState() {
     chkAppCacheDisableScreenChanges.setEnabled(!disabled);
     btnClearCustomizations.setEnabled(!disabled);
 }
+
+function ifSetLoadStartupAppOrWebApp() {
+    if (AppCache.StartApp) {
+        // We must load existing versions of the start app if we failed to fetch new ones
+        AppCache.Load(AppCache.StartApp);
+    } else if (AppCache.StartWebApp) {
+        // Start WebApp
+        AppCache.LoadWebApp(AppCache.StartWebApp);
+    }
+}

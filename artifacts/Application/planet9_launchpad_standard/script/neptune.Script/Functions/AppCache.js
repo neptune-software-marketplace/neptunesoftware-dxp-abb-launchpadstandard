@@ -2270,7 +2270,6 @@ let AppCache = {
         } else {
             afterPromise();
         }
-
     },
 
     UpdateGetData: async function () {
@@ -2337,9 +2336,7 @@ let AppCache = {
                     sap.n.Launchpad.BuildMenu();
                 }
                 
-                if (AppCache.StartApp) {
-                    AppCache.Load(AppCache.StartApp);
-                }
+                ifSetLoadStartupAppOrWebApp();
 
                 sap.n.Customization.Popover.init();
             });
@@ -2369,17 +2366,10 @@ let AppCache = {
                     resolve({ success: true, data: data });
                 },
                 error: function (result, status) {
-
                     sap.ui.core.BusyIndicator.hide();
                     busyDialogStartup.close();
 
-                    // We must load existing versions of the start app if we failed to fetch new ones
-                    if (AppCache.StartApp) {
-                        AppCache.Load(AppCache.StartApp);
-                        // Start WebApp
-                    } else if (AppCache.StartWebApp) {
-                        AppCache.LoadWebApp(AppCache.StartWebApp);
-                    }
+                    ifSetLoadStartupAppOrWebApp();
 
                     if (result.responseJSON && result.responseJSON.status && isLaunchpadNotFound(result.responseJSON.status)) {
                         showLaunchpadNotFoundError(result.responseJSON.status);
@@ -2392,10 +2382,11 @@ let AppCache = {
         })
 
         if(!res.success){
+            ifSetLoadStartupAppOrWebApp();
             return
         }
-        const data = res.data;
 
+        const data = res.data;
         if (data.status && isLaunchpadNotFound(data.status)) {
             showLaunchpadNotFoundError(data.status);
             return;
@@ -2434,6 +2425,8 @@ let AppCache = {
         modelAppCacheTiles.setData(data.tiles);
         modelAppCacheCategory.setData(data.category);
         modelAppCacheCategoryChild.setData(data.categoryChilds);
+
+        ifSetLoadStartupAppOrWebApp();
 
         setTimeout(() => {
             fetchAppUpdates();
@@ -2513,13 +2506,7 @@ let AppCache = {
                     });
                 }
 
-                if (AppCache.StartApp) {
-                    AppCache.Load(AppCache.StartApp);
-                    // Start WebApp
-                } else if (AppCache.StartWebApp) {
-                    AppCache.LoadWebApp(AppCache.StartWebApp);
-                }
-
+                ifSetLoadStartupAppOrWebApp();
                 resolve();
             });
         });
@@ -2532,7 +2519,6 @@ let AppCache = {
 
         busyDialogStartup.close();
         sap.n.Customization.Popover.init();
-
     },
 
     UpdateGetDataRemote: function (apps) {
