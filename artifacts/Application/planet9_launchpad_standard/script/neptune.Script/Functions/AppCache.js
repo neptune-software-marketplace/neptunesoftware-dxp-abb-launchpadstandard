@@ -107,7 +107,7 @@ let AppCache = {
             if (!refreshingAuth) {
                 AppCache._loadQueue();
             }
-        }, 500);
+        }, 1500);
     },
 
     //  AppCache Methods
@@ -1328,10 +1328,9 @@ let AppCache = {
                                 setCacheAppCacheData();
                             },
                             error: function (result, status) {
-
+                                appCacheLog('Get App Timestamp', 'result', result, 'status', status);
                             }
                         });
-
                     }
                 }
 
@@ -1339,6 +1338,8 @@ let AppCache = {
                 AppCache.initView({ viewName, value, data, loadOptions });
             },
             error: function (err) {
+                appCacheLog('getView 401 error', err);
+
                 if (err.status === 401) {
                     diaSessionTimeout.open();
                     return;
