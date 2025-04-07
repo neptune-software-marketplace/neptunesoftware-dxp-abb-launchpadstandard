@@ -1001,3 +1001,20 @@ function ifSetLoadStartupAppOrWebApp() {
         AppCache.LoadWebApp(AppCache.StartWebApp);
     }
 }
+
+function waitForAuth() {
+    if (!refreshingAuth) {
+        return Promise.resolve();
+    }
+
+    return new Promise((resolve) => {
+        const check = () => {
+            if (!refreshingAuth) {
+                resolve();
+            } else {
+                setTimeout(check, 100);
+            }
+        };
+        check();
+    });
+};

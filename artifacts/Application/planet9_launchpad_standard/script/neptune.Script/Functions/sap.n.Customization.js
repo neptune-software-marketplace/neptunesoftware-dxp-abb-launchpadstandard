@@ -342,16 +342,16 @@ sap.n.Customization = {
         if (!this.isP9Supported()) return Promise.resolve({});
 
         // make a call to p9 to fetch customizations for device
-        return new Promise((resolve, _reject) => {
-            jsonRequest({
+        return waitForAuth().then(() => {
+            return jsonRequest({
                 type: "GET",
                 url: this.getP9URL(this.getDeviceType()),
             }).then((res) => {
                 if (this.isEmpty(res)) {
-                    return resolve({});
+                    return {};
                 }
 
-                return resolve(res["config"]);
+                return res["config"];
             });
         });
     },
