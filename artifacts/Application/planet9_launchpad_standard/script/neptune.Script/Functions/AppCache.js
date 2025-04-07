@@ -1196,6 +1196,10 @@ let AppCache = {
 
         const headers = { 'X-Requested-With': 'XMLHttpRequest' };
 
+        if (AppCache.userInfo.azureToken) {
+            headers.Authorization = 'Bearer ' + AppCache.userInfo.azureToken.id_token;
+        }
+
         // Remote System
         if (loadOptions.appPath) {
             // Remote System
