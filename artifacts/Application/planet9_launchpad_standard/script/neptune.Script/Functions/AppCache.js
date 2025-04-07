@@ -85,7 +85,6 @@ let AppCache = {
         });
     },
 
-    isLoadAppQueueRunning: false,
     _loadQueue: function () {
         if (refreshingAuth) {
             setTimeout(() => {
@@ -95,13 +94,20 @@ let AppCache = {
         }
 
         if (this.loadQueue.length === 0) {
-            this.isLoadAppQueueRunning = false;
             return;
         }
 
         let { APPLID, OPTIONS } = this.loadQueue[0];
         this.loadQueue.splice(0, 1);
         this.Load(APPLID, OPTIONS);
+    },
+
+    clearLoadQueueAfterAuthRefresh: function() {
+        setTimeout(() => {
+            if (!refreshingAuth) {
+                AppCache._loadQueue();
+            }
+        }, 500);
     },
 
     //  AppCache Methods
@@ -115,14 +121,6 @@ let AppCache = {
                 'OPTIONS': options || {}
             };
             this.loadQueue.push(appData);
-
-            setTimeout(() => {
-                if (!this.isLoadAppQueueRunning) {
-                    this.isLoadAppQueueRunning = true;
-                    this._loadQueue();
-                }
-            }, 1500);
-
             return;
         }
 
@@ -1781,6 +1779,7 @@ let AppCache = {
                 appCacheLog(data);
                 AppCache.afterUserInfo(false, data);
                 AppCache_boxLogon.setVisible(false);
+                AppCache.clearLoadQueueAfterAuthRefresh();
             },
             function (result, error) {
                 appCacheError('Error getting User Info (getUserInfo)');
@@ -1824,6 +1823,7 @@ let AppCache = {
                             setCacheAppCacheUsers();
                         }
                     }
+                    AppCache.clearLoadQueueAfterAuthRefresh();
                     resolve('Ok');
                 },
                 function (result, _err) {

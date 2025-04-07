@@ -12,6 +12,7 @@ let AppCacheLogonLocal = {
 
         AppCache.Auth = Base64.encode(JSON.stringify(rec));
 
+        refreshingAuth = true;
         jsonRequest({
             url: AppCache.Url + '/user/logon/local' + AppCache._getLoginQuery(),
             data: JSON.stringify(rec),
@@ -19,6 +20,9 @@ let AppCacheLogonLocal = {
                 'login-path': getLoginPath(),
             },
             success: function (data) {
+                refreshingAuth = false;
+                AppCache.clearLoadQueueAfterAuthRefresh();
+
                 if (data.status && data.status === 'UpdatePassword' && !isCordova()) {
                     const url = new URL(data.link, location.href);
                     url.searchParams.append('reason', data.reason || 'other');
@@ -104,6 +108,8 @@ let AppCacheLogonLocal = {
                 },  
                 success: function (data) {
                     refreshingAuth = false;
+                    AppCache.clearLoadQueueAfterAuthRefresh();
+
                     if (data.status && data.status === 'UpdatePassword') {
                         const url = new URL(data.link, location.href);
                         url.searchParams.append('reason', data.reason || 'other');

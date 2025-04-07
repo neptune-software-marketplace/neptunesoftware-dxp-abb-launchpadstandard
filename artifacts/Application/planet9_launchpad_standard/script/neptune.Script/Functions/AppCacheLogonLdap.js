@@ -8,6 +8,7 @@ let AppCacheLogonLdap = {
         rec.loginid = AppCache_loginTypes.getSelectedKey();
         AppCache.Auth = Base64.encode(JSON.stringify(rec));
 
+        refreshingAuth = true;
         const { path } = getAuthSettingsForUser();
         jsonRequest({
             url: `${AppCache.Url}/user/logon/ldap/${path}${AppCache._getLoginQuery()}`,
@@ -16,6 +17,9 @@ let AppCacheLogonLdap = {
                 'login-path': getLoginPath(),
             },
             success: function (data) {
+                refreshingAuth = false;
+                AppCache.clearLoadQueueAfterAuthRefresh();
+
                 AppCache.getUserInfo();
             },
             error: function (result, status) {
@@ -43,6 +47,7 @@ let AppCacheLogonLdap = {
                 },
                 success: function (data) {
                     refreshingAuth = false;
+                    AppCache.clearLoadQueueAfterAuthRefresh();
                     resolve(data);
                 },
                 error: function (result, status) {

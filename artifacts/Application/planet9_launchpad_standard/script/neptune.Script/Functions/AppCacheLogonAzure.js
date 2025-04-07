@@ -554,6 +554,7 @@ let AppCacheLogonAzure = {
             headers: { 'Authorization': 'Bearer ' + idToken, 'login-path': getLoginPath() },
             success: (data) => {
                 refreshingAuth = false;
+                AppCache.clearLoadQueueAfterAuthRefresh();
 
                 switch (process) {
                     case 'pin':

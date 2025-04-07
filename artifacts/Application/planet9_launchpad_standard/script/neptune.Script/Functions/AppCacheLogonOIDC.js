@@ -67,7 +67,6 @@ const AppCacheLogonOIDC = {
 
                     AppCacheLogonOIDC._onTokenReady(oidcData.tokenSet);
                     AppCache.getUserInfo();
-
                 });
             });
         }).catch((err) => {
@@ -184,6 +183,7 @@ const AppCacheLogonOIDC = {
                 },
                 success: (data) => {
                     refreshingAuth = false;
+                    AppCache.clearLoadQueueAfterAuthRefresh();
                     appCacheLog('OIDC: Successfully logged on to P9. Starting process: Get User Info');
                     appCacheLog(data);
 
@@ -233,6 +233,8 @@ const AppCacheLogonOIDC = {
                 },
                 success: (data) => {
                     refreshingAuth = false;
+                    AppCache.clearLoadQueueAfterAuthRefresh();
+                    
                     switch (process) {
                         case 'pin':
                             appCacheLog(`OIDC: Successfully logged on to P9. Starting process: ${process}`);

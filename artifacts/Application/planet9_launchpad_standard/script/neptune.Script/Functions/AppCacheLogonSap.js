@@ -10,6 +10,7 @@ let AppCacheLogonSap = {
         };
         AppCache.Auth = Base64.encode(JSON.stringify(rec));
         
+        refreshingAuth = true;
         const { path } = getAuthSettingsForUser();
         jsonRequest({
             url: `${AppCache.Url}/user/logon/sap/${path}${AppCache._getLoginQuery()}`,
@@ -18,6 +19,9 @@ let AppCacheLogonSap = {
                 'login-path': getLoginPath(),
             },
             success: function (data) {
+                refreshingAuth = false;
+                AppCache.clearLoadQueueAfterAuthRefresh();
+
                 if (data.status === 'UpdatePassword') {
                     sap.ui.core.BusyIndicator.hide();
                     AppCache_formLogon.setVisible(false);      
@@ -53,7 +57,7 @@ let AppCacheLogonSap = {
                 headers: {
                     'login-path': getLoginPath(),
                 },
-                success: function (data) {                    
+                success: function (data) {           
                     if (data.status === 'UpdatePassword') {                        
                         sap.ui.core.BusyIndicator.hide();
                         jQuery.sap.require('sap.m.MessageToast');
@@ -102,6 +106,7 @@ let AppCacheLogonSap = {
                 },
                 success: function (data) {
                     refreshingAuth = false;
+                    AppCache.clearLoadQueueAfterAuthRefresh();
                     resolve(data);
                 },
                 error: function (result, status) {

@@ -12,6 +12,7 @@ let AppCacheLogonSaml = {
                 fetchUserInfo(
                     function (data) {
                         refreshingAuth = false;
+                        AppCache.clearLoadQueueAfterAuthRefresh();
                         AppCache.afterUserInfo(false, data);
                         loginWin.close();
                     },
@@ -38,6 +39,7 @@ let AppCacheLogonSaml = {
                 fetchUserInfo(
                     function (data) {
                         refreshingAuth = false;
+                        AppCache.clearLoadQueueAfterAuthRefresh();
 
                         // Clear
                         NumPad.attempts = 0;
