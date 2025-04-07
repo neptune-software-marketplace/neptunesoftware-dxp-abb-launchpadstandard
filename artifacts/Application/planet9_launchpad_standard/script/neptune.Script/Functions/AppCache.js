@@ -116,10 +116,12 @@ let AppCache = {
             };
             this.loadQueue.push(appData);
 
-            if (!this.isLoadAppQueueRunning) {
-                this.isLoadAppQueueRunning = true;
-                this._loadQueue();
-            }
+            setTimeout(() => {
+                if (!this.isLoadAppQueueRunning) {
+                    this.isLoadAppQueueRunning = true;
+                    this._loadQueue();
+                }
+            }, 1500);
 
             return;
         }
