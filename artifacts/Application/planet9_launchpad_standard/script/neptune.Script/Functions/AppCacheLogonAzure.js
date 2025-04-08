@@ -424,11 +424,11 @@ let AppCacheLogonAzure = {
                 this.GetTokenPopup({ scopes: this.options.scope.split(' '), account }).then((resourceToken) => {
                     refreshingAuth = false;
                     this._onTokenReadyMsal(azureToken, resourceToken);
-                    this._loginP9(azureToken.idToken, process);
+                    if (userIsNotLoggedIn) this._loginP9(azureToken.idToken, process);
                 });
             } else {
                 this._onTokenReadyMsal(azureToken);
-                this._loginP9(azureToken.idToken, process);
+                if (userIsNotLoggedIn) this._loginP9(azureToken.idToken, process);
             }
         }).catch((error) => {
             refreshingAuth = false;
