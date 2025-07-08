@@ -122,6 +122,7 @@ function cordovaRequest(opts) {
                 if (result.status && result.status === 'UpdatePassword') {
                     let newUrl = new URL(AppCache.Url + result.link);
                     newUrl.searchParams.append('reason', result.reason || 'other');
+                    newUrl.searchParams.append('redirect', encodeURIComponent(location.href));
                     location.replace(newUrl.href.toString());
                 }
 

@@ -228,7 +228,7 @@ let AppCache = {
         }).catch((err) => {
             appCacheLog('AppCache.Load: catch, while trying to load view from p9GetView', err);
             const data = sapStorageGet(viewName);
-            if (typeof data !== 'undefined') {
+            if (data) {
                 shouldFetchView = false;
                 AppCache.initView({ viewName, value, data, loadOptions });
             }
@@ -571,7 +571,7 @@ let AppCache = {
         if (user) {
             user.lastLogin = Date.now();
             ModelData.Update(AppCacheUsers, 'username', AppCache.userInfo.username, user);
-            setCacheAppCacheUsers();
+            persistAppCacheUsers();
         }
     },
 
@@ -607,7 +607,8 @@ let AppCache = {
 
             // In offline mode, when BuildMenu is first called, cache is not loaded, causing an empty launchpad screen
             if (AppCache.isOffline) {
-                sap.n.Launchpad.BuildMenu();
+                const navigateToHome = !AppCache.StartApp;
+                sap.n.Launchpad.BuildMenu(navigateToHome);
             }
 
             sap.n.Launchpad.RebuildTiles();
@@ -1260,6 +1261,8 @@ let AppCache = {
             }
         }
 
+        const isExpectedResponseJs = url.includes('.js') || url.includes('.json') || url.includes('debug=true');
+
         request({
             datatype: 'HTML',
             type: 'GET',
@@ -1267,6 +1270,11 @@ let AppCache = {
             headers,
             success: function (data, status, request) {
                 AppCache.hideGlobalAjaxError = true;
+
+                if (isExpectedResponseJs && typeof data === 'string' && data.trim().startsWith('<')) {
+                    AppCache.showTileErrorMessage(`App ${value} return an html response instead of js/json`);
+                    return;
+                }
 
                 // Save in DB/LocalStorage
                 const viewName = getAppViewName(value, loadOptions.appPath);
@@ -1344,7 +1352,7 @@ let AppCache = {
             error: function (err) {
                 appCacheLog('getView 401 error', err);
 
-                if (err.status === 401) {
+                if (err.status === 401 && !refreshingAuth) {
                     diaSessionTimeout.open();
                     return;
                 }
@@ -1546,6 +1554,7 @@ let AppCache = {
     },
 
     Lock: function () {
+        clearSAPCookies();
         AppCache_boxLogon.setVisible(true);
 
         const { type: authType } = getAuthSettingsForUser();
@@ -1598,6 +1607,7 @@ let AppCache = {
     },
 
     Logout: function () {
+        clearSAPCookies();
         AppCache_boxLogon.setVisible(true);
 
         const { type: authType } = getAuthSettingsForUser();
@@ -1764,16 +1774,6 @@ let AppCache = {
                     }
                 } catch (e) { }
             }
-        } else if (authType === 'openid-connect') {
-            const token = localStorage.getItem('p9oidctoken');
-            let tokenDataOIDC = token; //token.startsWith('{') ? token : decryptAES(token, generateKeyForLoginToken());
-            if (tokenDataOIDC) {
-                try {
-                    AppCache.userInfo.oidcToken = JSON.parse(tokenDataOIDC);
-                    AppCache.userInfo.oidcUser = parseJsonWebToken(AppCache.userInfo.azureToken.id_token);
-                    AppCache.userInfo.authDecrypted = AppCache.userInfo.oidcToken.refresh_token;
-                } catch (e) { }
-            }
         }
     },
 
@@ -1825,7 +1825,7 @@ let AppCache = {
 
                             AppCacheUserActionText.setText(user.name || user.username);
                             ModelData.Update(AppCacheUsers, 'username', user.username, user);
-                            setCacheAppCacheUsers();
+                            persistAppCacheUsers();
                         }
                     }
                     AppCache.clearLoadQueueAfterAuthRefresh();
@@ -1841,7 +1841,6 @@ let AppCache = {
     },
 
     afterSetUserInfo: function () {
-        
         if (refreshingAuth) {
             setTimeout(() => {
                 this.afterSetUserInfo();
@@ -1853,11 +1852,12 @@ let AppCache = {
 
         // Azure/OIDC - No PIN Code
         if (!AppCache.enablePasscode) {
+            // we don't need the token we are already logged into p9 via OIDC method
+            clearP9OidcToken();
+
             if (AppCache.userInfo) {
                 if (AppCache.userInfo.azureToken) userData.azureToken = AppCache.userInfo.azureToken;
                 if (AppCache.userInfo.azureUser) userData.azureUser = AppCache.userInfo.azureUser;
-                if (AppCache.userInfo.oidcToken) userData.oidcToken = AppCache.userInfo.oidcToken;
-                if (AppCache.userInfo.oidcUser) userData.oidcUser = AppCache.userInfo.oidcUser;
             }
         }
 
@@ -1926,13 +1926,13 @@ let AppCache = {
         } else if (data) {
             userData = data[0];
             if (userData.idpSource === 'local') {
-                userData.logonData = { type: 'local' };
-            } else {
+                userData.logonData = { type: 'local' };            
+            } else if (!userData.logonData) {
                 userData.logonData = getAuthSettingsFromLoginType(); // setting authentication settings on user object
             }
             
             ModelData.Update(AppCacheUsers, 'username', data[0].username, userData);
-            setCacheAppCacheUsers();
+            persistAppCacheUsers();
         }
 
         if (typeof userData.logonData === 'undefined') {
@@ -1964,6 +1964,8 @@ let AppCache = {
     },
 
     SetPasscode: function () {
+        NumPad.Clear();
+
         if (userIsNotLoggedIn()) return;
 
         const p1 = AppCache_inPasscode1;
@@ -2039,7 +2041,7 @@ let AppCache = {
         if (modelAppCacheUsers.oData.length === 1 && modelAppCacheUsers.oData[0].username !== AppCache.userInfo.username) AppCache.userInfo.biometric = false;
 
         // Save User Data  
-        setCacheAppCacheUsers();
+        persistAppCacheUsers();
         modelAppCacheUsers.refresh();
 
         // Store passcode to OS SAMKeychain library or Android SecureStorage
@@ -2084,36 +2086,36 @@ let AppCache = {
                                 // Encryption success
                                 if (result.withFingerprint || result.withBackup) {
                                     AppCache.userInfo.token = result.token;
-                                    setCacheAppCacheUsers();
+                                    persistAppCacheUsers();
                                     AppCache.setEnablePasscodeEntry();
                                 } else {
                                     AppCache.biometricAuthentication = false;
                                     AppCache.userInfo.biometric = false;
-                                    setCacheAppCacheUsers();
+                                    persistAppCacheUsers();
                                     AppCache.setEnablePasscodeEntry();
                                 }
                             }, function (error) {
                                 AppCache.biometricAuthentication = false;
                                 AppCache.userInfo.biometric = false;
-                                setCacheAppCacheUsers();
+                                persistAppCacheUsers();
                                 AppCache.setEnablePasscodeEntry();
                             });
                         } else {
                             AppCache.biometricAuthentication = false;
                             AppCache.userInfo.biometric = false;
-                            setCacheAppCacheUsers();
+                            persistAppCacheUsers();
                             AppCache.setEnablePasscodeEntry();
                         }
                     }, function (error) {
                         AppCache.biometricAuthentication = false;
                         AppCache.userInfo.biometric = false;
-                        setCacheAppCacheUsers();
+                        persistAppCacheUsers();
                         AppCache.setEnablePasscodeEntry();
                     });
                 } catch (error) {
                     AppCache.biometricAuthentication = false;
                     AppCache.userInfo.biometric = false;
-                    setCacheAppCacheUsers();
+                    persistAppCacheUsers();
                     AppCache.setEnablePasscodeEntry();
                 }
 
@@ -2132,14 +2134,14 @@ let AppCache = {
                             console.log(error);
                             AppCache.biometricAuthentication = false;
                             AppCache.userInfo.biometric = false;
-                            setCacheAppCacheUsers();
+                            persistAppCacheUsers();
                             AppCache.setEnablePasscodeEntry();
                         }, serviceKey, AppCache.Passcode);
                     } else {
                         console.log(res);
                         AppCache.biometricAuthentication = false;
                         AppCache.userInfo.biometric = false;
-                        setCacheAppCacheUsers();
+                        persistAppCacheUsers();
                         AppCache.setEnablePasscodeEntry();
                     }
 
@@ -2147,14 +2149,14 @@ let AppCache = {
                     console.log(error);
                     AppCache.biometricAuthentication = false;
                     AppCache.userInfo.biometric = false;
-                    setCacheAppCacheUsers();
+                    persistAppCacheUsers();
                     AppCache.setEnablePasscodeEntry();
                 });
 
             } else {
                 AppCache.biometricAuthentication = false;
                 AppCache.userInfo.biometric = false;
-                setCacheAppCacheUsers();
+                persistAppCacheUsers();
                 AppCache.setEnablePasscodeEntry();
             }
 
@@ -2220,6 +2222,11 @@ let AppCache = {
         ].forEach((model) => {
             model.setData([]);
         });
+
+        persistExistingDeviceId()
+        setCacheDataSettings();
+        persistAppCacheUsers();
+        setCachediaPWAInstall();
     },
 
     Update: function () {
@@ -2878,6 +2885,7 @@ let AppCache = {
         AppCache_inPasscode1.onAfterRendering = pincodeInputAfterRendering;
         AppCache_inPasscode2.onAfterRendering = pincodeInputAfterRendering;
         
+        clearSAPCookies();
         AppCache.handleUserMenu();
 
         // PWA - Webauthn
@@ -2891,8 +2899,7 @@ let AppCache = {
                     if (credential === 'ERROR') {
                         AppCache.userInfo.biometric = false;
                         ModelData.Update( AppCacheUsers, "username", AppCache.userInfo.username, AppCache.userInfo);
-                        setCacheAppCacheUsers();
-
+                        persistAppCacheUsers();
                         AppCacheNav.to('AppCache_boxPasscode', 'show');
                     } else {
                         // Store Authentication
@@ -2904,7 +2911,7 @@ let AppCache = {
 
                         AppCache.userInfo.webauthid = credential;
                         ModelData.Update(AppCacheUsers, "username", AppCache.userInfo.username, AppCache.userInfo);
-                        setCacheAppCacheUsers();
+                        persistAppCacheUsers();
 
                         AppCache.Update();
                     }
@@ -2912,14 +2919,14 @@ let AppCache = {
             } else {
                 AppCache.userInfo.biometric = false;
                 ModelData.Update( AppCacheUsers, "username", AppCache.userInfo.username, AppCache.userInfo);
-                setCacheAppCacheUsers();
+                persistAppCacheUsers();
 
                 AppCacheNav.to('AppCache_boxPasscode', 'show');
             }
         } else {
             AppCache.userInfo.biometric = false;
             ModelData.Update( AppCacheUsers, "username", AppCache.userInfo.username, AppCache.userInfo);
-            setCacheAppCacheUsers();
+            persistAppCacheUsers();
 
             AppCacheNav.to('AppCache_boxPasscode', 'show');
         }
@@ -2933,6 +2940,7 @@ let AppCache = {
     },
 
     setEnableUsersScreen: function () {
+        clearSAPCookies();
         closeContentNavigator();
         sap.n.Launchpad.setHideTopButtons(true);
         AppCacheShellUser.setIcon('sap-icon://fa-solid/user-circle');
@@ -2975,6 +2983,7 @@ let AppCache = {
     },
 
     setEnableLogonScreen: function () {
+        clearSAPCookies();
         closeContentNavigator();
         sap.n.Launchpad.setHideTopButtons(true);
 
@@ -3351,13 +3360,7 @@ let AppCache = {
             }
         }
 
-        // Device ID
-        AppCache.deviceID = localStorage.getItem('AppCacheID');
-
-        if (!AppCache.deviceID) {
-            AppCache.deviceID = ModelData.genID();
-            localStorage.setItem('AppCacheID', AppCache.deviceID);
-        }
+        setDeviceId();
 
         // Reset Password Link
         if (AppCache.passUrlReset && AppCache.passUrlReset !== 'null') AppCache_resetPassword.setVisible(true);

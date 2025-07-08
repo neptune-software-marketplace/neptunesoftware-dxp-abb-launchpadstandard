@@ -40277,8 +40277,9 @@
 								{
 									"attribute": "afterClose",
 									"grouping": "Events",
-									"value": "AppCache.Lock();",
-									"script": "AppCache.Lock();",
+									"value": "Anonymous Function",
+									"script": "file://event/sap.m.Dialog/diaSessionTimeout/afterClose.js",
+									"language": "javascript",
 									"translation": []
 								}
 							],
@@ -51677,7 +51678,7 @@
 		}
 	],
 	"componentInterface": [],
-	"ver": "25.04.08.1545",
+	"ver": "25.07.01.1509",
 	"application": "planet9_launchpad_standard",
 	"title": "",
 	"description": "Planet 9 Launchpad ",

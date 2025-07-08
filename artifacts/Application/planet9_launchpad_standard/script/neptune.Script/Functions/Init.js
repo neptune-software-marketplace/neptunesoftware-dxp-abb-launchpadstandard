@@ -18,6 +18,8 @@ let enableFavDnD = false;
 //  is in process.
 let refreshingAuth = false;
 
+clearSAPCookies();
+
 // Get URL Parameters
 let params = {};
 if (location.search) {

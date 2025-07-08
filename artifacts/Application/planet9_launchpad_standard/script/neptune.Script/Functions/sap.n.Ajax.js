@@ -88,7 +88,7 @@ sap.n.Ajax = {
                 location.hash = '';
             }
 
-            sap.n.Launchpad.BuildMenu();
+            sap.n.Launchpad.BuildMenu(!AppCache.StartApp);
             sap.n.Launchpad.RebuildTiles();
         }
 

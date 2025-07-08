@@ -113,6 +113,12 @@ const NumPad = {
     },
 
     enterKey: function (keyValue) {
+        try {
+            if (Number.isNaN(Number.parseInt(keyValue))) {
+                return;
+            }
+        } catch (err) { return; }
+        
         // only purpose of these checkboxes is to keep count
         // on how many characters have been entered
         const checkboxes = [
@@ -120,29 +126,27 @@ const NumPad = {
             Passcode5, Passcode6, Passcode7, Passcode8,
         ];
 
-        let checked = 0;
-        for (const cb of checkboxes) {
-            if (cb.getSelected() === true) {
-                checked += 1;
-                continue;
-            }
-
-            if (cb.getSelected() === false) {
+        let count = 0;
+        for (let i = 0; i < AppCache.passcodeLength; i++) {
+            const cb = checkboxes[i];
+            
+            if (cb.getSelected()) {
+                count += 1;
+            } else {
                 cb.setSelected(true);
-                checked += 1;
-
                 NumPad.numValue += keyValue;
-
-                // possible keycode length can be 4, 6 or 8 characters
-                if (checked === AppCache.passcodeLength) {
-                    setTimeout(function () {
-                        NumPad.Logon();
-                    }, 50);
-                    NumPad.setPasscodeBusy(true);
-                }
-
-                return;
+                count += 1;
+                break;
             }
+        }
+
+        if (count >= AppCache.passcodeLength) {
+            NumPad.setPasscodeBusy(true);
+            requestAnimationFrame(() => {
+                setTimeout(function () {
+                    NumPad.Logon();
+                }, 50);
+            });
         }
     },
 
@@ -180,6 +184,7 @@ const NumPad = {
                 AppCache.Encrypted = AppCache.userInfo.auth;
             } else {
                 NumPad.Clear();
+                NumPad.setPasscodeBusy(false);
                 AppCache.Logout();
                 sap.m.MessageToast.show(AppCache_tNoUserInfo.getText());
                 sap.ui.core.BusyIndicator.hide();
@@ -193,6 +198,7 @@ const NumPad = {
             const key = generatePBKDF2Key(NumPad.numValue, AppCache.deviceID);
             auth = decryptAES(AppCache.Encrypted, key.toString());
         } catch (err) {
+            NumPad.setPasscodeBusy(false);
             appCacheLog('NumPad.Logon: decryption error');
         }
 
@@ -301,6 +307,8 @@ const NumPad = {
                         sap.m.MessageToast.show(AppCache_tWrongUserNamePass.getText());
                         AppCache.Logout();
                     }
+                }).catch(() => {
+                    NumPad.setPasscodeBusy(false);
                 });
         }
     }

@@ -584,6 +584,12 @@ function p9UserLogout(authenticationType = '') {
             appCacheLog(`${authenticationType}: Successfully logged out`);
 
             if (!AppCache.isMobile) {
+                const logoutUrl = AppCache.userInfo?.logonData?.logoutUrl
+                if (logoutUrl) {
+                    location.href = logoutUrl;
+                    return;
+                }
+
                 location.hash = '';
                 location.reload();
             }
@@ -809,7 +815,7 @@ function hasUserLoggedOut() {
     fetchUserInfo(
         () => {},
         ({ status }) => {
-            if (status === 401) {
+            if (status === 401 && !refreshingAuth) {
                 diaSessionTimeout && diaSessionTimeout.open();
             }
         }
@@ -966,21 +972,28 @@ function openTileFromSemanticObjectActionPath(semanticPath) {
 }
 
 function genericAuthRelogin(authType, auth) {
-    const reloginFuncs = {
-        'saml': AppCacheLogonSaml.Relog,
-        'openid-connect': AppCacheLogonOIDC.Relog,
-        'azure-bearer': AppCacheLogonAzure.Relog,
-        'local': AppCacheLogonLocal.Relog,
-        'ldap': AppCacheLogonLdap.Relog,
-        'sap': AppCacheLogonSap.Relog,
-    };
-    
-    const func = reloginFuncs[authType];
-    if (func) {
-        return func(auth);
+    switch (authType) {
+        case 'saml':
+            AppCacheLogonSaml.Relog(auth);
+            break;
+        case 'openid-connect':
+            AppCacheLogonOIDC.Relog(auth);
+            break;
+        case 'azure-bearer':
+            AppCacheLogonAzure.Relog(auth);
+            break;
+        case 'local':
+            AppCacheLogonLocal.Relog(auth);
+            break;
+        case 'ldap':
+            AppCacheLogonLdap.Relog(auth);
+            break;
+        case 'sap':
+            AppCacheLogonSap.Relog(auth);
+            break;
+        default:
+            return Promise.reject(new Error(`Unsupported auth type: ${auth.type}`, auth));
     }
-    
-    return Promise.reject(new Error(`Unsupported auth type: ${auth.type}`, auth));
 }
 
 function setSettingsDialogScreenChangesUIState() {
@@ -1017,4 +1030,91 @@ function waitForAuth() {
         };
         check();
     });
-};
+}
+
+function persistAppCacheUsers() {
+    if (modelAppCacheUsers.oData.length > 0) {
+        modelAppCacheUsers.oData.forEach((user, idx) => {
+            modelAppCacheUsers.setProperty(`/${idx}/authDecrypted`, null)
+        });
+    }
+
+    setCacheAppCacheUsers();
+}
+
+function hideEmptyTileGroups(tiles, tilegroups) {
+    if (!sap.n.Customization.isDisabled()) return false;
+
+    if (tiles.length === 0 && tilegroups.length === 0) {
+        return true;
+    } else if (tiles.length === 0) {
+        const groups = tilegroups.map(tg => {
+            const category = sap.n.Customization.getCategory(tg.id);
+            if (category) return category;
+
+            const tilegroup = sap.n.Customization.getTileGroup(tg.id);
+            if (tilegroup) return tilegroup;
+
+            return false;
+        }).filter(Boolean);
+
+        if (groups.every(tg => tg.tiles.length === 0 && tg.tilegroups.length === 0)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function refreshUserLogonOnOfflineToOnlineMode() {
+    const process = 'refresh';
+    const user = AppCache.userInfo;
+
+    if (user) {
+        const { type } = getAuthSettingsForUser();
+        const decrypted = user.authDecrypted;
+
+        // if decryption fails we have nothing for relogin
+        if (typeof decrypted === 'undefined') return;
+
+        if (type === 'local') AppCacheLogonLocal.Relog(decrypted, process);
+    }
+}
+
+function clearSAPCookies() {
+    document.cookie.split(';').forEach((cookie) => {
+        const name = cookie.split('=')[0].trim();
+        if (name === 'MYSAPSSO2' || name.startsWith('SAP_SESSIONID') || name.startsWith('sap-')) {
+            removeCookie(name);
+        }
+    });
+}
+
+function removeCookie(name) {
+    const expires = 'expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    const domainParts = location.hostname.split('.');
+
+    if (domainParts.length < 2) {
+        document.cookie = `${name}=; ${expires};`;
+        return;
+    }
+
+    for (let i = 0; i <= domainParts.length-2; i++) {
+        const domain = domainParts.slice(i).join('.');
+        document.cookie = `${name}=; ${expires}; domain=.${domain}`;
+        document.cookie = `${name}=; ${expires};`;
+    }
+}
+
+function setDeviceId() {
+    AppCache.deviceID = localStorage.getItem('AppCacheID');
+
+    if (!AppCache.deviceID) {
+        AppCache.deviceID = ModelData.genID();
+        localStorage.setItem('AppCacheID', AppCache.deviceID);
+    }
+}
+
+function persistExistingDeviceId() {
+    localStorage.setItem('AppCacheID', AppCache.deviceID);
+}

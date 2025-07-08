@@ -173,6 +173,7 @@ function afterOnOnline() {
     AppCacheUserActionChangePassword.setVisible(!AppCache.isOffline && authType === 'local' && !isChpassDisabled());
 
     if (!AppCache.isOffline) {
+        refreshUserLogonOnOfflineToOnlineMode();
         setSettingsDialogScreenChangesUIState();
         fetchAppUpdates();
 

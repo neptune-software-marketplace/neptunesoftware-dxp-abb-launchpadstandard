@@ -624,6 +624,10 @@ sap.n.Launchpad = {
         
         sap.n.Customization.getCategories().forEach(function (dataCat) {
             if (dataCat.hideFromMenu) return;
+
+            if (hideEmptyTileGroups(dataCat.tiles, dataCat.tilegroups)) {
+                return;
+            }
             
             let menuText = sap.n.Launchpad.translateTile('title', dataCat);
             if (dataCat.isCustom) {
@@ -660,8 +664,7 @@ sap.n.Launchpad = {
                     if (!dataCatChild) return;
                     if (dataCatChild.hideFromMenu) return;
 
-                    const { tiles, tilegroups } = dataCatChild;
-                    if (sap.n.Customization.isDisabled() && tilegroups.length === 0 && tiles.length === 0) {
+                    if (hideEmptyTileGroups(dataCatChild.tiles, dataCatChild.tilegroups)) {
                         return;
                     }
 
@@ -851,6 +854,10 @@ sap.n.Launchpad = {
                 title = dataCat.props.menuText || dataCat.props.title;
             }
 
+            if (hideEmptyTileGroups(dataCat.tiles, dataCat.tilegroups)) {
+                return;
+            }
+
             treeData.push({
                 id: dataCat.id,
                 parent: '',
@@ -876,8 +883,7 @@ sap.n.Launchpad = {
                 if (!dataCatChild) return;
                 if (dataCatChild.hideFromMenu) return;
 
-                const { tilegroups, tiles } = dataCatChild;
-                if (sap.n.Customization.isDisabled() && tilegroups.length === 0 && tiles.length === 0) {
+                if (hideEmptyTileGroups(dataCatChild.tiles, dataCatChild.tilegroups)) {
                     return;
                 }
 
@@ -1165,13 +1171,12 @@ sap.n.Launchpad = {
                     if (!dataCatChild) dataCatChild = sap.n.Customization.getTileGroup(data.id);
                     if (!dataCatChild) return;
 
-                    const { tiles, tilegroups } = dataCatChild;
-                    if (sap.n.Customization.isDisabled() && tilegroups.length === 0 && tiles.length === 0) {
+                    if (hideEmptyTileGroups(dataCatChild.tiles, dataCatChild.tilegroups)) {
                         return;
                     }
 
                     //Grid containerOpenApp
-                    let tilegroupContainer = new sap.m.FlexBox(`${sectionPrefix()}${dataCat.id}${dataCatChild.id}`, {
+                    let tilegroupContainer = new sap.m.FlexBox(`${sectionPrefix()}${dataCatChild.id}`, {
                         direction: 'Column',
                         alignItems: 'Start'
                     }).addStyleClass('nepGridContainer nepGridCards');

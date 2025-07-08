@@ -1,3 +1,11 @@
+const AppCacheLogonOIDCToken = 'p9oidctoken';
+
+function clearP9OidcToken() {
+    if (localStorage.getItem(AppCacheLogonOIDCToken) !== null) {
+        localStorage.removeItem(AppCacheLogonOIDCToken);
+    }
+}
+
 const AppCacheLogonOIDC = {
     state: null,
     options: {},
@@ -109,12 +117,10 @@ const AppCacheLogonOIDC = {
     },
 
     Signout: function () {
+        clearP9OidcToken();
+
         const logon = getAuthSettingsForUser();
         externalAuthUserLogoutUsingPopup(`${AppCache.Url}/user/logon/openid-connect/${logon.path}/logout`, 1500)
-            .then(() => {
-                if(!localStorage.p9oidctoken) return;
-                localStorage.removeItem("p9oidctoken");
-            })
             .finally(() => {
                 p9UserLogout("OpenID Connect");
             });
@@ -272,15 +278,16 @@ const AppCacheLogonOIDC = {
     },
 
     _onTokenReady: function (data, resourceToken) {
-        // localStorage.setItem('p9oidctoken', encryptAES(JSON.stringify(data), generateKeyForLoginToken()));
-        localStorage.setItem('p9oidctoken', JSON.stringify(data));
-
+        const key = generatePBKDF2Key(NumPad.numValue, AppCache.deviceID);
+        const encrypted = encryptAES(data.refresh_token, key.toString());
+        AppCache.userInfo.auth = encrypted.toString();
+        
         if (!AppCache.userInfo) {
             AppCache.userInfo = {};
         }
 
         AppCache.userInfo.oidcToken = data;
-        AppCache.userInfo.oidcUser = parseJsonWebToken(AppCache.userInfo.oidcToken.id_token);
+        AppCache.userInfo.oidcUser = parseJsonWebToken(data.id_token);
 
         if (resourceToken) {
             AppCache.userInfo.oidcResourceToken = resourceToken;

@@ -26,6 +26,7 @@ let AppCacheLogonLocal = {
                 if (data.status && data.status === 'UpdatePassword' && !isCordova()) {
                     const url = new URL(data.link, location.href);
                     url.searchParams.append('reason', data.reason || 'other');
+                    url.searchParams.append('redirect', encodeURIComponent(location.href));
                     location.replace(url.toString());
                 } else {
                     AppCache.getUserInfo();
@@ -113,6 +114,7 @@ let AppCacheLogonLocal = {
                     if (data.status && data.status === 'UpdatePassword') {
                         const url = new URL(data.link, location.href);
                         url.searchParams.append('reason', data.reason || 'other');
+                        url.searchParams.append('redirect', encodeURIComponent(location.href));
                         location.replace(url.toString());
                         resolve('ERROR');
                     } else {
