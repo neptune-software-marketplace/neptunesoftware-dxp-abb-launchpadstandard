@@ -2530,7 +2530,6 @@ let AppCache = {
                     });
                 }
 
-                ifSetLoadStartupAppOrWebApp();
                 resolve();
             });
         });

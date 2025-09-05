@@ -8,7 +8,7 @@
 	},
 	"name": "neptunesoftware-dxp-abb-launchpadstandard",
 	"description": null,
-	"ver": "25.02.12.1354",
+	"ver": "25.09.05.1333",
 	"enableCICD": true,
 	"apps": [
 		{
