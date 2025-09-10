@@ -23,6 +23,7 @@ let AppCacheLogonLdap = {
                 AppCache.getUserInfo();
             },
             error: function (result, status) {
+                refreshingAuth = false;
                 if (result.status === 401) {
                     sap.m.MessageToast.show(AppCache_tWrongUserNamePass.getText());
                 }

@@ -1417,7 +1417,15 @@ sap.n.Launchpad = {
 
     HandleTilePress: function (dataTile, dataCat) {
         if (dataTile.navObject && dataTile.navAction) {
-            location.hash = dataTile.navObject + '-' + dataTile.navAction;
+            const hashPath = dataTile.navObject + '-' + dataTile.navAction;
+            if (location.hash === `#${hashPath}`) {
+                sap.n.Launchpad.currentTile = {};
+                sap.n.Launchpad.setLaunchpadContentWidth();
+                sap.n.HashNavigation._handler();
+                return
+            }
+
+            location.hash = hashPath;
         } else {
             location.hash = '';
             sap.n.Launchpad._HandleTilePress(dataTile, dataCat);

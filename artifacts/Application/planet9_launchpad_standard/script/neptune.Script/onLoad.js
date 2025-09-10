@@ -153,6 +153,7 @@ function isOffline() {
 }
 
 function onOffline() {
+    refreshingAuth = false;
     AppCache.isOffline = true;
     AppCacheShellNetwork.setVisible(true);
     AppCache_butNewUser.setEnabled(false);

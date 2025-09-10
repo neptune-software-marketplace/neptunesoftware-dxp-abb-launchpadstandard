@@ -34,6 +34,7 @@ let AppCacheLogonLocal = {
                 }
             },
             error: function (result, status) {
+                refreshingAuth = false;
                 if (result.status === 401) sap.m.MessageToast.show(AppCache_tWrongUserNamePass.getText());
                 if (result.status === 0) sap.m.MessageToast.show(AppCache_tNoConnection.getText());
                 AppCacheLogonLocal.AutoLoginRemove();
@@ -97,6 +98,7 @@ let AppCacheLogonLocal = {
                 rec = Base64.decode(auth);
                 rec = JSON.parse(rec);
             } catch (e) {
+                refreshingAuth = false;
                 appCacheError(e);
                 return resolve('ERROR');
             }
