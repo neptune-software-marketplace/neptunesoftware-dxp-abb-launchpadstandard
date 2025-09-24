@@ -1,3 +1,22 @@
+function setSessionNonce(type, path, excludeNonce = false) {
+    if (excludeNonce) {
+        return Promise.resolve(undefined);
+    }
+
+    return new Promise((resolve, reject) => {
+        const nonce = ModelData.genID();
+        fetch(`/user/logon/${type}/${path}/session`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({nonce})
+        }).then(result => result.json())
+        .then(({ nonce }) => resolve(nonce))
+        .catch((err) =>  reject(err));
+    });
+}
+
 let AppCacheLogonAzure = {
     state: null,
     options: {},
@@ -244,18 +263,21 @@ let AppCacheLogonAzure = {
     },
 
     _loginMsal: function () {
-        this.InitMsal().then(() => {
-            this.msalObj.loginPopup({ scopes: this.loginScopes, prompt: 'select_account' }).then((response) => {
-                AppCache.Auth = ModelData.genID();
-                this._loginP9(response.idToken);
-            }).catch((error) => {
-                if (error && error.toString().indexOf('Failed to fetch') > -1) {
-                    sap.m.MessageToast.show('Failed to fetch token. Redirect URI in azure must be set to Single Page Application');
-                } else {
-                    sap.m.MessageToast.show(error.toString());
-                }
+        setSessionNonce('azure-bearer', this.options.path, this.options.excludeNonce)
+            .then((nonce) => {
+                this.InitMsal().then(() => {
+                    this.msalObj.loginPopup({ scopes: this.loginScopes, prompt: 'select_account', nonce }).then((response) => {
+                        AppCache.Auth = ModelData.genID();
+                        this._loginP9(response.idToken);
+                    }).catch((error) => {
+                        if (error && error.toString().indexOf('Failed to fetch') > -1) {
+                            sap.m.MessageToast.show('Failed to fetch token. Redirect URI in azure must be set to Single Page Application');
+                        } else {
+                            sap.m.MessageToast.show(error.toString());
+                        }
+                    });
+                });
             });
-        });
     },
 
     getFullUri: function () {

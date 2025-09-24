@@ -920,7 +920,7 @@ let AppCache = {
                     AppCache.View[applid] = view;
                 }
             } catch (err) {
-                AppCache.handleTileError(err);
+                AppCache.handleTileError(err, loadOptions);
                 AppCache.showTileErrorMessage(`Init view error in: ${value.toUpperCase()}`)
             }
         } else {
@@ -930,7 +930,7 @@ let AppCache = {
                     type: sap.ui.core.mvc.ViewType.JS
                 });
             } catch (err) {
-                AppCache.handleTileError(err);
+                AppCache.handleTileError(err, loadOptions);
                 AppCache.showTileErrorMessage(`Init view error in: ${value.toUpperCase()}`);
             }
         }
@@ -953,7 +953,7 @@ let AppCache = {
 
             AppCache.buildView({ viewName, applid, loadOptions });
         }).catch(function (err) {
-            AppCache.handleTileError(err);
+            AppCache.handleTileError(err, loadOptions);
             AppCache.showTileErrorMessage(err);
         }).finally(() => {
             AppCache.isInitViewRunning = false;
@@ -1367,7 +1367,7 @@ let AppCache = {
                     AppCache.showTileErrorMessage(AppCache_tAppNotFound.getText());
                 }
 
-                AppCache.handleTileError(err.statusText);
+                AppCache.handleTileError(err.statusText, loadOptions);
                 setTimeout(function () {
                     AppCache.hideGlobalAjaxError = false;
                 }, 100);
@@ -1377,7 +1377,10 @@ let AppCache = {
 
     handleTileError: function (err, loadOptions = {}) {
         sap.n.currentView = '';
-        sap.n.Shell.closeTile({ id: loadOptions.appGUID });
+        
+        if (loadOptions.appGUID) {
+            sap.n.Shell.closeTile({ id: loadOptions.appGUID });
+        }
         sap.n.Shell.closeSidepanel();
         
         if (AppCacheNav.getCurrentPage().getContent().length === 0) {
