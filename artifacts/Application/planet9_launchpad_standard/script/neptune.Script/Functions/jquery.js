@@ -47,117 +47,139 @@ function cordovaReadFile(path, readAs = 'ArrayBuffer') {
  */
 function cordovaRequest(opts) {
     return new Promise((resolve, reject) => {
-        let url = '';
         try {
-            if (opts.url.startsWith('/')) {
-                url = new URL(opts.url, AppCache.Url);
-            } else if (opts.url.startsWith('public/')) {
-                url = new URL(opts.url, location.origin);
-            } else {
-                url = new URL(opts.url);
+            let url = '';
+            try {
+                if (opts.url.startsWith('/')) {
+                    url = new URL(opts.url, AppCache.Url);
+                } else if (opts.url.startsWith('public/')) {
+                    url = new URL(opts.url, location.origin);
+                } else {
+                    url = new URL(opts.url);
+                }
+            } catch (err) {
+                console.error('cordovaRequest', err);
+                reject(err);
+                return;
             }
-        } catch (err) {
-            console.error('cordovaRequest', err);
-        }
-        
-        const method = opts.type.toLowerCase();
-        let data = {};
-        let headers = {};
-        let params = {};
+            
+            const method = opts.type.toLowerCase();
+            let data = {};
+            let headers = {};
+            let params = {};
 
-        if (opts.headers && typeof headers === 'object') {
-            headers = opts.headers;
-        }
-
-        const { contentType } = opts;
-        if (contentType) {
-            headers['Content-Type'] = contentType;
-
-            if (contentType.includes('json')) {
-                cordova.plugin.http.setDataSerializer('json');
+            if (opts.headers && typeof opts.headers === 'object') {
+                headers = opts.headers;
             }
 
-            if(contentType.includes('application/x-www-form-urlencoded')) {
-                cordova.plugin.http.setDataSerializer('urlencoded');
+            const { contentType } = opts;
+            if (contentType) {
+                headers['Content-Type'] = contentType;
+
+                if (contentType.includes('json')) {
+                    cordova.plugin.http.setDataSerializer('json');
+                }
+
+                if(contentType.includes('application/x-www-form-urlencoded')) {
+                    cordova.plugin.http.setDataSerializer('urlencoded');
+                }
             }
-        }
 
-        // we pass json as string into jQuery.request
-        if (typeof opts.data !== 'undefined') {
-            if (typeof opts.data === 'string') {
-                data = JSON.parse(opts.data);
-            } else if (typeof opts.data === 'object') {
-                data = opts.data;
-            }
-        }
-
-        // jQuery.request (success, error) functions we already pass as options
-        const { success, error } = opts;
-
-        for (const [key, value] of url.searchParams.entries()) {
-            params[key] = value;
-        }
-
-        const options = {
-            method,
-            data: Object.keys(data).length > 0 ? data : {},
-        };
-        if (Object.keys(params).length > 0) options.params = params;
-        if (Object.keys(headers).length > 0) options.headers = headers;
-
-        // https://www.npmjs.com/package/cordova-plugin-advanced-http
-        cordova.plugin.http.sendRequest(
-            `${url.origin}${url.pathname}`, options, (res) => {
-                let result;
-                if (typeof res.data !== 'undefined') {
+            // we pass json as string into jQuery.request
+            if (typeof opts.data !== 'undefined') {
+                if (typeof opts.data === 'string') {
                     try {
-                        result = JSON.parse(res.data);
-                    } catch (e) {
-                        // if JSON is not parsed correctly. e.g. in case of OK being returned from server after correct login
-                        // we will just set result to res.data
-                        result = res.data;
+                        data = JSON.parse(opts.data);
+                    } catch (err) {
+                        // keep data as string
+                        data = opts.data;
                     }
+                } else if (typeof opts.data === 'object') {
+                    data = opts.data;
                 }
+            }
 
-                if (result.status && result.status === 'UpdatePassword') {
-                    let newUrl = new URL(AppCache.Url + result.link);
-                    newUrl.searchParams.append('reason', result.reason || 'other');
-                    newUrl.searchParams.append('redirect', encodeURIComponent(location.href));
-                    location.replace(newUrl.href.toString());
+            // jQuery.request (success, error) functions we already pass as options
+            const { success, error } = opts;
+            
+            try {
+                for (const [key, value] of url.searchParams.entries()) {
+                    params[key] = value;
                 }
+            } catch (err) {
+                console.error('cordova request searchParams', err);
+                reject(err);
+                return;
+            }
 
-                success && success(result, 'success', {
-                    headers: res.headers,
-                    getResponseHeader: function (key) {
-                        return this.headers[key.toLowerCase()];
+            const options = {
+                method,
+                data: Object.keys(data).length > 0 ? data : {},
+            };
+            if (Object.keys(params).length > 0) options.params = params;
+            if (Object.keys(headers).length > 0) options.headers = headers;
+
+            // https://www.npmjs.com/package/cordova-plugin-advanced-http
+            cordova.plugin.http.sendRequest(
+                `${url.origin}${url.pathname}`, options, (res) => {
+                    let result;
+                    if (typeof res.data !== 'undefined') {
+                        try {
+                            result = JSON.parse(res.data);
+                        } catch (e) {
+                            // if JSON is not parsed correctly. e.g. in case of OK being returned from server after correct login
+                            // we will just set result to res.data
+                            result = res.data;
+                        }
                     }
-                });
-                resolve(result);
-            },
-            (err) => {
-                // this is not a an error, but when the plugin parses 'OK'
-                // as response from p9 server from e.g. /user/logon/local
-                // json parsing fails, so we end up here
-                if (
-                    err.error &&
-                    err.error.includes('Unexpected identifier "OK"')
-                ) {
-                    success && success(err.error);
-                    resolve(err.error);
-                    return;
-                }
 
-                let result = {
-                    status: err.status,
-                };
-                if (typeof err.data !== 'undefined') {
-                    result.data = JSON.parse(err.data);
-                }
+                    if (result && result.status === 'UpdatePassword') {
+                        let newUrl = new URL(AppCache.Url + result.link);
+                        newUrl.searchParams.append('reason', result.reason || 'other');
+                        newUrl.searchParams.append('redirect', encodeURIComponent(location.href));
+                        location.replace(newUrl.href.toString());
+                    }
 
-                error && error(result, err.status);
-                reject(result);
-            },
-        );
+                    success && success(result, 'success', {
+                        headers: res.headers,
+                        getResponseHeader: function (key) {
+                            return this.headers[key.toLowerCase()];
+                        }
+                    });
+                    resolve(result);
+                },
+                (err) => {
+                    // this is not a an error, but when the plugin parses 'OK'
+                    // as response from p9 server from e.g. /user/logon/local
+                    // json parsing fails, so we end up here
+                    if (
+                        err.error &&
+                        err.error.includes('Unexpected identifier "OK"')
+                    ) {
+                        success && success(err.error);
+                        resolve(err.error);
+                        return;
+                    }
+
+                    let result = {
+                        status: err.status,
+                    };
+                    if (typeof err.data !== 'undefined') {
+                        try {
+                            result.data = JSON.parse(err.data);
+                        } catch (parseErr) {
+                            result.data = err.data;
+                        }
+                    }
+
+                    error && error(result, err.status);
+                    reject(result);
+                },
+            );
+        } catch (outerErr) {
+            console.error('cordovaRequest unexpected error', outerErr);
+            reject(outerErr);
+        }
     });
 }
 
