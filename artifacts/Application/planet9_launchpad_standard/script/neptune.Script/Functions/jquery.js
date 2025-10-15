@@ -155,7 +155,7 @@ function cordovaRequest(opts) {
                 }
 
                 error && error(result, err.status);
-                reject(result, err.status);
+                reject(result);
             },
         );
     });
