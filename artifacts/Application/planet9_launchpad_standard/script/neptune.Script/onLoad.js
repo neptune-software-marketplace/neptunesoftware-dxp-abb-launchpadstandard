@@ -23,6 +23,41 @@ function isSecureKeyStorePluginAvailableOnCordova() {
     return isCordova() && typeof cordova.plugins !== 'undefined' && typeof cordova.plugins.SecureKeyStore !== 'undefined';
 }
 
+async function configureSsl() {
+    if (!isCordova()) return;
+
+    // don't modify existing clients < 23.10.11 which do not have possibility to configure ssl
+    if (!AppCache.ssl) return;
+    
+    const ssl = AppCache.ssl;
+    const http = cordova.plugin && cordova.plugin.http;
+
+    if (!http) return;
+
+    if (ssl.skipSslCertificateCheck) {
+        return http.setServerTrustMode('nocheck', () =>
+            appCacheLog('[SSL] Trust mode: nocheck')
+        );
+    }
+
+    if (ssl.useCorporateCertificate) {
+        return http.setServerTrustMode('pinned', () =>
+            appCacheLog('[SSL] Trust mode: pinned (corporate cert)')
+        );
+    }
+
+    if (ssl.allowSystemCertificates || ssl.allowUserCertificates) {
+        // NOTE: only 'default' mode respects network_security_config.xml
+        return http.setServerTrustMode('default', () =>
+            appCacheLog('[SSL] Trust mode: default (system + user if XML configured)')
+        );
+    }
+
+    return http.setServerTrustMode('default', () =>
+        appCacheLog('[SSL] Trust mode: default (fallback)')
+    );
+}
+
 // Browser/Phonegap Startup
 if (isCordova()) {
     document.addEventListener('deviceready', onDeviceReady, false);
@@ -92,6 +127,9 @@ function onDeviceReady() {
 
     // Android SSL 
     if (isCordova() && cordova.plugins && cordova.plugins.certificates) cordova.plugins.certificates.trustUnsecureCerts(true);
+    
+    // adding it just below existing settings, cordova.plugins.certificates is also conditional
+    configureSsl();
 
     // InAppBrowser 
     if (isCordova()) window.open = cordova.InAppBrowser.open;
