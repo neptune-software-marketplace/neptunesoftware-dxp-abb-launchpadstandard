@@ -656,16 +656,22 @@ let AppCache = {
     },
 
     AutoUpdateMobileApp: function () {
-        // Update App - device check
-        if (!isMobileAppUpdateSupported() || !isCordova() || AppCache.isOffline) return;
+        try {
+            // Update App - device check
+            if (!isMobileAppUpdateSupported() || !isCordova() || AppCache.isOffline) return;
 
-        // Version check
-        const currentVersion = AppCache.AppVersion.replace(/\D/g, '');
-        const activeVersion = AppCache.GetActiveAppVersion().replace(/\D/g, '');
-        
-        if (activeVersion > currentVersion) {
-            const url = getMobileAppUpdateUrlForOS(`${AppCache.Url}/mobileClients/${AppCache.mobileClient}/build/${AppCache.AppVersionActiveID}/`)
-            AppCache.UpdateMobileApp(url, AppCache.GetActiveAppVersion());
+            // Version check
+            const currentVersion = AppCache.AppVersion.replace(/\D/g, '');
+
+            const activeAppVersion = AppCache.GetActiveAppVersion();
+            const activeVersion = typeof activeAppVersion === 'string' ? activeAppVersion.replace(/\D/g, '') : activeAppVersion;
+            
+            if (activeVersion > currentVersion) {
+                const url = getMobileAppUpdateUrlForOS(`${AppCache.Url}/mobileClients/${AppCache.mobileClient}/build/${AppCache.AppVersionActiveID}/`)
+                AppCache.UpdateMobileApp(url, AppCache.GetActiveAppVersion());
+            }
+        } catch (err) {
+            console.log('AutoUpdateMobileApp', err);
         }
     },
 
