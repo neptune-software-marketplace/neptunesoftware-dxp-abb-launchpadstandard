@@ -643,10 +643,11 @@ let AppCache = {
     },
 
     GetActiveAppVersion: function () {
-        if (typeof AppCache.AppVersionActive === 'string') {
-            return AppCache.AppVersionActive;
-        } else if (Array.isArray(AppCache.AppVersionActive) && AppCache.AppVersionActive.length > 0) {
-            return AppCache.AppVersionActive[0];
+        const activeVersion =  AppCache.AppVersionActive;
+        if (typeof activeVersion === 'string') {
+            return activeVersion;
+        } else if (Array.isArray(activeVersion) && activeVersion.length > 0 && activeVersion[0] !== null) {
+            return activeVersion[0];
         }
 
         // we were unable to find the active app version
@@ -659,7 +660,7 @@ let AppCache = {
         if (!isMobileAppUpdateSupported() || !isCordova() || AppCache.isOffline) return;
 
         // Version check
-        const currentVersion = AppCache.AppVersion.replace(/\D/g, '')
+        const currentVersion = AppCache.AppVersion.replace(/\D/g, '');
         const activeVersion = AppCache.GetActiveAppVersion().replace(/\D/g, '');
         
         if (activeVersion > currentVersion) {
