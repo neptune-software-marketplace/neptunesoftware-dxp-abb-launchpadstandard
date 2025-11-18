@@ -126,7 +126,18 @@ function onDeviceReady() {
     }
 
     // Android SSL 
-    if (isCordova() && cordova.plugins && cordova.plugins.certificates) cordova.plugins.certificates.trustUnsecureCerts(true);
+    if (isCordova() && cordova.plugins && cordova.plugins.certificates) {
+        cordova.plugins.certificates.trustUnsecureCerts(true);
+
+        if (cordova.plugin && cordova.plugin.http) {
+            cordova.plugin.http.setServerTrustMode('nocheck', () => {
+                console.log('Server trust mode set to nocheck');
+            },
+            (err) => {
+                console.error('Failed to set server trust mode', err);
+            });
+        }
+    }
     
     // adding it just below existing settings, cordova.plugins.certificates is also conditional
     configureSsl();

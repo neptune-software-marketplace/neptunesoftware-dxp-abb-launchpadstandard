@@ -1,6 +1,6 @@
 {
 	"id": "ae5dd690-2555-ed11-ade6-000d3ab237df",
-	"createdAt": "2022-10-26T08:58:56.063Z",
+	"createdAt": "2022-10-26T11:58:56.063Z",
 	"createdBy": "lloyd.trevarthen@neptune-software.com",
 	"git": {
 		"targetServers": [],
@@ -8,7 +8,7 @@
 	},
 	"name": "neptunesoftware-dxp-abb-launchpadstandard",
 	"description": null,
-	"ver": "25.10.15.2006",
+	"ver": "25.11.18.0830",
 	"enableCICD": true,
 	"apps": [
 		{
