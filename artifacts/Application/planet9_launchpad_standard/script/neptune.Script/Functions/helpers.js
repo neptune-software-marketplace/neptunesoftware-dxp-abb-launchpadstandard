@@ -659,35 +659,11 @@ function createPopupWindow(url, target='_blank', width=-1, height=-1) {
 }
 
 function watchPopupState(popupWin, finalState=[], logState=[], callbackFn) {
-    let url = '';
-    let intervalId = setInterval(() => {
-        try {
-            url = popupWin.location.href ?? '';
-        } catch (err) {
-            url = ''; // otherwise it would error out on accessing string functions
-
-            if (err.name === 'SecurityError') {
-                appCacheLog('we are unable to read location.href', popupWin, 'error', err);
-            } else {
-                appCacheLog('watchPopupState popupWin', popupWin, 'error', err);
-            }
-        }
-
-        if (logState.some(param => url.includes(`${param}=`))) {
-            appCacheLog(`watchPopupState logging url - ${url} because it matched one of the following parameters = ${logState.join(', ')} `)
-        }
-
-        if (popupWin.closed || url.includes('error=')) {
-            clearInterval(intervalId);
-        }
-
-        if (finalState.some(param => url.includes(`${param}=`))) {
-            appCacheLog(`watchPopupState final state reached - ${url}`);
-            clearInterval(intervalId);
-            popupWin.close();
-            return callbackFn(url);
-        }
-    }, 100);
+    const channel = new BroadcastChannel('oidc-login');
+    channel.onmessage = function (event) {
+        channel.close();
+        callbackFn(event.data);
+    };
 }
 
 function parseJsonWebToken(token) {

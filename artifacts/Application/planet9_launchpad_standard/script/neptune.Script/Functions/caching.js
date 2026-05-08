@@ -1584,7 +1584,7 @@ async function addUrlToCache({ url, cacheName }) {
         const response = await fetch(url);
         if (response.ok) {
             const cache = await caches.open(cacheName);
-            await cache.put(url, response);
+            await cache.put(url, response.clone());
             appCacheLog(`added to cache ${cacheName}`, url);
         }
     } catch (err) {

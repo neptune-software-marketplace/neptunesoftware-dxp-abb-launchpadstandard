@@ -299,27 +299,18 @@ const AppCacheLogonOIDC = {
 
     _showLogonPopupAndWaitForCallbackUrl: function (url) {
         return new Promise((resolve, reject) => {
-            const popup = this._showLogonPopup(url);
+            const channel = new BroadcastChannel('oidc-login');
+            this._showLogonPopup(url);
 
-            (function check() {
-                if (popup.closed) {
-                    return resolve();
+            channel.onmessage = function (event) {
+                channel.close();
+                const params = new URLSearchParams(event.data);
+                const error = params.get('error');
+                if (error) {
+                    return reject(new Error(error));
                 }
-
-                let callbackUrl = '';
-                try {
-                    callbackUrl = popup.location.href || '';
-                } catch (e) { }
-
-                if (callbackUrl) {
-                    if (callbackUrl.indexOf('code=') > -1) {
-                        console.log('Callbackurl: ', callbackUrl);
-                        popup.close();
-                        return resolve(callbackUrl);
-                    }
-                }
-                setTimeout(check, 100);
-            })();
+                resolve(event.data);
+            };
         });
     },
 
