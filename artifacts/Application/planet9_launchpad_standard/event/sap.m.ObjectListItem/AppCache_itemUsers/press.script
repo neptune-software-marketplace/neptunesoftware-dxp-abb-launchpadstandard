@@ -4,11 +4,12 @@ const data = ctx.getObject();
 AppCache.userInfo = data;
 
 // PWA - Webauthn
-if (AppCache.userInfo.biometric) {
+if (AppCache.userInfo.biometric && AppCache.userInfo.webauthid) {
     sap.n.Webauthn.login(AppCache.userInfo.webauthid)
         .then(function (res) {
-            // check if response is an error
+            // WebAuthn failed or was cancelled, fall back to the passcode
             if (res instanceof Error) {
+                AppCache.setEnablePasscodeEntry();
                 return;
             }
 

@@ -1270,6 +1270,14 @@ let AppCache = {
 
         const isExpectedResponseJs = url.includes('.js') || url.includes('.json') || url.includes('debug=true');
 
+        // SAP couldn't log the user on, e.g. the password must be changed first
+        function showSapLogonFailed() {
+            AppCache.showTileErrorMessage(`Could not log on to the SAP system to open ${value}. If this is your first logon or your SAP password has expired, change your SAP password and try again.`);
+            // the app never opened, let the user open the tile again
+            const { currentTile } = sap.n.Launchpad;
+            if (currentTile && currentTile.id === loadOptions.appGUID) sap.n.Launchpad.currentTile = {};
+        }
+
         request({
             datatype: 'HTML',
             type: 'GET',
@@ -1279,6 +1287,12 @@ let AppCache = {
                 AppCache.hideGlobalAjaxError = true;
 
                 if (isExpectedResponseJs && typeof data === 'string' && data.trim().startsWith('<')) {
+                    // SAP sends its logon page instead of the app
+                    if (loadOptions.appType === 'SAP') {
+                        showSapLogonFailed();
+                        return;
+                    }
+
                     AppCache.showTileErrorMessage(`App ${value} return an html response instead of js/json`);
                     return;
                 }
@@ -1358,6 +1372,12 @@ let AppCache = {
             },
             error: function (err) {
                 appCacheLog('getView 401 error', err);
+
+                // a 401 from SAP is its own logon failing, our session is fine
+                if (err.status === 401 && err.getResponseHeader('sap-server')) {
+                    showSapLogonFailed();
+                    return;
+                }
 
                 if (err.status === 401 && !refreshingAuth) {
                     diaSessionTimeout.open();
@@ -1651,7 +1671,10 @@ let AppCache = {
 
             if (AppCache.enableAutoLogin) AppCacheLogonLocal.AutoLoginRemove();
 
-            if (isExternalLogoutEnabled()) {
+            // nobody logged in (e.g. session timed out at start), authType is then only the selected login type
+            const isLoggedIn = AppCache.userInfo && AppCache.userInfo.logonData && AppCache.userInfo.logonData.type;
+
+            if (isExternalLogoutEnabled() && isLoggedIn) {
                 if (authType === 'azure-bearer') {
                     AppCacheLogonAzure.Logoff();
                 } else if (authType === 'openid-connect') {
@@ -2055,7 +2078,8 @@ let AppCache = {
         modelAppCacheUsers.refresh();
 
         // Store passcode to OS SAMKeychain library or Android SecureStorage
-        if (isCordova() && !window.navigator.simulator && AppCache.biometricAuthentication) {
+        // only for the user that keeps biometrics, other users would enroll for a biometric login they can never use
+        if (isCordova() && !window.navigator.simulator && AppCache.biometricAuthentication && AppCache.userInfo.biometric) {
 
             // Set OS SAMKeychain library and Android SecureStorage key
             let serviceKey = AppCache.userInfo.username;

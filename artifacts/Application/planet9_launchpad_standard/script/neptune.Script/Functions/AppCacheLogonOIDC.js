@@ -107,7 +107,7 @@ const AppCacheLogonOIDC = {
     },
 
     Logoff: function () {
-        this.Signout();
+        this.Signout(false);
         p9UserLogout('OpenID Connect');
     },
 
@@ -116,13 +116,14 @@ const AppCacheLogonOIDC = {
         this.GetTokenWithRefreshToken(refreshToken, 'pin');
     },
 
-    Signout: function () {
+    // Logoff does the P9 logout itself, a second one after the popup could end a new session
+    Signout: function (p9Logout = true) {
         clearP9OidcToken();
 
         const logon = getAuthSettingsForUser();
         externalAuthUserLogoutUsingPopup(`${AppCache.Url}/user/logon/openid-connect/${logon.path}/logout`, 1500)
             .finally(() => {
-                p9UserLogout("OpenID Connect");
+                if (p9Logout) p9UserLogout("OpenID Connect");
             });
     },
 

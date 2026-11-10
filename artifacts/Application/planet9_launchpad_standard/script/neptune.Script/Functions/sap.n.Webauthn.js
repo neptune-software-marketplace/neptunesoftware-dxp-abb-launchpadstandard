@@ -61,11 +61,21 @@ sap.n.Webauthn = {
 
     login: function (userId) {
         return new Promise(function (resolve) {
+            // a missing or corrupted credential id makes atob throw, report it like any other failure
+            let credentialId;
+            try {
+                credentialId = sap.n.Webauthn.bufferDecode(userId);
+            } catch (e) {
+                appCacheLog(e);
+                resolve(e);
+                return;
+            }
+
             const challenge = new Uint8Array(16);
             const publicKeyCredentialOptions = {
                 challenge: window.crypto.getRandomValues(challenge),
                 allowCredentials: [{
-                    id: sap.n.Webauthn.bufferDecode(userId),
+                    id: credentialId,
                     type: 'public-key',
                 }],
                 userVerification: 'discouraged',

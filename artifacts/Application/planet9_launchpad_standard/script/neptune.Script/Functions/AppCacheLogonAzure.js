@@ -229,16 +229,17 @@ let AppCacheLogonAzure = {
         });
     },
 
-    Signout: function () {
+    // Logoff does the P9 logout itself, a second one after the popup could end a new session
+    Signout: function (p9Logout = true) {
         if (isOffline()) return;
         
         if (this.options.azureSilentSignout) {
             let signoutFrame = document.getElementById('azureSignout');
             if (signoutFrame) signoutFrame.setAttribute('src', 'https://login.microsoftonline.com/common/oauth2/logout');
-            setTimeout(()=> p9UserLogout('Azure'), 1000);
+            if (p9Logout) setTimeout(()=> p9UserLogout('Azure'), 1000);
         } else {
             externalAuthUserLogoutUsingPopup('https://login.microsoftonline.com/common/oauth2/logout', 1000).then(() => {
-                p9UserLogout('Azure');
+                if (p9Logout) p9UserLogout('Azure');
             });
         }
 
@@ -258,7 +259,7 @@ let AppCacheLogonAzure = {
     },
 
     Logoff: function () {
-        this.Signout();
+        this.Signout(false);
         p9UserLogout('Azure');
     },
 

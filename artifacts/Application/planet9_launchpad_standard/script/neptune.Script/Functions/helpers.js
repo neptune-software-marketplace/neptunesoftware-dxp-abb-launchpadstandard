@@ -612,10 +612,12 @@ function externalAuthUserLogoutUsingPopup(url, closePopupAfterSecs=5000) {
         logoutPopup.blur && logoutPopup.blur();
 
         if (isCordova()) {
-            logoutPopup.addEventListener('loadstop', () => {
+            const done = () => {
                 logoutPopup.close();
                 resolve();
-            });
+            };
+            logoutPopup.addEventListener('loadstop', done);
+            logoutPopup.addEventListener('loaderror', done);
         } else {
             logoutPopup.onload = () => {
                 logoutPopup.close();

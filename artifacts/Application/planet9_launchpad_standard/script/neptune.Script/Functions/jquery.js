@@ -163,6 +163,10 @@ function cordovaRequest(opts) {
 
                     let result = {
                         status: err.status,
+                        headers: err.headers || {},
+                        getResponseHeader: function (key) {
+                            return this.headers[key.toLowerCase()];
+                        }
                     };
                     if (typeof err.data !== 'undefined') {
                         try {
